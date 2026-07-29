@@ -21,7 +21,7 @@ export const projects: readonly Project[] = [
   {
     id: "tochegando",
     url: "https://tochegandobar-three.vercel.app",
-    image: null,
+    image: "/tochegando.png",
     stack: ["Next.js", "React", "TypeScript", "Vercel"],
     status: "live",
     featured: true,

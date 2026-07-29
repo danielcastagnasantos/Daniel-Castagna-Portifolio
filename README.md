@@ -34,7 +34,7 @@ resume: null,     // → "/curriculo.pdf"  (idem)
 
 ### Outros pendentes
 
-- **Captura do Tô Chegando** — salve a imagem em `public/tochegando.png` e troque `image: null` por `image: "/tochegando.png"` em `src/content/projects.ts`. Sem ela o card mostra um bloco com gradiente: funciona, mas vende bem menos.
+- ~~Captura do Tô Chegando~~ — feito, em `public/tochegando.png`.
 - **Domínio real** — `siteConfig.url` está como `https://danielcastagna.dev`. Ele alimenta canonical, sitemap, robots e Open Graph; troque antes de publicar.
 - **Card do Lighthouse** — `MEASURED_LIGHTHOUSE` em `src/components/sections/Stats.tsx` está `null`, então o card não aparece. Rode o Lighthouse no site publicado e coloque **o número medido**. Se der 93, escreva 93.
 

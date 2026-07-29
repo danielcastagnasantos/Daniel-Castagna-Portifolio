@@ -27,8 +27,10 @@ export function Projects() {
             >
               <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--line)] bg-card/70 backdrop-blur transition-[border-color,transform] duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:border-primary/60">
                 <div
+                  // 2/1 no destaque acompanha a proporção real da captura
+                  // (1864x964), evitando cortar a base da página.
                   className={`relative w-full overflow-hidden border-b border-[var(--line)] ${
-                    project.featured ? "aspect-[21/9]" : "aspect-[16/10]"
+                    project.featured ? "aspect-[2/1]" : "aspect-[16/10]"
                   }`}
                 >
                   {project.image ? (
