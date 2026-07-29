@@ -1,25 +1,32 @@
-/**
- * Caminhos que o proxy de idioma NÃO deve interceptar.
- *
- * Mora aqui, separado de `proxy.ts`, porque aquele arquivo importa
- * `next-intl/middleware` e só carrega dentro do runtime do Next — o que
- * tornaria esta regra impossível de testar.
- *
- * `icon` está na lista por um defeito encontrado em produção: o favicon
- * gerado por `app/icon.tsx` é servido em `/icon`, sem extensão de arquivo.
- * A exclusão genérica `.*\..*` só pega caminhos com ponto, então `/icon`
- * passava batido, era tratado como página, ganhava prefixo de idioma e
- * virava `/pt/icon` — que não existe. O site ficou sem favicon em silêncio,
- * porque a tag no HTML continuava correta e nada acusava erro.
- *
- * `sitemap.xml` e `robots.txt` já são cobertos pela regra do ponto.
- */
-export const PROXY_MATCHER = "/((?!api|_next|_vercel|icon|.*\\..*).*)";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 /**
- * Reproduz a decisão do matcher para um caminho.
- * Usado nos testes; o Next compila a mesma string do seu próprio lado.
+ * Lê o matcher realmente usado em `src/proxy.ts`.
+ *
+ * Por que extrair do arquivo em vez de importar: o Next exige que `matcher`
+ * seja uma string literal, lida em tempo de compilação, e recusa constantes
+ * importadas. E `proxy.ts` importa `next-intl/middleware`, que nem carrega
+ * fora do runtime do Next.
+ *
+ * Duplicar o valor num módulo separado deixaria os dois divergirem em
+ * silêncio — exatamente o tipo de falha que o teste existe para impedir.
+ * Extrair garante que o teste avalie o valor que vai para produção.
  */
-export function proxyHandles(pathname: string): boolean {
-  return new RegExp(`^${PROXY_MATCHER}$`).test(pathname);
+export function readProxyMatcher(): string {
+  const proxyPath = fileURLToPath(new URL("../proxy.ts", import.meta.url));
+  const source = readFileSync(proxyPath, "utf8");
+
+  const match = source.match(/matcher:\s*"([^"]+)"/);
+  if (!match) {
+    throw new Error("Não foi possível encontrar o matcher em src/proxy.ts");
+  }
+
+  // O literal do arquivo traz as barras invertidas escapadas para JS.
+  return JSON.parse(`"${match[1]}"`);
+}
+
+/** Reproduz a decisão do matcher para um caminho. */
+export function proxyHandles(pathname: string, matcher = readProxyMatcher()): boolean {
+  return new RegExp(`^${matcher}$`).test(pathname);
 }
