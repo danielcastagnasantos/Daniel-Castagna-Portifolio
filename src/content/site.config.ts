@@ -48,11 +48,12 @@ export const siteConfig: SiteConfig = {
   photo: null,
   resume: null,
   links: {
-    whatsapp: null,
-    email: null,
-    github: null,
-    linkedin: null,
-    instagram: null,
+    // Formato internacional obrigatório para o wa.me: 55 (Brasil) + 27 (ES).
+    whatsapp: "5527998723273",
+    email: "danielcastagna2006@gmail.com",
+    github: "https://github.com/danielcastagnasantos",
+    linkedin: "https://www.linkedin.com/in/daniel-castagna-santos-8419893aa/",
+    instagram: "https://www.instagram.com/danielcastagna_/",
   },
 };
 

@@ -23,26 +23,18 @@ Abre em `http://localhost:3000` e redireciona para `/pt` ou `/en` conforme o idi
 
 ## O que falta você preencher
 
-Tudo está centralizado em **`src/content/site.config.ts`**. Enquanto um campo estiver `null`, o botão correspondente aparece desabilitado com a marcação "em breve" — nunca como link quebrado.
+Tudo em **`src/content/site.config.ts`**. Enquanto um campo estiver `null`, o botão correspondente aparece desabilitado com a marcação "em breve" — nunca como link quebrado.
+
+Os cinco canais de contato **já estão preenchidos e ativos**. Faltam dois arquivos:
 
 ```ts
-photo: null,      // → "/daniel.jpg"  (coloque o arquivo em public/)
-resume: null,     // → "/curriculo.pdf"
-
-links: {
-  whatsapp: null,   // só dígitos com DDI: "5527999999999"
-  email: null,      // "contato@exemplo.com"
-  github: null,     // URL completa
-  linkedin: null,   // URL completa
-  instagram: null,  // URL completa
-},
+photo: null,      // → "/daniel.jpg"     (coloque o arquivo em public/)
+resume: null,     // → "/curriculo.pdf"  (idem)
 ```
-
-Preencher qualquer um deles acende o canal automaticamente na seção Contato, no rodapé e no `sameAs` do JSON-LD. Nenhum componente precisa ser alterado.
 
 ### Outros pendentes
 
-- **Captura do Tô Chegando** — coloque em `public/` e aponte `image` em `src/content/projects.ts`. Sem ela o card mostra um bloco com gradiente.
+- **Captura do Tô Chegando** — salve a imagem em `public/tochegando.png` e troque `image: null` por `image: "/tochegando.png"` em `src/content/projects.ts`. Sem ela o card mostra um bloco com gradiente: funciona, mas vende bem menos.
 - **Domínio real** — `siteConfig.url` está como `https://danielcastagna.dev`. Ele alimenta canonical, sitemap, robots e Open Graph; troque antes de publicar.
 - **Card do Lighthouse** — `MEASURED_LIGHTHOUSE` em `src/components/sections/Stats.tsx` está `null`, então o card não aparece. Rode o Lighthouse no site publicado e coloque **o número medido**. Se der 93, escreva 93.
 

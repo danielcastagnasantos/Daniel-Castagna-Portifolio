@@ -62,8 +62,11 @@ export function Contact() {
                 {href ? (
                   <a
                     href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    // `mailto:` não abre em nova aba: o navegador entrega ao
+                    // cliente de e-mail e deixaria uma aba em branco para trás.
+                    {...(href.startsWith("http")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
                     className={`${shared} h-full hover:-translate-y-1 hover:border-primary/70`}
                   >
                     {inner}

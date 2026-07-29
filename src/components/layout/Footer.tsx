@@ -41,8 +41,9 @@ export function Footer() {
                     <li key={key}>
                       <a
                         href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        {...(href.startsWith("http")
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
                         aria-label={tContact(key)}
                         className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--line)] text-muted transition-colors duration-300 hover:border-primary hover:text-ink"
                       >
