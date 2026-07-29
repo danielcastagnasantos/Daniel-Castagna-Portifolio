@@ -8,7 +8,7 @@ import { Header } from "@/components/layout/Header";
 import { SectionTracker } from "@/components/layout/SectionTracker";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Scene } from "@/components/three/Scene";
+import { SceneMount } from "@/components/three/SceneMount";
 import { Cursor } from "@/components/ui/Cursor";
 import { Preloader } from "@/components/ui/Preloader";
 import { siteConfig } from "@/content/site.config";
@@ -135,7 +135,7 @@ export default async function LocaleLayout({
             </a>
 
             <Preloader brand={siteConfig.brand} />
-            <Scene />
+            <SceneMount />
             <Cursor />
             <SectionTracker />
 
