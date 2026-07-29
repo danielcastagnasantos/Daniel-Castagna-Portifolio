@@ -1,47 +1,44 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { useSceneStore } from "@/store/scene";
 
-/** Tempo máximo de espera antes de liberar a página de qualquer forma. */
-const SAFETY_TIMEOUT_MS = 4000;
+/** Batida mínima para a transição não piscar em conexões rápidas. */
+const MINIMUM_MS = 550;
+/** Teto absoluto: nada segura a página além disto. */
+const MAXIMUM_MS = 2500;
 
 /**
  * Tela de carregamento.
  *
- * O sinal de pronto é a combinação de fontes carregadas e primeiro frame da
- * cena 3D renderizado — não um temporizador fingido. O timeout de segurança
- * existe porque a cena pode nunca renderizar: WebGL indisponível, contexto
- * perdido ou GPU bloqueada. Sem ele, essa falha prenderia o visitante numa
- * tela preta permanente.
+ * Duas decisões vindas de falhas observadas em teste, não de hipótese:
+ *
+ * 1. Depende apenas das fontes e de uma batida mínima — deliberadamente NÃO da
+ *    cena 3D. Decoração não pode bloquear conteúdo: com WebGL desabilitado,
+ *    bloqueado por política ou lento, o visitante ficava preso numa tela preta.
+ *
+ * 2. A saída é transição CSS, não animação em JS. `AnimatePresence` só desmonta
+ *    o elemento quando a animação de saída termina, e ela depende de
+ *    requestAnimationFrame — que não roda em aba sem composição. O overlay
+ *    ficava visível e cobrindo o site para sempre. Com CSS, mesmo que a
+ *    transição não anime, `visibility` e `pointer-events` mudam de imediato e
+ *    a página fica utilizável.
  */
 export function Preloader({ brand }: { brand: string }) {
-  const ready = useSceneStore((state) => state.ready);
-  const setReady = useSceneStore((state) => state.setReady);
-  const [fontsReady, setFontsReady] = useState(false);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
+    const start = performance.now();
 
-    document.fonts.ready.then(() => {
-      if (!cancelled) setFontsReady(true);
-    });
-
-    const safety = window.setTimeout(() => {
-      if (!cancelled) {
-        setFontsReady(true);
-        setReady(true);
-      }
-    }, SAFETY_TIMEOUT_MS);
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(safety);
+    const finish = () => {
+      const remaining = Math.max(0, MINIMUM_MS - (performance.now() - start));
+      window.setTimeout(() => setDone(true), remaining);
     };
-  }, [setReady]);
 
-  const done = ready && fontsReady;
+    document.fonts.ready.then(finish).catch(finish);
+
+    const hardStop = window.setTimeout(() => setDone(true), MAXIMUM_MS);
+    return () => window.clearTimeout(hardStop);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = done ? "" : "hidden";
@@ -51,36 +48,23 @@ export function Preloader({ brand }: { brand: string }) {
   }, [done]);
 
   return (
-    <AnimatePresence>
-      {!done && (
-        <motion.div
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-bg"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          role="status"
-          aria-live="polite"
-        >
-          <div className="flex flex-col items-center gap-6">
-            <motion.span
-              className="font-display text-2xl font-bold tracking-tight"
-              initial={{ opacity: 0.4 }}
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            >
-              {brand}
-            </motion.span>
+    <div
+      {...(done ? { "aria-hidden": true as const } : { role: "status", "aria-live": "polite" as const })}
+      className={[
+        "fixed inset-0 z-[200] flex items-center justify-center bg-bg",
+        "transition-[opacity,visibility] duration-700 ease-[var(--ease-out-expo)]",
+        done ? "pointer-events-none invisible opacity-0" : "visible opacity-100",
+      ].join(" ")}
+    >
+      <div className="flex flex-col items-center gap-6">
+        <span className="animate-pulse font-display text-2xl font-bold tracking-tight">
+          {brand}
+        </span>
 
-            <span className="h-px w-40 overflow-hidden bg-[var(--line)]">
-              <motion.span
-                className="block h-full w-1/3 bg-glow"
-                animate={{ x: ["-100%", "300%"] }}
-                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </span>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        <span className="h-px w-40 overflow-hidden bg-[var(--line)]">
+          <span className="block h-full w-1/3 bg-glow [animation:loader-sweep_1.2s_ease-in-out_infinite]" />
+        </span>
+      </div>
+    </div>
   );
 }

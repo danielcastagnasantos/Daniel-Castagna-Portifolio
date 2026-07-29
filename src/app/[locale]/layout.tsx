@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SectionTracker } from "@/components/layout/SectionTracker";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Scene } from "@/components/three/Scene";
 import { Cursor } from "@/components/ui/Cursor";
 import { Preloader } from "@/components/ui/Preloader";
@@ -46,9 +47,55 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
 
+  const title = t("title");
+  const description = t("description");
+  const canonical = `${siteConfig.url}/${locale}`;
+
   return {
-    title: t("title"),
-    description: t("description"),
+    metadataBase: new URL(siteConfig.url),
+    title,
+    description,
+    applicationName: siteConfig.brand,
+    authors: [{ name: siteConfig.name, url: siteConfig.url }],
+    creator: siteConfig.name,
+    keywords: [
+      "desenvolvedor full stack",
+      "full stack developer",
+      "Next.js",
+      "React",
+      "TypeScript",
+      "criação de sites",
+      "landing page",
+      "sistemas web",
+      siteConfig.location.city,
+    ],
+    alternates: {
+      canonical,
+      languages: Object.fromEntries(
+        routing.locales.map((code) => [
+          code === "pt" ? "pt-BR" : "en",
+          `${siteConfig.url}/${code}`,
+        ]),
+      ),
+    },
+    openGraph: {
+      type: "website",
+      siteName: siteConfig.brand,
+      title,
+      description,
+      url: canonical,
+      locale: locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    },
   };
 }
 
@@ -68,6 +115,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const t = await getTranslations({ locale, namespace: "a11y" });
+  const tMeta = await getTranslations({ locale, namespace: "meta" });
 
   return (
     <html
@@ -76,6 +124,7 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body>
+        <JsonLd locale={locale} description={tMeta("description")} />
         <NextIntlClientProvider>
           <SmoothScroll>
             <a

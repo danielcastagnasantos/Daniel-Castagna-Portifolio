@@ -8,6 +8,7 @@ import {
   type LineBasicMaterial,
   type PointsMaterial,
 } from "three";
+import { createRandom } from "@/lib/prng";
 import { liveConfig } from "@/lib/sceneConfig";
 import { sceneSignals } from "@/lib/sceneSignals";
 
@@ -28,14 +29,15 @@ export function NeuralNetwork() {
   const lineMaterialRef = useRef<LineBasicMaterial>(null);
 
   const { nodes, edges } = useMemo(() => {
+    const random = createRandom(0xbeef7);
     const nodeArray = new Float32Array(NODE_COUNT * 3);
     const points: Array<[number, number, number]> = [];
 
     for (let index = 0; index < NODE_COUNT; index += 1) {
       const point: [number, number, number] = [
-        (Math.random() - 0.5) * SPREAD * 1.6,
-        (Math.random() - 0.5) * SPREAD,
-        (Math.random() - 0.5) * SPREAD * 0.6,
+        (random() - 0.5) * SPREAD * 1.6,
+        (random() - 0.5) * SPREAD,
+        (random() - 0.5) * SPREAD * 0.6,
       ];
       points.push(point);
       nodeArray.set(point, index * 3);

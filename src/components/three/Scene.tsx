@@ -47,14 +47,19 @@ function Rig() {
 export function Scene() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const setReady = useSceneStore((state) => state.setReady);
+  const ready = useSceneStore((state) => state.ready);
 
   usePointerTracking(!prefersReducedMotion);
 
   return (
+    // A cena revela a si mesma quando o renderer existe, em vez de o site
+    // esperar por ela. Transição em CSS, não em JS: se o WebGL nunca subir, o
+    // que fica é um fundo preto limpo, e não uma página bloqueada.
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10"
-      style={{ contain: "strict" }}
+      className={`pointer-events-none fixed inset-0 -z-10 transition-opacity duration-1000 ease-out ${
+        ready ? "opacity-100" : "opacity-0"
+      }`}
     >
       <Canvas
         // Teto de 1.75 no device pixel ratio: acima disso o custo de

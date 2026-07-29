@@ -3,6 +3,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import { AdditiveBlending, type Points, type PointsMaterial } from "three";
+import { createRandom } from "@/lib/prng";
 import { liveConfig } from "@/lib/sceneConfig";
 import { sceneSignals } from "@/lib/sceneSignals";
 
@@ -21,14 +22,15 @@ export function Particles() {
   const materialRef = useRef<PointsMaterial>(null);
 
   const positions = useMemo(() => {
+    const random = createRandom(0x5eed1);
     const array = new Float32Array(COUNT * 3);
 
     for (let index = 0; index < COUNT; index += 1) {
       // Distribuição em casca esférica com raiz cúbica, para densidade uniforme
       // no volume em vez de acúmulo no centro.
-      const radius = RADIUS * Math.cbrt(Math.random());
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
+      const radius = RADIUS * Math.cbrt(random());
+      const theta = random() * Math.PI * 2;
+      const phi = Math.acos(2 * random() - 1);
 
       array[index * 3] = radius * Math.sin(phi) * Math.cos(theta);
       array[index * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);

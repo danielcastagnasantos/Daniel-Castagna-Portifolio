@@ -34,9 +34,14 @@ export function Typewriter({ words }: { words: readonly string[] }) {
     }
 
     if (deleting && text === "") {
-      setDeleting(false);
-      setWordIndex((index) => (index + 1) % words.length);
-      return;
+      // A troca acontece dentro de um timeout, e não no corpo do efeito: além
+      // de evitar renderização em cascata, a pausa curta dá respiro entre uma
+      // palavra e a próxima.
+      const advance = window.setTimeout(() => {
+        setDeleting(false);
+        setWordIndex((index) => (index + 1) % words.length);
+      }, 180);
+      return () => window.clearTimeout(advance);
     }
 
     const step = window.setTimeout(

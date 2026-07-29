@@ -18,15 +18,16 @@ interface CounterProps {
  */
 export function Counter({ to, suffix = "", durationMs = 1600 }: CounterProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [value, setValue] = useState(0);
+  const [animated, setAnimated] = useState(0);
   const elementRef = useRef<HTMLSpanElement>(null);
   const hasRun = useRef(false);
 
+  // Derivado, não sincronizado por efeito: com movimento reduzido o valor final
+  // já é o primeiro que a tela mostra, sem render extra.
+  const value = prefersReducedMotion ? to : animated;
+
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setValue(to);
-      return;
-    }
+    if (prefersReducedMotion) return;
 
     const element = elementRef.current;
     if (!element) return;
@@ -41,7 +42,7 @@ export function Counter({ to, suffix = "", durationMs = 1600 }: CounterProps) {
         const start = performance.now();
         const tick = (now: number) => {
           const elapsed = now - start;
-          setValue(counterValue(elapsed, durationMs, to));
+          setAnimated(counterValue(elapsed, durationMs, to));
           if (elapsed < durationMs) frame = requestAnimationFrame(tick);
         };
         frame = requestAnimationFrame(tick);
