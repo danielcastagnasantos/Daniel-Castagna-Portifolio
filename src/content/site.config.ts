@@ -20,7 +20,15 @@ export interface SiteConfig {
   name: string;
   /** Nome curto da marca. */
   brand: string;
-  /** Origem canônica em produção, sem barra final. */
+  /**
+   * Origem canônica em produção, sem barra final.
+   *
+   * Alimenta canonical, hreflang, sitemap.xml, robots.txt, as URLs do Open
+   * Graph e o `@id` do JSON-LD. Apontar para um domínio que não é seu diz ao
+   * Google que o conteúdo original está em outro lugar, e quebra o preview de
+   * link no WhatsApp e no LinkedIn. Ao registrar um domínio próprio, esta é a
+   * única linha a trocar.
+   */
   url: string;
   location: { city: string; region: string; regionCode: string; country: string };
   /** Caminho em /public. `null` renderiza o retrato em estado de espera. */
@@ -38,7 +46,7 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   name: "Daniel Castagna Santos",
   brand: "Daniel Castagna",
-  url: "https://danielcastagna.dev",
+  url: "https://daniel-castagna-portifolio.vercel.app",
   location: {
     city: "Vila Velha",
     region: "Espírito Santo",
