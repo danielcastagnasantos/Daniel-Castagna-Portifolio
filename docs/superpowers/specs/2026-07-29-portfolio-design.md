@@ -199,6 +199,22 @@ Runner: **Vitest**. Cada teste nomeia a mudança de produção que o faria falha
 
 Verificação final por build real (`npm run build`), lint limpo, `tsc --noEmit` limpo, e Lighthouse medido — número reportado é o medido, nunca o desejado.
 
+## Desvios da spec durante a implementação
+
+Registrados durante a construção, com o motivo:
+
+1. **Next.js 16.2.12, não 15.** O `create-next-app@latest` instalou a 16. Mantida — é mais nova e o App Router é o mesmo. Consequência: a convenção `middleware.ts` foi renomeada para `proxy.ts`.
+
+2. **Preloader não depende mais da cena 3D.** A spec previa `useProgress` do drei. Isso não funciona: `useProgress` rastreia carregamento de assets do three.js, e a cena é 100% procedural — não carrega nada, então o progresso ficaria em zero para sempre. Trocado por fontes carregadas + batida mínima. Mais importante, a dependência estava invertida: decoração não pode bloquear conteúdo.
+
+3. **Saída do preloader em CSS, não em `AnimatePresence`.** Observado em teste: `AnimatePresence` só desmonta o elemento quando a animação de saída termina, e ela depende de `requestAnimationFrame`. Em aba sem composição o overlay cobria o site permanentemente. Com transição CSS, `visibility` e `pointer-events` mudam de imediato.
+
+4. **`Math.random()` substituído por PRNG com semente.** Impuro dentro de `useMemo` sob as regras do React Compiler, e agora a cena é reproduzível entre visitas.
+
+5. **Media queries via `useSyncExternalStore`.** Elimina `setState` dentro de efeito e a renderização em cascata que ele provoca.
+
+6. **`react-hooks/immutability` desligado apenas em `src/components/three/`.** O three.js anima por mutação direta; criar objetos por frame geraria lixo constante.
+
 ## Critérios de sucesso
 
 - `npm run build` conclui sem erro; `tsc --noEmit` e `eslint` limpos

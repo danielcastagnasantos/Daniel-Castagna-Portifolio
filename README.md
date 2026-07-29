@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfólio — Daniel Castagna
 
-## Getting Started
+Portfólio pessoal bilíngue com cena 3D dirigida por scroll.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript strict · Tailwind CSS v4 · React Three Fiber · motion · Lenis · next-intl · Vitest
+
+## Rodando
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre em `http://localhost:3000` e redireciona para `/pt` ou `/en` conforme o idioma do navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Servidor de desenvolvimento |
+| `npm run build` | Build de produção |
+| `npm test` | Suíte de testes (Vitest) |
+| `npm run typecheck` | Verificação de tipos |
+| `npm run lint` | ESLint |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## O que falta você preencher
 
-## Learn More
+Tudo está centralizado em **`src/content/site.config.ts`**. Enquanto um campo estiver `null`, o botão correspondente aparece desabilitado com a marcação "em breve" — nunca como link quebrado.
 
-To learn more about Next.js, take a look at the following resources:
+```ts
+photo: null,      // → "/daniel.jpg"  (coloque o arquivo em public/)
+resume: null,     // → "/curriculo.pdf"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+links: {
+  whatsapp: null,   // só dígitos com DDI: "5527999999999"
+  email: null,      // "contato@exemplo.com"
+  github: null,     // URL completa
+  linkedin: null,   // URL completa
+  instagram: null,  // URL completa
+},
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Preencher qualquer um deles acende o canal automaticamente na seção Contato, no rodapé e no `sameAs` do JSON-LD. Nenhum componente precisa ser alterado.
 
-## Deploy on Vercel
+### Outros pendentes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Captura do Tô Chegando** — coloque em `public/` e aponte `image` em `src/content/projects.ts`. Sem ela o card mostra um bloco com gradiente.
+- **Domínio real** — `siteConfig.url` está como `https://danielcastagna.dev`. Ele alimenta canonical, sitemap, robots e Open Graph; troque antes de publicar.
+- **Card do Lighthouse** — `MEASURED_LIGHTHOUSE` em `src/components/sections/Stats.tsx` está `null`, então o card não aparece. Rode o Lighthouse no site publicado e coloque **o número medido**. Se der 93, escreva 93.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Como o conteúdo é organizado
+
+Nenhum texto vive dentro de componente. Para mudar qualquer palavra do site, edite `messages/pt.json` e `messages/en.json` — os dois têm exatamente as mesmas chaves, e existe um teste que falha se você adicionar copy em um idioma e esquecer do outro.
+
+```
+messages/           Todo o texto, PT e EN
+src/content/        Dados: links, tecnologias, projetos
+src/components/
+  sections/         Uma seção da página cada
+  three/            Objetos da cena 3D
+  ui/               Primitivos reutilizáveis
+  layout/           Header, Footer
+src/lib/            Lógica pura e testável
+src/store/          Estado discreto (Zustand)
+docs/superpowers/   Spec de design e plano de implementação
+```
+
+## Detalhes que não são óbvios
+
+**A cena 3D é um canvas só.** Montado uma vez no layout, fixo atrás de todo o conteúdo. Ele muda de estado conforme a seção entra na viewport — a coreografia inteira está em `src/lib/sceneConfig.ts`, que é função pura e testada. Se a cena travar no visual errado, o defeito está lá.
+
+**Scroll e posição do mouse não passam pelo React.** Vivem em `src/lib/sceneSignals.ts`, um objeto mutável lido só dentro do loop de renderização. Colocá-los em estado do React dispararia re-render da árvore inteira sessenta vezes por segundo.
+
+**Acessibilidade não é opcional no código.** `prefers-reduced-motion` desliga parallax, cursor customizado, efeito de digitação e congela a cena. O canvas é `aria-hidden`. Se for mexer em animação, mantenha esse caminho funcionando.
+
+**Decoração nunca bloqueia conteúdo.** O preloader não espera o WebGL. Se a GPU falhar, estiver bloqueada ou o navegador não suportar, o site carrega normalmente com fundo preto.
