@@ -1,5 +1,13 @@
 import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { About } from "@/components/sections/About";
+import { Contact } from "@/components/sections/Contact";
+import { Differentials } from "@/components/sections/Differentials";
+import { Hero } from "@/components/sections/Hero";
+import { Process } from "@/components/sections/Process";
+import { Projects } from "@/components/sections/Projects";
+import { Services } from "@/components/sections/Services";
+import { Stats } from "@/components/sections/Stats";
+import { Technologies } from "@/components/sections/Technologies";
 
 type PageParams = { locale: string };
 
@@ -7,16 +15,17 @@ export default async function HomePage({ params }: { params: Promise<PageParams>
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <PageContent />;
-}
-
-function PageContent() {
-  const t = useTranslations("hero");
-
   return (
-    <main className="container-x section-py">
-      <h1 className="font-display text-5xl font-bold">{t("titlePrefix")}</h1>
-      <p className="mt-4 max-w-2xl text-muted">{t("subtitle")}</p>
+    <main id="main">
+      <Hero />
+      <About />
+      <Stats />
+      <Technologies />
+      <Services />
+      <Projects />
+      <Differentials />
+      <Process />
+      <Contact />
     </main>
   );
 }
