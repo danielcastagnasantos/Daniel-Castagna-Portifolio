@@ -45,7 +45,7 @@ export const siteConfig: SiteConfig = {
     regionCode: "ES",
     country: "BR",
   },
-  photo: null,
+  photo: "/daniel.jpg",
   resume: null,
   links: {
     // Formato internacional obrigatório para o wa.me: 55 (Brasil) + 27 (ES).

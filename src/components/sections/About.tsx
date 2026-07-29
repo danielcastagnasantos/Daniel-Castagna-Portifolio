@@ -22,7 +22,10 @@ export function About() {
                   alt={t("photoAlt")}
                   fill
                   sizes="(max-width: 1024px) 100vw, 320px"
-                  className="object-cover"
+                  // Foto quadrada num card 4/5: o corte tira das laterais.
+                  // Deslocado para a esquerda porque a metade direita da
+                  // imagem é parede vazia.
+                  className="object-cover object-[35%_50%]"
                   priority={false}
                 />
               ) : (
