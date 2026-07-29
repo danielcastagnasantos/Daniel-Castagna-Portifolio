@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "title": "Daniel Castagna — Desenvolvedor Full Stack",
+    "description": "Desenvolvedor Full Stack especializado em criar sites modernos, rápidos, responsivos e personalizados para empresas que desejam crescer no digital.",
+    "ogAlt": "Daniel Castagna — Desenvolvedor Full Stack"
+  },
+  "a11y": {
+    "skipToContent": "Pular para o conteúdo",
+    "openMenu": "Abrir menu de navegação",
+    "closeMenu": "Fechar menu de navegação",
+    "switchLanguage": "Mudar idioma para inglês",
+    "backToTop": "Voltar ao topo",
+    "mainNav": "Navegação principal",
+    "socialNav": "Redes sociais"
+  },
+  "common": {
+    "soon": "Em breve",
+    "soonHint": "Link ainda não disponível"
+  },
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "tech": "Tecnologias",
+    "services": "Serviços",
+    "projects": "Projetos",
+    "process": "Processo",
+    "contact": "Contato"
+  },
+  "hero": {
+    "badge": "Disponível para novos projetos",
+    "titlePrefix": "Transformando ideias em",
+    "typewriter": [
+      "experiências digitais",
+      "sites que convertem",
+      "sistemas sob medida",
+      "produtos memoráveis"
+    ],
+    "subtitle": "Desenvolvedor Full Stack especializado em criar sites modernos, rápidos, responsivos e personalizados para empresas que desejam crescer no digital.",
+    "ctaProjects": "Ver Projetos",
+    "ctaQuote": "Solicitar orçamento",
+    "ctaResume": "Baixar currículo",
+    "scrollHint": "Role para explorar"
+  },
+  "about": {
+    "eyebrow": "Sobre",
+    "title": "Quem está por trás do código",
+    "name": "Daniel Castagna Santos",
+    "role": "Full Stack Developer",
+    "photoAlt": "Retrato profissional de Daniel Castagna Santos",
+    "photoPlaceholder": "Foto em breve",
+    "p1": "Sou apaixonado por tecnologia e desenvolvimento de soluções digitais. Desenvolvo sites modernos, sistemas personalizados e interfaces que unem performance, design e excelente experiência do usuário.",
+    "p2": "Meu foco é criar produtos digitais rápidos, seguros, escaláveis e visualmente diferenciados. Cada projeto começa entendendo o problema real do cliente — e termina com algo que ele consegue usar, medir e crescer em cima.",
+    "location": "Vila Velha, Espírito Santo — atendendo remoto para todo o Brasil"
+  },
+  "stats": {
+    "eyebrow": "Números",
+    "title": "O que sustento com fatos",
+    "technologies": "Tecnologias",
+    "months": "Meses desenvolvendo",
+    "lighthouse": "Lighthouse deste site",
+    "responsive": "Responsivo"
+  },
+  "tech": {
+    "eyebrow": "Stack",
+    "title": "Tecnologias que eu domino",
+    "subtitle": "Ferramentas que uso no dia a dia para entregar do front ao banco de dados.",
+    "categories": {
+      "lang": "Linguagens",
+      "framework": "Frameworks",
+      "tool": "Ferramentas",
+      "db": "Dados"
+    }
+  },
+  "services": {
+    "eyebrow": "Serviços",
+    "title": "Como posso ajudar seu negócio",
+    "subtitle": "Do primeiro rascunho até o site no ar, funcionando e dando retorno.",
+    "items": {
+      "institutional": {
+        "title": "Sites Institucionais",
+        "description": "A presença digital da sua empresa, com estrutura clara e informação fácil de achar."
+      },
+      "landing": {
+        "title": "Landing Pages",
+        "description": "Páginas focadas em uma única ação: transformar visitante em contato."
+      },
+      "portfolio": {
+        "title": "Portfólios",
+        "description": "Vitrines que mostram seu trabalho do jeito que ele merece ser visto."
+      },
+      "systems": {
+        "title": "Sistemas Web",
+        "description": "Reservas, cadastros, painéis e fluxos internos feitos sob medida."
+      },
+      "integrations": {
+        "title": "Integrações",
+        "description": "WhatsApp, pagamentos, e-mail e APIs externas conversando com seu site."
+      },
+      "seo": {
+        "title": "SEO",
+        "description": "Estrutura técnica correta para o Google entender e ranquear seu site."
+      },
+      "hosting": {
+        "title": "Hospedagem",
+        "description": "Publicação em infraestrutura moderna, com HTTPS e deploy automático."
+      },
+      "domain": {
+        "title": "Domínio",
+        "description": "Registro e configuração do seu endereço próprio na internet."
+      },
+      "maintenance": {
+        "title": "Manutenção",
+        "description": "Atualizações, correções e ajustes contínuos depois da entrega."
+      },
+      "optimization": {
+        "title": "Otimização",
+        "description": "Sites lentos ficam rápidos: imagens, bundle, cache e Core Web Vitals."
+      },
+      "consulting": {
+        "title": "Consultoria",
+        "description": "Análise do que você já tem e o caminho mais curto para melhorar."
+      }
+    }
+  },
+  "projects": {
+    "eyebrow": "Projetos",
+    "title": "Trabalho real, no ar",
+    "subtitle": "Só projetos publicados e funcionando. Nada de exemplo fictício.",
+    "viewProject": "Ver projeto",
+    "liveBadge": "No ar",
+    "inProgressBadge": "Em construção",
+    "items": {
+      "tochegando": {
+        "title": "Tô Chegando Bar e Restaurante",
+        "client": "Vila Velha, ES",
+        "problem": "O bar recebia reservas apenas por telefone e mensagem, sem registro organizado e perdendo pedidos em horário de pico.",
+        "solution": "Site completo com sistema de reservas online, cardápio digital, galeria, FAQ e contato direto por WhatsApp. Integração com o Instagram mantém a página viva sem trabalho manual.",
+        "imageAlt": "Página inicial do site do Tô Chegando Bar e Restaurante"
+      },
+      "portfolio": {
+        "title": "Este portfólio",
+        "client": "Projeto pessoal",
+        "problem": "Precisava de uma vitrine que provasse competência técnica em vez de apenas afirmá-la.",
+        "solution": "Página única bilíngue com cena 3D em WebGL dirigida por scroll, animações fluidas, SEO técnico completo e acessibilidade WCAG. O próprio site é a demonstração.",
+        "imageAlt": "Página inicial do portfólio de Daniel Castagna"
+      }
+    }
+  },
+  "differentials": {
+    "eyebrow": "Diferenciais",
+    "title": "O que vem junto em todo projeto",
+    "items": {
+      "performance": {
+        "title": "Performance",
+        "description": "Carregamento rápido de verdade, medido com Lighthouse e Core Web Vitals."
+      },
+      "seo": {
+        "title": "SEO",
+        "description": "Meta tags, dados estruturados, sitemap e URLs pensados desde o início."
+      },
+      "cleanCode": {
+        "title": "Código Limpo",
+        "description": "Código organizado e tipado, que outro desenvolvedor consegue continuar."
+      },
+      "design": {
+        "title": "Design Premium",
+        "description": "Interface própria, sem template genérico reaproveitado de outro cliente."
+      },
+      "responsive": {
+        "title": "Responsividade",
+        "description": "Do celular pequeno ao monitor ultrawide, sem nada quebrado."
+      },
+      "scalable": {
+        "title": "Escalabilidade",
+        "description": "Estrutura preparada para crescer sem precisar recomeçar do zero."
+      },
+      "practices": {
+        "title": "Boas Práticas",
+        "description": "Versionamento com Git, revisão e histórico de tudo que muda."
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Contraste, navegação por teclado e leitores de tela considerados."
+      },
+      "support": {
+        "title": "Suporte",
+        "description": "Canal aberto depois da entrega, para ajustes e dúvidas."
+      }
+    }
+  },
+  "process": {
+    "eyebrow": "Processo",
+    "title": "Como um projeto acontece",
+    "subtitle": "Etapas claras, com você sabendo exatamente onde estamos.",
+    "steps": {
+      "planning": {
+        "title": "Planejamento",
+        "description": "Entendo seu negócio, seu público e o que o site precisa resolver. Define-se escopo e prazo."
+      },
+      "design": {
+        "title": "Design",
+        "description": "Estrutura das páginas e identidade visual, aprovadas por você antes de virar código."
+      },
+      "development": {
+        "title": "Desenvolvimento",
+        "description": "Construção do site com código limpo, tipado e versionado a cada etapa."
+      },
+      "testing": {
+        "title": "Testes",
+        "description": "Verificação em celular, tablet e desktop, mais performance, SEO e acessibilidade."
+      },
+      "launch": {
+        "title": "Publicação",
+        "description": "Domínio, hospedagem e HTTPS configurados. Site no ar e indexado."
+      },
+      "support": {
+        "title": "Suporte",
+        "description": "Acompanhamento pós-lançamento, correções e melhorias contínuas."
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contato",
+    "title": "Vamos construir algo juntos",
+    "subtitle": "Me conte o que você precisa. Respondo rápido e sem enrolação.",
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "email": "E-mail",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "instagram": "Instagram"
+    },
+    "channelHints": {
+      "whatsapp": "Resposta mais rápida",
+      "email": "Para propostas detalhadas",
+      "github": "Veja meu código",
+      "linkedin": "Perfil profissional",
+      "instagram": "Bastidores e novidades"
+    }
+  },
+  "footer": {
+    "role": "Full Stack Developer",
+    "tagline": "Transformando ideias em experiências digitais.",
+    "rights": "Todos os direitos reservados.",
+    "builtWith": "Construído com Next.js, React Three Fiber e TypeScript."
+  }
+}

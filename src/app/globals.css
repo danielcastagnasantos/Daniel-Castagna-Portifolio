@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg: #050505;
+  --color-card: #101014;
+  --color-primary: #7c3aed;
+  --color-secondary: #a855f7;
+  --color-glow: #c084fc;
+  --color-ink: #ffffff;
+  --color-muted: #a1a1aa;
+
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --line: rgba(124, 58, 237, 0.25);
+  --glass: rgba(255, 255, 255, 0.05);
+  --header-h: 4.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  min-width: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  /* Lenis assume o controle; âncoras nativas ficam como fallback sem JS */
+  scroll-padding-top: var(--header-h);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Lenis desativa o scroll nativo enquanto controla a página */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-glow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@layer utilities {
+  .glass {
+    background-color: var(--glass);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .text-gradient {
+    background-image: linear-gradient(
+      110deg,
+      var(--color-ink) 0%,
+      var(--color-glow) 50%,
+      var(--color-ink) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .glow-primary {
+    box-shadow:
+      0 0 24px -6px var(--color-primary),
+      0 0 64px -24px var(--color-secondary);
+  }
+
+  /* Ruído sutil sobre o fundo, sem requisição de rede */
+  .noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .section-py {
+    padding-block: clamp(5rem, 12vh, 9rem);
+  }
+
+  .container-x {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+}
+
+/* Requisito WCAG: respeita a preferência do sistema por menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

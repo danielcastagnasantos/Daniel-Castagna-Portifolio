@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "title": "Daniel Castagna — Full Stack Developer",
+    "description": "Full Stack Developer specialized in building modern, fast, responsive and custom websites for companies that want to grow online.",
+    "ogAlt": "Daniel Castagna — Full Stack Developer"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "switchLanguage": "Switch language to Portuguese",
+    "backToTop": "Back to top",
+    "mainNav": "Main navigation",
+    "socialNav": "Social links"
+  },
+  "common": {
+    "soon": "Coming soon",
+    "soonHint": "Link not available yet"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "tech": "Stack",
+    "services": "Services",
+    "projects": "Work",
+    "process": "Process",
+    "contact": "Contact"
+  },
+  "hero": {
+    "badge": "Available for new projects",
+    "titlePrefix": "Turning ideas into",
+    "typewriter": [
+      "digital experiences",
+      "websites that convert",
+      "custom-built systems",
+      "memorable products"
+    ],
+    "subtitle": "Full Stack Developer specialized in building modern, fast, responsive and custom websites for companies that want to grow online.",
+    "ctaProjects": "View Work",
+    "ctaQuote": "Request a quote",
+    "ctaResume": "Download résumé",
+    "scrollHint": "Scroll to explore"
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "The person behind the code",
+    "name": "Daniel Castagna Santos",
+    "role": "Full Stack Developer",
+    "photoAlt": "Professional portrait of Daniel Castagna Santos",
+    "photoPlaceholder": "Photo coming soon",
+    "p1": "I am passionate about technology and building digital solutions. I develop modern websites, custom systems and interfaces that combine performance, design and an excellent user experience.",
+    "p2": "My focus is creating digital products that are fast, secure, scalable and visually distinctive. Every project starts by understanding the client's real problem — and ends with something they can use, measure and build on.",
+    "location": "Vila Velha, Espírito Santo, Brazil — working remotely nationwide"
+  },
+  "stats": {
+    "eyebrow": "Numbers",
+    "title": "What I can back with facts",
+    "technologies": "Technologies",
+    "months": "Months building",
+    "lighthouse": "Lighthouse on this site",
+    "responsive": "Responsive"
+  },
+  "tech": {
+    "eyebrow": "Stack",
+    "title": "Technologies I work with",
+    "subtitle": "The tools I use daily to deliver from the front end to the database.",
+    "categories": {
+      "lang": "Languages",
+      "framework": "Frameworks",
+      "tool": "Tooling",
+      "db": "Data"
+    }
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "How I can help your business",
+    "subtitle": "From the first sketch to a live site that works and pays off.",
+    "items": {
+      "institutional": {
+        "title": "Business Websites",
+        "description": "Your company's digital presence, with clear structure and information that is easy to find."
+      },
+      "landing": {
+        "title": "Landing Pages",
+        "description": "Pages focused on a single action: turning a visitor into a lead."
+      },
+      "portfolio": {
+        "title": "Portfolios",
+        "description": "Showcases that present your work the way it deserves to be seen."
+      },
+      "systems": {
+        "title": "Web Systems",
+        "description": "Bookings, registrations, dashboards and internal flows built to measure."
+      },
+      "integrations": {
+        "title": "Integrations",
+        "description": "WhatsApp, payments, email and external APIs talking to your site."
+      },
+      "seo": {
+        "title": "SEO",
+        "description": "The right technical structure for Google to understand and rank your site."
+      },
+      "hosting": {
+        "title": "Hosting",
+        "description": "Deployment on modern infrastructure, with HTTPS and automatic builds."
+      },
+      "domain": {
+        "title": "Domain",
+        "description": "Registration and setup of your own address on the internet."
+      },
+      "maintenance": {
+        "title": "Maintenance",
+        "description": "Updates, fixes and continuous adjustments after delivery."
+      },
+      "optimization": {
+        "title": "Optimization",
+        "description": "Slow sites made fast: images, bundle, caching and Core Web Vitals."
+      },
+      "consulting": {
+        "title": "Consulting",
+        "description": "A review of what you already have and the shortest path to improve it."
+      }
+    }
+  },
+  "projects": {
+    "eyebrow": "Work",
+    "title": "Real work, live",
+    "subtitle": "Only published, working projects. No fictional filler.",
+    "viewProject": "View project",
+    "liveBadge": "Live",
+    "inProgressBadge": "In progress",
+    "items": {
+      "tochegando": {
+        "title": "Tô Chegando Bar & Restaurant",
+        "client": "Vila Velha, Brazil",
+        "problem": "The venue took reservations only by phone and messages, with no organized record and lost requests at peak hours.",
+        "solution": "A complete website with an online reservation system, digital menu, gallery, FAQ and direct WhatsApp contact. Instagram integration keeps the page alive with no manual work.",
+        "imageAlt": "Home page of the Tô Chegando Bar & Restaurant website"
+      },
+      "portfolio": {
+        "title": "This portfolio",
+        "client": "Personal project",
+        "problem": "I needed a showcase that proved technical skill rather than just claiming it.",
+        "solution": "A bilingual single page with a scroll-driven WebGL scene, fluid animations, complete technical SEO and WCAG accessibility. The site itself is the demo.",
+        "imageAlt": "Home page of Daniel Castagna's portfolio"
+      }
+    }
+  },
+  "differentials": {
+    "eyebrow": "What sets it apart",
+    "title": "What comes with every project",
+    "items": {
+      "performance": {
+        "title": "Performance",
+        "description": "Genuinely fast loading, measured with Lighthouse and Core Web Vitals."
+      },
+      "seo": {
+        "title": "SEO",
+        "description": "Meta tags, structured data, sitemap and URLs planned from the start."
+      },
+      "cleanCode": {
+        "title": "Clean Code",
+        "description": "Organized, typed code that another developer can pick up and continue."
+      },
+      "design": {
+        "title": "Premium Design",
+        "description": "A bespoke interface, not a generic template recycled from another client."
+      },
+      "responsive": {
+        "title": "Responsive",
+        "description": "From small phones to ultrawide monitors, with nothing broken."
+      },
+      "scalable": {
+        "title": "Scalable",
+        "description": "A structure ready to grow without starting over from scratch."
+      },
+      "practices": {
+        "title": "Best Practices",
+        "description": "Git versioning, review and a full history of everything that changes."
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Contrast, keyboard navigation and screen readers taken into account."
+      },
+      "support": {
+        "title": "Support",
+        "description": "An open channel after delivery, for adjustments and questions."
+      }
+    }
+  },
+  "process": {
+    "eyebrow": "Process",
+    "title": "How a project happens",
+    "subtitle": "Clear stages, with you always knowing where we are.",
+    "steps": {
+      "planning": {
+        "title": "Planning",
+        "description": "I learn your business, your audience and what the site must solve. Scope and timeline get defined."
+      },
+      "design": {
+        "title": "Design",
+        "description": "Page structure and visual identity, approved by you before any code is written."
+      },
+      "development": {
+        "title": "Development",
+        "description": "Building the site with clean, typed code, versioned at every step."
+      },
+      "testing": {
+        "title": "Testing",
+        "description": "Checks on phone, tablet and desktop, plus performance, SEO and accessibility."
+      },
+      "launch": {
+        "title": "Launch",
+        "description": "Domain, hosting and HTTPS configured. Site live and indexed."
+      },
+      "support": {
+        "title": "Support",
+        "description": "Post-launch follow-up, fixes and continuous improvements."
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Let's build something together",
+    "subtitle": "Tell me what you need. I reply fast and without fluff.",
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "instagram": "Instagram"
+    },
+    "channelHints": {
+      "whatsapp": "Fastest reply",
+      "email": "For detailed proposals",
+      "github": "See my code",
+      "linkedin": "Professional profile",
+      "instagram": "Behind the scenes"
+    }
+  },
+  "footer": {
+    "role": "Full Stack Developer",
+    "tagline": "Turning ideas into digital experiences.",
+    "rights": "All rights reserved.",
+    "builtWith": "Built with Next.js, React Three Fiber and TypeScript."
+  }
+}
