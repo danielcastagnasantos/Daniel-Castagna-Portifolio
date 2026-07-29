@@ -22,7 +22,7 @@ export const projects: readonly Project[] = [
     id: "tochegando",
     url: "https://tochegandobar-three.vercel.app",
     image: "/tochegando.png",
-    stack: ["Next.js", "React", "TypeScript", "Vercel"],
+    stack: ["Next.js", "React", "TypeScript", "Supabase", "Vercel"],
     status: "live",
     featured: true,
   },

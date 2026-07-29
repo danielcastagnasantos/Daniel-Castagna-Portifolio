@@ -122,7 +122,7 @@
         "title": "Tô Chegando Bar & Restaurant",
         "client": "Vila Velha, Brazil",
         "problem": "The venue took reservations only by phone and messages, with no organized record and lost requests at peak hours.",
-        "solution": "A complete website with an online reservation system, digital menu, gallery, FAQ and direct WhatsApp contact. Instagram integration keeps the page alive with no manual work.",
+        "solution": "A complete website with online bookings, a login area and an admin panel where the staff manages requests — authentication and database on Supabase. It also brings a digital menu, gallery, FAQ and direct WhatsApp contact, plus an Instagram integration that keeps the page alive with no manual work.",
         "imageAlt": "Home page of the Tô Chegando Bar & Restaurant website"
       },
       "portfolio": {

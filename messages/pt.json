@@ -122,7 +122,7 @@
         "title": "Tô Chegando Bar e Restaurante",
         "client": "Vila Velha, ES",
         "problem": "O bar recebia reservas apenas por telefone e mensagem, sem registro organizado e perdendo pedidos em horário de pico.",
-        "solution": "Site completo com sistema de reservas online, cardápio digital, galeria, FAQ e contato direto por WhatsApp. Integração com o Instagram mantém a página viva sem trabalho manual.",
+        "solution": "Site completo com reservas online, área de login e painel administrativo onde a equipe gerencia os pedidos — autenticação e banco de dados em Supabase. Traz ainda cardápio digital, galeria, FAQ e contato direto por WhatsApp, com integração ao Instagram que mantém a página viva sem trabalho manual.",
         "imageAlt": "Página inicial do site do Tô Chegando Bar e Restaurante"
       },
       "portfolio": {
