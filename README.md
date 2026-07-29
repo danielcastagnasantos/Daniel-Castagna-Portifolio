@@ -50,6 +50,8 @@ Preencher qualquer um deles acende o canal automaticamente na seção Contato, n
 
 Nenhum texto vive dentro de componente. Para mudar qualquer palavra do site, edite `messages/pt.json` e `messages/en.json` — os dois têm exatamente as mesmas chaves, e existe um teste que falha se você adicionar copy em um idioma e esquecer do outro.
 
+**Cargo e formação** ficam em `identity.role` e `identity.study`, dentro desses mesmos arquivos. Trocar ali muda o header, o rodapé, a seção Sobre, a imagem de compartilhamento e o `jobTitle` do JSON-LD de uma vez. Conforme você avançar no curso e ganhar bagagem, é uma linha por idioma.
+
 ```
 messages/           Todo o texto, PT e EN
 src/content/        Dados: links, tecnologias, projetos

@@ -21,8 +21,11 @@ O valor do card Lighthouse é definido pela medição real no build final e não
 
 ## Dados reais do usuário
 
+> **Revisão de 2026-07-29:** o briefing original dizia "Desenvolvedor Full Stack". Daniel corrigiu depois: está no **segundo período de Análise e Desenvolvimento de Sistemas**, com 9 meses desenvolvendo. O site foi reposicionado para "Desenvolvedor Web" com a formação visível, a seção de stack deixou de dizer "domino", e Serviços caiu de 11 para 7 itens — mantendo só o que o projeto do Tô Chegando comprova. Prometer o que não se entrega custa mais caro depois, com o dinheiro do cliente já pago.
+
 - **Nome:** Daniel Castagna Santos
-- **Cargo:** Full Stack Developer
+- **Cargo:** Desenvolvedor Web
+- **Formação:** cursando Análise e Desenvolvimento de Sistemas, 2º período
 - **Slogan:** Transformando ideias em experiências digitais.
 - **Experiência:** 9 meses desenvolvendo
 - **Tecnologias (12):** HTML, CSS, JavaScript, TypeScript, React, Next.js, Node.js, Git, GitHub, Vercel, Firebase, Supabase

@@ -1,8 +1,13 @@
 {
   "meta": {
-    "title": "Daniel Castagna — Desenvolvedor Full Stack",
-    "description": "Desenvolvedor Full Stack especializado em criar sites modernos, rápidos, responsivos e personalizados para empresas que desejam crescer no digital.",
-    "ogAlt": "Daniel Castagna — Desenvolvedor Full Stack"
+    "title": "Daniel Castagna — Desenvolvedor Web",
+    "description": "Desenvolvedor web e estudante de Análise e Desenvolvimento de Sistemas. Crio sites, landing pages e sistemas sob medida — com um sistema de reservas já em produção para cliente real.",
+    "ogAlt": "Daniel Castagna — Desenvolvedor Web"
+  },
+  "identity": {
+    "role": "Desenvolvedor Web",
+    "study": "Estudante de Análise e Desenvolvimento de Sistemas",
+    "studyShort": "Estudante de ADS"
   },
   "a11y": {
     "skipToContent": "Pular para o conteúdo",
@@ -35,7 +40,7 @@
       "sistemas sob medida",
       "produtos memoráveis"
     ],
-    "subtitle": "Desenvolvedor Full Stack especializado em criar sites modernos, rápidos, responsivos e personalizados para empresas que desejam crescer no digital.",
+    "subtitle": "Crio sites e sistemas rápidos, responsivos e feitos sob medida. Estudante de Análise e Desenvolvimento de Sistemas, com um sistema de reservas já no ar para um cliente real.",
     "ctaProjects": "Ver Projetos",
     "ctaQuote": "Solicitar orçamento",
     "ctaResume": "Baixar currículo",
@@ -45,25 +50,24 @@
     "eyebrow": "Sobre",
     "title": "Quem está por trás do código",
     "name": "Daniel Castagna Santos",
-    "role": "Full Stack Developer",
     "photoAlt": "Retrato profissional de Daniel Castagna Santos",
     "photoPlaceholder": "Foto em breve",
-    "p1": "Sou apaixonado por tecnologia e desenvolvimento de soluções digitais. Desenvolvo sites modernos, sistemas personalizados e interfaces que unem performance, design e excelente experiência do usuário.",
-    "p2": "Meu foco é criar produtos digitais rápidos, seguros, escaláveis e visualmente diferenciados. Cada projeto começa entendendo o problema real do cliente — e termina com algo que ele consegue usar, medir e crescer em cima.",
+    "p1": "Sou apaixonado por tecnologia e estou no segundo período de Análise e Desenvolvimento de Sistemas. Desenvolvo sites e interfaces que unem performance, design e uma boa experiência de uso.",
+    "p2": "Meu foco é entregar trabalho rápido, responsivo e bem construído — e aprender rápido no caminho. Cada projeto começa entendendo o problema real do cliente e termina com algo que ele consegue usar de verdade.",
     "location": "Vila Velha, Espírito Santo — atendendo remoto para todo o Brasil"
   },
   "stats": {
     "eyebrow": "Números",
     "title": "O que sustento com fatos",
-    "technologies": "Tecnologias",
+    "technologies": "Tecnologias que uso",
     "months": "Meses desenvolvendo",
     "lighthouse": "Lighthouse deste site",
     "responsive": "Responsivo"
   },
   "tech": {
     "eyebrow": "Stack",
-    "title": "Tecnologias que eu domino",
-    "subtitle": "Ferramentas que uso no dia a dia para entregar do front ao banco de dados.",
+    "title": "Tecnologias que eu uso",
+    "subtitle": "Ferramentas que uso nos meus projetos, do front-end até a publicação.",
     "categories": {
       "lang": "Linguagens",
       "framework": "Frameworks",
@@ -74,7 +78,7 @@
   "services": {
     "eyebrow": "Serviços",
     "title": "Como posso ajudar seu negócio",
-    "subtitle": "Do primeiro rascunho até o site no ar, funcionando e dando retorno.",
+    "subtitle": "Do primeiro rascunho até o site publicado e funcionando.",
     "items": {
       "institutional": {
         "title": "Sites Institucionais",
@@ -90,15 +94,11 @@
       },
       "systems": {
         "title": "Sistemas Web",
-        "description": "Reservas, cadastros, painéis e fluxos internos feitos sob medida."
+        "description": "Reservas, cadastros e formulários sob medida, como o que fiz para o Tô Chegando."
       },
       "integrations": {
         "title": "Integrações",
-        "description": "WhatsApp, pagamentos, e-mail e APIs externas conversando com seu site."
-      },
-      "seo": {
-        "title": "SEO",
-        "description": "Estrutura técnica correta para o Google entender e ranquear seu site."
+        "description": "WhatsApp, Instagram e formulários de contato conectados ao seu site."
       },
       "hosting": {
         "title": "Hospedagem",
@@ -107,18 +107,6 @@
       "domain": {
         "title": "Domínio",
         "description": "Registro e configuração do seu endereço próprio na internet."
-      },
-      "maintenance": {
-        "title": "Manutenção",
-        "description": "Atualizações, correções e ajustes contínuos depois da entrega."
-      },
-      "optimization": {
-        "title": "Otimização",
-        "description": "Sites lentos ficam rápidos: imagens, bundle, cache e Core Web Vitals."
-      },
-      "consulting": {
-        "title": "Consultoria",
-        "description": "Análise do que você já tem e o caminho mais curto para melhorar."
       }
     }
   },
@@ -140,7 +128,7 @@
       "portfolio": {
         "title": "Este portfólio",
         "client": "Projeto pessoal",
-        "problem": "Precisava de uma vitrine que provasse competência técnica em vez de apenas afirmá-la.",
+        "problem": "Precisava de uma vitrine que mostrasse o que eu sei fazer em vez de apenas afirmar.",
         "solution": "Página única bilíngue com cena 3D em WebGL dirigida por scroll, animações fluidas, SEO técnico completo e acessibilidade WCAG. O próprio site é a demonstração.",
         "imageAlt": "Página inicial do portfólio de Daniel Castagna"
       }
@@ -155,7 +143,7 @@
         "description": "Carregamento rápido de verdade, medido com Lighthouse e Core Web Vitals."
       },
       "seo": {
-        "title": "SEO",
+        "title": "SEO técnico",
         "description": "Meta tags, dados estruturados, sitemap e URLs pensados desde o início."
       },
       "cleanCode": {
@@ -163,16 +151,12 @@
         "description": "Código organizado e tipado, que outro desenvolvedor consegue continuar."
       },
       "design": {
-        "title": "Design Premium",
-        "description": "Interface própria, sem template genérico reaproveitado de outro cliente."
+        "title": "Design Próprio",
+        "description": "Interface feita pro seu caso, sem template genérico reaproveitado de outro cliente."
       },
       "responsive": {
         "title": "Responsividade",
         "description": "Do celular pequeno ao monitor ultrawide, sem nada quebrado."
-      },
-      "scalable": {
-        "title": "Escalabilidade",
-        "description": "Estrutura preparada para crescer sem precisar recomeçar do zero."
       },
       "practices": {
         "title": "Boas Práticas",
@@ -181,6 +165,10 @@
       "accessibility": {
         "title": "Acessibilidade",
         "description": "Contraste, navegação por teclado e leitores de tela considerados."
+      },
+      "communication": {
+        "title": "Comunicação direta",
+        "description": "Você fala comigo, não com intermediário. Resposta rápida e sem jargão."
       },
       "support": {
         "title": "Suporte",
@@ -239,7 +227,6 @@
     }
   },
   "footer": {
-    "role": "Full Stack Developer",
     "tagline": "Transformando ideias em experiências digitais.",
     "rights": "Todos os direitos reservados.",
     "builtWith": "Construído com Next.js, React Three Fiber e TypeScript."

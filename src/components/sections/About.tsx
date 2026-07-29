@@ -6,6 +6,7 @@ import { siteConfig } from "@/content/site.config";
 
 export function About() {
   const t = useTranslations("about");
+  const tIdentity = useTranslations("identity");
 
   return (
     <section id="about" aria-labelledby="about-title" className="section-py">
@@ -52,11 +53,12 @@ export function About() {
 
           <div className="flex flex-col gap-6">
             <Reveal delay={0.1}>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1.5">
                 <h3 className="font-display text-2xl font-bold">{t("name")}</h3>
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-glow">
-                  {t("role")}
+                  {tIdentity("role")}
                 </p>
+                <p className="text-sm text-muted">{tIdentity("study")}</p>
               </div>
             </Reveal>
 

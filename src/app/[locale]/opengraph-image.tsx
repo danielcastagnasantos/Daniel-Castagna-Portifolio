@@ -23,6 +23,7 @@ export default async function OpengraphImage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
+  const tIdentity = await getTranslations({ locale, namespace: "identity" });
 
   return new ImageResponse(
     (
@@ -52,7 +53,7 @@ export default async function OpengraphImage({
           }}
         >
           <div style={{ width: 40, height: 2, background: "#7C3AED" }} />
-          {siteConfig.role}
+          {tIdentity("role")}
         </div>
 
         <div
@@ -71,9 +72,20 @@ export default async function OpengraphImage({
         <div
           style={{
             display: "flex",
-            fontSize: 30,
+            fontSize: 26,
+            color: "#C084FC",
+            marginTop: 18,
+          }}
+        >
+          {tIdentity("study")}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            fontSize: 28,
             color: "#A1A1AA",
-            marginTop: 26,
+            marginTop: 22,
             maxWidth: 900,
             lineHeight: 1.35,
           }}

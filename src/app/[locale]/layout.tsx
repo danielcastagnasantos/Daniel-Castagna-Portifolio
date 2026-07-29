@@ -59,14 +59,14 @@ export async function generateMetadata({
     authors: [{ name: siteConfig.name, url: siteConfig.url }],
     creator: siteConfig.name,
     keywords: [
-      "desenvolvedor full stack",
-      "full stack developer",
-      "Next.js",
-      "React",
-      "TypeScript",
+      "desenvolvedor web",
+      "web developer",
       "criação de sites",
       "landing page",
       "sistemas web",
+      "Next.js",
+      "React",
+      "TypeScript",
       siteConfig.location.city,
     ],
     alternates: {
@@ -116,6 +116,7 @@ export default async function LocaleLayout({
 
   const t = await getTranslations({ locale, namespace: "a11y" });
   const tMeta = await getTranslations({ locale, namespace: "meta" });
+  const tIdentity = await getTranslations({ locale, namespace: "identity" });
 
   return (
     <html
@@ -124,7 +125,11 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body>
-        <JsonLd locale={locale} description={tMeta("description")} />
+        <JsonLd
+          locale={locale}
+          description={tMeta("description")}
+          role={tIdentity("role")}
+        />
         <NextIntlClientProvider>
           <SmoothScroll>
             <a

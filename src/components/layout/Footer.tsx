@@ -8,6 +8,7 @@ export function Footer() {
   const t = useTranslations("footer");
   const tA11y = useTranslations("a11y");
   const tContact = useTranslations("contact.channels");
+  const tIdentity = useTranslations("identity");
 
   // Ano calculado na renderização: nunca envelhece sozinho no código.
   const year = new Date().getFullYear();
@@ -26,8 +27,9 @@ export function Footer() {
               {siteConfig.brand}
             </span>
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-              {t("role")}
+              {tIdentity("role")}
             </span>
+            <span className="font-mono text-[10px] text-muted/70">{tIdentity("study")}</span>
             <p className="mt-2 max-w-xs text-pretty text-sm text-muted">{t("tagline")}</p>
           </div>
 

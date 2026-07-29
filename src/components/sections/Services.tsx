@@ -10,12 +10,8 @@ const SERVICE_KEYS = [
   "portfolio",
   "systems",
   "integrations",
-  "seo",
   "hosting",
   "domain",
-  "maintenance",
-  "optimization",
-  "consulting",
 ] as const;
 
 export function Services() {

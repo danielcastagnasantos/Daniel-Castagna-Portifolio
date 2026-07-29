@@ -11,12 +11,15 @@
 
 export type LinkKey = "whatsapp" | "email" | "github" | "linkedin" | "instagram";
 
+/**
+ * O cargo NÃO mora aqui: ele é copy, muda por idioma e vive em
+ * `messages/*.json` sob a chave `identity.role`.
+ */
 export interface SiteConfig {
   /** Nome completo, usado em JSON-LD e no rodapé. */
   name: string;
   /** Nome curto da marca. */
   brand: string;
-  role: string;
   /** Origem canônica em produção, sem barra final. */
   url: string;
   location: { city: string; region: string; regionCode: string; country: string };
@@ -35,7 +38,6 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   name: "Daniel Castagna Santos",
   brand: "Daniel Castagna",
-  role: "Full Stack Developer",
   url: "https://danielcastagna.dev",
   location: {
     city: "Vila Velha",

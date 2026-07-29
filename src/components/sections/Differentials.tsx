@@ -10,9 +10,9 @@ const DIFFERENTIALS = [
   { key: "cleanCode", path: "M8 6 3 12l5 6M16 6l5 6-5 6M14 4l-4 16" },
   { key: "design", path: "M12 3l2.6 5.6 6.4.8-4.7 4.3 1.2 6.3L12 17l-5.5 3 1.2-6.3L3 9.4l6.4-.8L12 3Z" },
   { key: "responsive", path: "M3 5h13v11H3zM16 9h5v10h-5zM7 20h6" },
-  { key: "scalable", path: "M4 20V10M10 20V4M16 20v-7M22 20H2" },
   { key: "practices", path: "M6 3v12a3 3 0 0 0 3 3h6M18 3v6M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM18 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" },
   { key: "accessibility", path: "M12 4.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM4 8l8 1.5L20 8M12 9.5V15m0 0-3 6.5M12 15l3 6.5" },
+  { key: "communication", path: "M21 12a8 8 0 0 1-8 8H4l2.3-2.3A8 8 0 1 1 21 12Z" },
   { key: "support", path: "M4 14v-3a8 8 0 1 1 16 0v3M4 14a2 2 0 0 0 2 2h1v-6H6a2 2 0 0 0-2 2Zm16 0a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2Z" },
 ] as const;
 

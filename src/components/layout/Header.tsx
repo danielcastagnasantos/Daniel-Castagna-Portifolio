@@ -19,6 +19,7 @@ const NAV_ITEMS = [
 export function Header() {
   const t = useTranslations("nav");
   const tA11y = useTranslations("a11y");
+  const tIdentity = useTranslations("identity");
   const locale = useLocale();
   const pathname = usePathname();
   const activeSection = useSceneStore((state) => state.activeSection);
@@ -56,7 +57,7 @@ export function Header() {
             {siteConfig.brand}
           </span>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted transition-colors group-hover:text-glow">
-            {siteConfig.role}
+            {tIdentity("role")}
           </span>
         </a>
 

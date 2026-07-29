@@ -6,7 +6,15 @@ import { CONTACT_ORDER, getLinkHref, siteConfig } from "@/content/site.config";
  * `sameAs` só lista perfis realmente configurados: declarar URLs vazias ou
  * inventadas é o tipo de dado estruturado que buscadores tratam como spam.
  */
-export function JsonLd({ locale, description }: { locale: string; description: string }) {
+export function JsonLd({
+  locale,
+  description,
+  role,
+}: {
+  locale: string;
+  description: string;
+  role: string;
+}) {
   const sameAs = CONTACT_ORDER.filter(
     (key) => key !== "whatsapp" && key !== "email",
   )
@@ -17,7 +25,7 @@ export function JsonLd({ locale, description }: { locale: string; description: s
     "@type": "Person",
     "@id": `${siteConfig.url}/#person`,
     name: siteConfig.name,
-    jobTitle: siteConfig.role,
+    jobTitle: role,
     description,
     url: siteConfig.url,
     ...(sameAs.length > 0 && { sameAs }),
@@ -27,14 +35,9 @@ export function JsonLd({ locale, description }: { locale: string; description: s
       addressRegion: siteConfig.location.regionCode,
       addressCountry: siteConfig.location.country,
     },
-    knowsAbout: [
-      "Full Stack Development",
-      "Next.js",
-      "React",
-      "TypeScript",
-      "Web Performance",
-      "SEO",
-    ],
+    // Sem `alumniOf`: essa propriedade significa formado, e o curso está em
+    // andamento. A condição de estudante já consta na descrição.
+    knowsAbout: ["Web Development", "Next.js", "React", "TypeScript", "Responsive Design"],
   };
 
   const website = {
