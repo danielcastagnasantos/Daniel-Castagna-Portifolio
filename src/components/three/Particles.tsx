@@ -7,7 +7,10 @@ import { createRandom } from "@/lib/prng";
 import { liveConfig } from "@/lib/sceneConfig";
 import { sceneSignals } from "@/lib/sceneSignals";
 
-const COUNT = 1400;
+// Reduzido de 1400 após medição no Lighthouse: cada partícula custa no
+// preenchimento do bloom, e a diferença visual entre 800 e 1400 num campo
+// desfocado é imperceptível.
+const COUNT = 800;
 const RADIUS = 14;
 
 /**

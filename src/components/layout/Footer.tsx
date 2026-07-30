@@ -29,7 +29,12 @@ export function Footer() {
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
               {tIdentity("role")}
             </span>
-            <span className="font-mono text-[10px] text-muted/70">{tIdentity("study")}</span>
+            {/*
+              Sem opacidade: `text-muted/70` resulta em #727278 sobre #050505,
+              contraste 4.26 — abaixo do mínimo WCAG AA de 4.5. Reprovado pelo
+              Lighthouse. O token cheio dá 9.2.
+            */}
+            <span className="font-mono text-[10px] text-muted">{tIdentity("study")}</span>
             <p className="mt-2 max-w-xs text-pretty text-sm text-muted">{t("tagline")}</p>
           </div>
 

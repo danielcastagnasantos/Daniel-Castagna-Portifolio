@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { usePointerTracking } from "@/hooks/usePointerTracking";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { liveConfig, updateLiveConfig } from "@/lib/sceneConfig";
@@ -13,6 +13,60 @@ import { InfiniteGrid } from "./InfiniteGrid";
 import { NeuralNetwork } from "./NeuralNetwork";
 import { Notebook } from "./Notebook";
 import { Particles } from "./Particles";
+
+/** Alvo de 30 quadros por segundo. */
+const FRAME_INTERVAL_MS = 1000 / 30;
+
+/**
+ * Controla quando a cena desenha.
+ *
+ * O canvas roda em `frameloop="demand"`, então só renderiza quando pedimos.
+ * Duas razões, ambas medidas com Lighthouse:
+ *
+ * 1. **30fps em vez de 60.** A cena é ambiente e lenta — deriva de partículas,
+ *    flutuação, interpolação de câmera. A 30 quadros isso é indistinguível a
+ *    olho nu, e corta pela metade o trabalho na thread principal, que era o
+ *    que derrubava a nota de performance (18,5s de bloqueio).
+ *
+ * 2. **Pausa em aba oculta.** Sem isso a cena continuava desenhando para
+ *    ninguém, queimando CPU e bateria enquanto o visitante estava em outra
+ *    aba.
+ */
+function FrameDriver() {
+  const invalidate = useThree((state) => state.invalidate);
+
+  useEffect(() => {
+    let frame = 0;
+    let previous = 0;
+
+    const loop = (time: number) => {
+      frame = requestAnimationFrame(loop);
+      if (time - previous < FRAME_INTERVAL_MS) return;
+      previous = time;
+      invalidate();
+    };
+
+    const start = () => {
+      if (frame === 0) frame = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const onVisibilityChange = () => (document.hidden ? stop() : start());
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    start();
+
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [invalidate]);
+
+  return null;
+}
 
 /**
  * Único ponto que calcula o estado interpolado do frame e move a câmera.
@@ -62,16 +116,19 @@ export function Scene() {
       }`}
     >
       <Canvas
-        // Teto de 1.75 no device pixel ratio: acima disso o custo de
-        // preenchimento do bloom cresce sem ganho visual perceptível.
-        dpr={[1, 1.75]}
+        // Teto de 1.5 no device pixel ratio. O custo de preenchimento do
+        // bloom cresce com o quadrado dessa escala, e acima disso o ganho
+        // visual não se percebe.
+        dpr={[1, 1.5]}
         camera={{ position: [0, 0, 6], fov: 45, near: 0.1, far: 100 }}
         gl={{ antialias: false, powerPreference: "high-performance", alpha: true }}
-        // Com movimento reduzido a cena renderiza um frame e congela.
-        frameloop={prefersReducedMotion ? "demand" : "always"}
+        // Sempre sob demanda: quem decide quando desenhar é o FrameDriver.
+        // Com movimento reduzido ele nem monta, e a cena fica num frame só.
+        frameloop="demand"
         onCreated={() => setReady(true)}
       >
         <Suspense fallback={null}>
+          {!prefersReducedMotion && <FrameDriver />}
           <Rig />
 
           <ambientLight intensity={0.35} />

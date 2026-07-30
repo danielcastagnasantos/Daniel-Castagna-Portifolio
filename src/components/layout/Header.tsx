@@ -85,13 +85,20 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/*
+            Sem `aria-label` aqui: ele SUBSTITUIRIA o texto visível "EN" no
+            nome acessível, e a WCAG 2.5.3 exige que o nome contenha o rótulo
+            visível — quem navega por voz diz "clicar EN" e o comando falharia.
+            O texto complementar entra como conteúdo oculto, então o nome
+            acessível fica "EN, mudar idioma para inglês".
+          */}
           <Link
             href={pathname}
             locale={otherLocale}
-            aria-label={tA11y("switchLanguage")}
             className="rounded-full border border-[var(--line)] px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:border-primary hover:text-ink"
           >
             {otherLocale}
+            <span className="sr-only">, {tA11y("switchLanguage")}</span>
           </Link>
 
           <button
