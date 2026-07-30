@@ -58,6 +58,12 @@ export function Typewriter({ words }: { words: readonly string[] }) {
 
   const fallback = words[0] ?? "";
 
+  // A palavra mais longa reserva o espaço. Sem isso, cada troca de palavra
+  // requebra as linhas do h1 e empurra a página inteira: o Lighthouse mediu
+  // 15 deslocamentos numa única carga, levando o CLS a 0,231 — mais do que o
+  // dobro do limite aceitável. Além da nota, é desconfortável de ler.
+  const longest = words.reduce((a, b) => (b.length > a.length ? b : a), fallback);
+
   if (prefersReducedMotion) {
     return <span className="text-gradient">{fallback}</span>;
   }
@@ -65,9 +71,14 @@ export function Typewriter({ words }: { words: readonly string[] }) {
   return (
     <>
       <span className="sr-only">{fallback}</span>
-      <span aria-hidden="true" className="text-gradient">
-        {text}
-        <span className="ml-0.5 inline-block w-[3px] animate-pulse bg-glow align-middle [height:0.85em]" />
+      <span aria-hidden="true" className="inline-grid align-bottom">
+        <span className="invisible col-start-1 row-start-1" aria-hidden="true">
+          {longest}
+        </span>
+        <span className="col-start-1 row-start-1 justify-self-start text-gradient">
+          {text}
+          <span className="ml-0.5 inline-block w-[3px] animate-pulse bg-glow align-middle [height:0.85em]" />
+        </span>
       </span>
     </>
   );
