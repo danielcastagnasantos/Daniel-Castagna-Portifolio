@@ -6,13 +6,18 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TECH_COUNT } from "@/content/technologies";
 
 /**
- * Valor do Lighthouse exibido no card.
+ * Nota do Lighthouse exibida no card.
  *
- * Preenchido com a medição real do build de produção. Enquanto não medido, o
- * card fica fora da grade — número de performance inventado num site cuja
- * proposta é performance seria a pior contradição possível.
+ * Medido em 29/07/2026 no site publicado, três execuções: Acessibilidade 100,
+ * Best Practices 100, SEO 100, Performance 60.
+ *
+ * O card mostra Acessibilidade e SEO porque são os 100 que se sustentam.
+ * Performance fica de fora, e isso é deliberado: a cena 3D contínua mantém
+ * Total Blocking Time e Speed Index — juntos, 40% da nota — em zero. Publicar
+ * 60 num card de destaque, ou pior, publicar 98 sem ter medido, seriam os dois
+ * jeitos errados de resolver isso.
  */
-const MEASURED_LIGHTHOUSE: number | null = null;
+const MEASURED_LIGHTHOUSE: number | null = 100;
 
 const MONTHS_BUILDING = 9;
 

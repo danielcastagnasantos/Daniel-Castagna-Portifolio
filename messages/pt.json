@@ -61,7 +61,7 @@
     "title": "O que sustento com fatos",
     "technologies": "Tecnologias que uso",
     "months": "Meses desenvolvendo",
-    "lighthouse": "Lighthouse deste site",
+    "lighthouse": "Acessibilidade e SEO no Lighthouse",
     "responsive": "Responsivo"
   },
   "tech": {
@@ -139,8 +139,8 @@
     "title": "O que vem junto em todo projeto",
     "items": {
       "performance": {
-        "title": "Performance",
-        "description": "Carregamento rápido de verdade, medido com Lighthouse e Core Web Vitals."
+        "title": "Carregamento rápido",
+        "description": "Conteúdo na tela em menos de um segundo. Medido com Lighthouse, não estimado."
       },
       "seo": {
         "title": "SEO técnico",
