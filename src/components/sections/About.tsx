@@ -22,10 +22,10 @@ export function About() {
                   alt={t("photoAlt")}
                   fill
                   sizes="(max-width: 1024px) 100vw, 320px"
-                  // Foto quadrada num card 4/5: o corte tira das laterais.
-                  // Deslocado para a esquerda porque a metade direita da
-                  // imagem é parede vazia.
-                  className="object-cover object-[35%_50%]"
+                  // Retrato 2:3 num card 4/5: o corte tira ~17% da altura.
+                  // Ancorado acima do centro para preservar o topo da cabeça
+                  // e tirar da camisa, que é onde não há informação.
+                  className="object-cover object-[50%_28%]"
                   priority={false}
                 />
               ) : (
