@@ -1,7 +1,7 @@
 /**
- * Apenas projetos reais. Um card de projeto é lido pelo visitante como prova de
- * trabalho executado — preenchimento fictício aqui é o tipo de promessa que
- * cobra o preço depois, com o dinheiro do cliente já pago.
+ * Apenas projetos reais e publicados. Um card de projeto é lido pelo visitante
+ * como prova de trabalho executado — preenchimento fictício aqui é o tipo de
+ * promessa que cobra o preço depois, com o dinheiro do cliente já pago.
  */
 
 export interface Project {
@@ -20,18 +20,20 @@ export interface Project {
 export const projects: readonly Project[] = [
   {
     id: "tochegando",
-    url: "https://tochegandobar-three.vercel.app",
+    url: "https://tochegandobar.vercel.app",
     image: "/tochegando.png",
-    stack: ["Next.js", "React", "TypeScript", "Supabase", "Vercel"],
+    stack: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS", "Vitest"],
     status: "live",
     featured: true,
   },
   {
-    id: "portfolio",
-    url: null,
+    id: "thaystop",
+    url: "https://thaystop-brasil.vercel.app",
     image: null,
-    stack: ["Next.js", "React Three Fiber", "TypeScript", "Tailwind CSS"],
-    status: "in-progress",
+    // Sem framework de propósito: uma landing page estática de uma página não
+    // precisa de bundler, e o resultado carrega mais rápido sem ele.
+    stack: ["HTML", "CSS", "JavaScript", "Vercel"],
+    status: "live",
     featured: false,
   },
 ] as const;

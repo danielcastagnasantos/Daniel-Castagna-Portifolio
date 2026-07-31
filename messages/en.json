@@ -121,16 +121,16 @@
       "tochegando": {
         "title": "Tô Chegando Bar & Restaurant",
         "client": "Vila Velha, Brazil",
-        "problem": "The venue took reservations only by phone and messages, with no organized record and lost requests at peak hours.",
-        "solution": "A complete website with online bookings, a login area and an admin panel where the staff manages requests — authentication and database on Supabase. It also brings a digital menu, gallery, FAQ and direct WhatsApp contact, plus an Instagram integration that keeps the page alive with no manual work.",
+        "problem": "Bookings arrived by phone and got lost at peak hours. The floor plan was also hardcoded: the 26 tables came from a migration with coordinates calibrated by hand, so rearranging the room for a barbecue or a live show meant calling a developer.",
+        "solution": "A complete website with online bookings, login and an admin panel — plus a visual floor plan editor in the vein of SevenRooms and OpenTable: the staff lays out the room by dragging tables over a photo of the venue, and guests book on that same plan, in real time. Nobody needs a developer to rearrange the room anymore. Under the hood: percentage-based geometry so the plan scales from phone to monitor with no table drifting, dragging via Pointer Events with no new library, batched saving through a single RPC, writes restricted to staff by SECURITY DEFINER functions, and deletion that preserves history — a booking from last month still reads Table 26 even with a new Table 26 on the floor. 92 unit tests.",
         "imageAlt": "Home page of the Tô Chegando Bar & Restaurant website"
       },
-      "portfolio": {
-        "title": "This portfolio",
-        "client": "Personal project",
-        "problem": "I needed a showcase that demonstrated what I can build rather than just claiming it.",
-        "solution": "A bilingual single page with a scroll-driven WebGL scene, fluid animations, complete technical SEO and WCAG accessibility. The site itself is the demo.",
-        "imageAlt": "Home page of Daniel Castagna's portfolio"
+      "thaystop": {
+        "title": "Thays Miranda — Vehicle Protection",
+        "client": "Top Brasil · Vila Velha and Greater Vitória, Brazil",
+        "problem": "A vehicle protection consultant needed a page that explained the coverage and took interested visitors straight into a conversation, with no form in the middle cooling the lead down.",
+        "solution": "A single-page landing site with the coverage options, a quote simulator, social proof and the consultant's profile. Every button opens her WhatsApp with the message already written — each extra form field is one more person who gives up. Built in plain HTML, CSS and JavaScript, with no framework: for a single page a bundler never pays for itself, and without one the page loads faster.",
+        "imageAlt": "Home page of Thays Miranda's vehicle protection landing page"
       }
     }
   },

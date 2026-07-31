@@ -121,16 +121,16 @@
       "tochegando": {
         "title": "Tô Chegando Bar e Restaurante",
         "client": "Vila Velha, ES",
-        "problem": "O bar recebia reservas apenas por telefone e mensagem, sem registro organizado e perdendo pedidos em horário de pico.",
-        "solution": "Site completo com reservas online, área de login e painel administrativo onde a equipe gerencia os pedidos — autenticação e banco de dados em Supabase. Traz ainda cardápio digital, galeria, FAQ e contato direto por WhatsApp, com integração ao Instagram que mantém a página viva sem trabalho manual.",
+        "problem": "As reservas chegavam por telefone e se perdiam no horário de pico. E o salão era fixo no código: as 26 mesas nasciam de uma migration com coordenadas calibradas à mão, então mudar a disposição para um churrasco ou um show ao vivo exigia chamar um desenvolvedor.",
+        "solution": "Site completo com reservas online, login e painel administrativo — mais um editor visual de planta baixa no padrão de sistemas como SevenRooms e OpenTable: a equipe monta o salão arrastando mesas sobre a foto da casa, e o cliente reserva nessa mesma planta, em tempo real. Ninguém precisa mais de programador para remontar o salão. Por dentro: geometria em porcentagem para a planta escalar do celular ao monitor sem nenhuma mesa sair do lugar, arraste em Pointer Events sem biblioteca nova, gravação em lote num único RPC, escrita restrita à equipe por funções SECURITY DEFINER, e exclusão que preserva o histórico — uma reserva do mês passado continua dizendo Mesa 26 mesmo com uma Mesa 26 nova no salão. 92 testes unitários.",
         "imageAlt": "Página inicial do site do Tô Chegando Bar e Restaurante"
       },
-      "portfolio": {
-        "title": "Este portfólio",
-        "client": "Projeto pessoal",
-        "problem": "Precisava de uma vitrine que mostrasse o que eu sei fazer em vez de apenas afirmar.",
-        "solution": "Página única bilíngue com cena 3D em WebGL dirigida por scroll, animações fluidas, SEO técnico completo e acessibilidade WCAG. O próprio site é a demonstração.",
-        "imageAlt": "Página inicial do portfólio de Daniel Castagna"
+      "thaystop": {
+        "title": "Thays Miranda — Proteção Veicular",
+        "client": "Top Brasil · Vila Velha e Grande Vitória",
+        "problem": "Uma consultora de proteção veicular precisava de uma página que explicasse as coberturas e levasse o interessado direto à conversa, sem formulário no meio do caminho esfriando o contato.",
+        "solution": "Landing page de página única com as coberturas, simulação de cotação, prova social e o perfil da consultora. Todo botão abre o WhatsApp dela com a mensagem já escrita — cada campo a mais num formulário é gente que desiste. Feita em HTML, CSS e JavaScript puros, sem framework: para uma página só, bundler nenhum se paga, e sem ele o carregamento fica mais rápido.",
+        "imageAlt": "Página inicial da landing page de proteção veicular da Thays Miranda"
       }
     }
   },

@@ -4,8 +4,27 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { projects } from "@/content/projects";
 
+/**
+ * Quais cards ocupam a largura inteira da grade.
+ *
+ * Destaques sempre ocupam. Além deles, um card que sobra sozinho na última
+ * linha também ocupa — senão fica meio card de conteúdo e meio de vazio, que
+ * é como a seção aparecia com dois projetos.
+ */
+function fullWidthIds(): ReadonlySet<string> {
+  const ids = new Set(projects.filter((p) => p.featured).map((p) => p.id));
+  const rest = projects.filter((p) => !p.featured);
+
+  if (rest.length % 2 === 1) {
+    ids.add(rest[rest.length - 1].id);
+  }
+
+  return ids;
+}
+
 export function Projects() {
   const t = useTranslations("projects");
+  const fullWidth = fullWidthIds();
 
   return (
     <section id="projects" aria-labelledby="projects-title" className="section-py">
@@ -23,14 +42,16 @@ export function Projects() {
               as="li"
               key={project.id}
               delay={index * 0.1}
-              className={project.featured ? "lg:col-span-2" : ""}
+              className={fullWidth.has(project.id) ? "lg:col-span-2" : ""}
             >
               <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--line)] bg-card/70 backdrop-blur transition-[border-color,transform] duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:border-primary/60">
                 <div
-                  // 2/1 no destaque acompanha a proporção real da captura
-                  // (1864x964), evitando cortar a base da página.
+                  // 2/1 acompanha a proporção real da captura do Tô Chegando
+                  // (1864x964) e evita cortar a base da página. Cards de
+                  // largura inteira usam a mesma proporção para não virarem
+                  // um bloco alto demais.
                   className={`relative w-full overflow-hidden border-b border-[var(--line)] ${
-                    project.featured ? "aspect-[2/1]" : "aspect-[16/10]"
+                    fullWidth.has(project.id) ? "aspect-[2/1]" : "aspect-[16/10]"
                   }`}
                 >
                   {project.image ? (
