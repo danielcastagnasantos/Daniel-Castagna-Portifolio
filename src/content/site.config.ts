@@ -46,7 +46,7 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   name: "Daniel Castagna Santos",
   brand: "Daniel Castagna",
-  url: "https://daniel-castagna-portifolio.vercel.app",
+  url: "https://danielcastagna.vercel.app",
   location: {
     city: "Vila Velha",
     region: "Espírito Santo",
