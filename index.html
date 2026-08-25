@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friques Barbearia | Estilo e Confiança</title>
+<meta name="description" content="Friques Barbearia em Jardim da Penha, Vitória - ES. Corte, barba e uma experiência premium com Lounge Gamer PS5. Agende agora pelo WhatsApp.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0A0A0B',
+          bg2: '#121215',
+          gold: '#E5B80B',
+          gold2: '#F5CE38',
+        },
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          display: ['"Bebas Neue"', 'sans-serif'],
+        },
+        animation: {
+          'float': 'float 6s ease-in-out infinite',
+          'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          'fade-up': 'fadeUp 0.8s ease-out forwards',
+        },
+        keyframes: {
+          float: {
+            '0%, 100%': { transform: 'translateY(0px)' },
+            '50%': { transform: 'translateY(-14px)' },
+          },
+          fadeUp: {
+            '0%': { opacity: 0, transform: 'translateY(24px)' },
+            '100%': { opacity: 1, transform: 'translateY(0)' },
+          },
+        },
+      },
+    },
+  }
+</script>
+
+<style>
+  :root {
+    --gold: #E5B80B;
+    --gold-2: #F5CE38;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: #0A0A0B;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #F5F5F5;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--gold); color: #0A0A0B; }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0A0A0B; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--gold), #a97e05); border-radius: 8px; }
+
+  .font-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
+
+  /* Glassmorphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(229, 184, 11, 0.15);
+  }
+
+  .glass-strong {
+    background: rgba(18, 18, 21, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(229, 184, 11, 0.18);
+  }
+
+  /* Glow backgrounds */
+  .glow {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(110px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Gradient text */
+  .text-gold-gradient {
+    background: linear-gradient(90deg, #F5CE38 0%, #E5B80B 50%, #C9971A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Gradient border */
+  .border-gradient {
+    position: relative;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(#121215, #121215) padding-box,
+      linear-gradient(135deg, var(--gold), rgba(229,184,11,0.05), var(--gold)) border-box;
+  }
+
+  /* Shimmer button */
+  .btn-shimmer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .btn-shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.75s ease;
+    z-index: 1;
+  }
+  .btn-shimmer:hover::before { left: 125%; }
+
+  /* Nav link underline */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 1.5px;
+    background: linear-gradient(90deg, var(--gold-2), var(--gold));
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  /* Service card selection */
+  .service-card { transition: all 0.3s ease; cursor: pointer; }
+  .service-card.selected {
+    border-color: var(--gold);
+    background: rgba(229, 184, 11, 0.08);
+    box-shadow: 0 0 25px rgba(229, 184, 11, 0.25), inset 0 0 20px rgba(229, 184, 11, 0.05);
+    transform: translateY(-4px);
+  }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  /* Map dark filter */
+  .map-dark {
+    filter: grayscale(1) invert(0.92) contrast(0.85) brightness(0.9);
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8) sepia(1) saturate(4) hue-rotate(5deg);
+    cursor: pointer;
+  }
+
+  .badge-dot {
+    box-shadow: 0 0 0 0 rgba(229, 184, 11, 0.7);
+    animation: pulseDot 2s infinite;
+  }
+  @keyframes pulseDot {
+    0% { box-shadow: 0 0 0 0 rgba(229, 184, 11, 0.6); }
+    70% { box-shadow: 0 0 0 10px rgba(229, 184, 11, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(229, 184, 11, 0); }
+  }
+</style>
+</head>
+
+<body class="relative">
+
+<!-- Background ambient glows -->
+<div class="fixed inset-0 z-0 pointer-events-none">
+  <div class="glow w-[420px] h-[420px] bg-gold/20 top-[-100px] left-[-100px]"></div>
+  <div class="glow w-[500px] h-[500px] bg-gold/10 top-[30%] right-[-150px]"></div>
+  <div class="glow w-[380px] h-[380px] bg-gold/10 bottom-[-100px] left-[20%]"></div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-4 flex items-center justify-between glass-strong lg:glass rounded-b-2xl lg:rounded-none">
+    <a href="#" class="flex items-center gap-2 group">
+      <span class="font-display text-3xl tracking-wider text-white">FRIQUES</span>
+      <span class="font-display text-3xl tracking-wider text-gold-gradient drop-shadow-[0_0_12px_rgba(229,184,11,0.6)]">BARBEARIA</span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-300">
+      <a href="#espaco" class="nav-link hover:text-gold-2 transition-colors">O Espaço</a>
+      <a href="#diferenciais" class="nav-link hover:text-gold-2 transition-colors">Diferenciais</a>
+      <a href="#agendar" class="nav-link hover:text-gold-2 transition-colors">Agendar</a>
+      <a href="#localizacao" class="nav-link hover:text-gold-2 transition-colors">Localização</a>
+    </nav>
+
+    <a href="#agendar" class="btn-shimmer hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold text-sm px-6 py-2.5 rounded-full hover:shadow-[0_0_25px_rgba(229,184,11,0.5)] transition-shadow">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+      Agendar Agora
+    </a>
+
+    <button id="mobileMenuBtn" class="lg:hidden text-white p-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="hidden lg:hidden glass-strong mx-4 mt-2 rounded-2xl p-6 flex flex-col gap-5 text-gray-200">
+    <a href="#espaco" class="mobile-link">O Espaço</a>
+    <a href="#diferenciais" class="mobile-link">Diferenciais</a>
+    <a href="#agendar" class="mobile-link">Agendar</a>
+    <a href="#localizacao" class="mobile-link">Localização</a>
+    <a href="#agendar" class="btn-shimmer text-center bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-6 py-3 rounded-full mt-2">Agendar Agora</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="relative z-10 min-h-screen flex items-center pt-32 pb-16 lg:pt-40">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 items-center w-full">
+
+    <!-- Left: Copy -->
+    <div class="reveal">
+      <span class="badge-dot inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-xs font-semibold text-gold-2 mb-6">
+        <span class="w-2 h-2 rounded-full bg-gold-2"></span>
+        ESTILO, RESPEITO &amp; EXPERIÊNCIA PREMIUM
+      </span>
+
+      <h1 class="font-display text-6xl sm:text-7xl lg:text-8xl leading-[0.95] text-white mb-6">
+        SEU ESTILO. <br>
+        <span class="text-gold-gradient drop-shadow-[0_0_25px_rgba(229,184,11,0.35)]">SUA CONFIANÇA.</span>
+      </h1>
+
+      <p class="text-gray-400 text-lg max-w-xl mb-10 leading-relaxed">
+        Muito mais que um corte — o seu momento de pausa no dia. Na Friques Barbearia você recebe técnica, respeito ao seu horário e uma experiência completa, pensada para você.
+      </p>
+
+      <div class="flex flex-wrap gap-4 mb-14">
+        <a href="#agendar" class="btn-shimmer inline-flex items-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-8 py-4 rounded-full hover:shadow-[0_0_30px_rgba(229,184,11,0.5)] transition-shadow">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          Marcar Horário
+        </a>
+        <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="inline-flex items-center gap-2 glass text-white font-semibold px-8 py-4 rounded-full hover:border-gold/60 hover:text-gold-2 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92zm0 7.36a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm5.68-7.54a1.04 1.04 0 1 1-2.08 0 1.04 1.04 0 0 1 2.08 0z"/></svg>
+          @barbearia.friques
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex flex-wrap gap-10">
+        <div>
+          <div class="flex items-center gap-1 font-display text-4xl text-white">
+            4.9 <span class="text-gold-2 text-2xl">★</span>
+          </div>
+          <p class="text-gray-500 text-sm">avaliação no Google</p>
+        </div>
+        <div class="w-px bg-white/10"></div>
+        <div>
+          <div class="font-display text-4xl text-white">2.000+</div>
+          <p class="text-gray-500 text-sm">atendimentos realizados</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Visual + Gamer card -->
+    <div class="relative reveal">
+      <div class="relative rounded-[2rem] overflow-hidden border-gradient aspect-[4/5] shadow-[0_0_60px_rgba(229,184,11,0.15)]">
+        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop"
+             alt="Barbeiro atendendo cliente na Friques Barbearia"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent"></div>
+      </div>
+
+      <!-- Floating Gamer Card -->
+      <div class="animate-float absolute -bottom-8 -left-6 sm:-left-10 glass-strong rounded-2xl p-5 w-72 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-11 h-11 rounded-xl bg-gold/15 flex items-center justify-center text-gold-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7.5H9A5.5 5.5 0 0 0 3.6 13l.66 4.62A2 2 0 0 0 6.24 19.4a2 2 0 0 0 1.8-1.09L9.2 16h5.6l1.16 2.31a2 2 0 0 0 1.8 1.09 2 2 0 0 0 1.98-1.78L20.4 13A5.5 5.5 0 0 0 15 7.5zM9.5 12.75h-1.25V14H7v-1.25H5.75v-1.5H7V10h1.25v1.25H9.5v1.5zM15 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm2.5 2.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
+          </div>
+          <div>
+            <p class="text-white font-bold text-sm">Lounge Gamer PS5</p>
+            <p class="text-gray-400 text-xs">enquanto espera, você joga</p>
+          </div>
+        </div>
+        <div class="flex gap-3 text-gray-300 text-xs">
+          <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14z"/></svg>Climatizado</span>
+          <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-2" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>Wi-Fi</span>
+          <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5z"/></svg>Atenção 1:1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ O ESPAÇO ============ -->
+<section id="espaco" class="relative z-10 py-24 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">O Ambiente</span>
+      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">UM ESPAÇO FEITO PRA VOCÊ</h2>
+      <p class="text-gray-400 mt-4">Design moderno, conforto e uma vibe descontraída — do jeito que barbearia boa deve ser.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="reveal rounded-2xl overflow-hidden border-gradient aspect-square group">
+        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=800&auto=format&fit=crop" alt="Cadeiras da barbearia" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+      </div>
+      <div class="reveal rounded-2xl overflow-hidden border-gradient aspect-square group">
+        <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?q=80&w=800&auto=format&fit=crop" alt="Corte de cabelo em andamento" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+      </div>
+      <div class="reveal rounded-2xl overflow-hidden border-gradient aspect-square group">
+        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=800&auto=format&fit=crop" alt="Acabamento de barba" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIFERENCIAIS ============ -->
+<section id="diferenciais" class="relative z-10 py-24 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">Por que a Friques</span>
+      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">NOSSOS DIFERENCIAIS</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Card 1 -->
+      <div class="reveal glass rounded-2xl p-8 hover:-translate-y-2 hover:border-gold/50 transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42-3.42-3.42" /></svg>
+        </div>
+        <h3 class="text-white font-bold text-xl mb-3">Visagismo &amp; Técnica</h3>
+        <p class="text-gray-400 leading-relaxed">Profissionais especializados que analisam o formato do seu rosto para entregar o corte que mais valoriza o seu estilo.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="reveal glass rounded-2xl p-8 hover:-translate-y-2 hover:border-gold/50 transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" /></svg>
+        </div>
+        <h3 class="text-white font-bold text-xl mb-3">Lounge Gamer PS5</h3>
+        <p class="text-gray-400 leading-relaxed">Ambiente climatizado, Wi-Fi liberado e um PlayStation 5 à disposição — sua espera vira parte da experiência.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="reveal glass rounded-2xl p-8 hover:-translate-y-2 hover:border-gold/50 transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
+        </div>
+        <h3 class="text-white font-bold text-xl mb-3">Pontualidade &amp; Respeito</h3>
+        <p class="text-gray-400 leading-relaxed">Seu horário agendado é levado a sério. Respeitamos o seu tempo do início ao fim do atendimento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AGENDAMENTO ============ -->
+<section id="agendar" class="relative z-10 py-24 border-t border-white/5">
+  <div class="max-w-4xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">Reserve seu horário</span>
+      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">AGENDE SEU HORÁRIO</h2>
+      <p class="text-gray-400 mt-4">Preencha os dados abaixo e confirme direto pelo WhatsApp. Rápido e sem complicação.</p>
+    </div>
+
+    <div class="glass-strong rounded-3xl p-6 sm:p-10 reveal">
+
+      <!-- Step 1: Serviço -->
+      <div class="mb-10">
+        <p class="text-white font-bold mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-gold-2 text-black text-xs font-bold flex items-center justify-center">1</span> Escolha o serviço</p>
+        <p class="text-gray-500 text-sm mb-5 ml-8">Selecione uma opção</p>
+        <div class="grid sm:grid-cols-3 gap-4" id="serviceOptions">
+          <div class="service-card glass rounded-xl p-5 text-center" data-service="Corte Masculino" data-price="R$ 45">
+            <p class="text-white font-semibold">Corte Masculino</p>
+            <p class="text-gold-2 text-sm mt-1">R$ 45</p>
+          </div>
+          <div class="service-card glass rounded-xl p-5 text-center" data-service="Barba Completa" data-price="R$ 35">
+            <p class="text-white font-semibold">Barba Completa</p>
+            <p class="text-gold-2 text-sm mt-1">R$ 35</p>
+          </div>
+          <div class="service-card glass rounded-xl p-5 text-center" data-service="Combo Friques (Corte + Barba)" data-price="R$ 70">
+            <p class="text-white font-semibold">Combo Friques</p>
+            <p class="text-gray-500 text-xs">Corte + Barba</p>
+            <p class="text-gold-2 text-sm mt-1">R$ 70</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Data e Hora -->
+      <div class="mb-10">
+        <p class="text-white font-bold mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-gold-2 text-black text-xs font-bold flex items-center justify-center">2</span> Data e horário</p>
+        <p class="text-gray-500 text-sm mb-5 ml-8">Quando você prefere vir?</p>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <input type="date" id="dateInput" class="glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:border-gold-2 border border-transparent focus:ring-1 focus:ring-gold-2 transition-all [color-scheme:dark]">
+          <select id="timeInput" class="glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:border-gold-2 border border-transparent focus:ring-1 focus:ring-gold-2 transition-all">
+            <option value="" class="bg-bg2">Selecione o horário</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 3: Nome -->
+      <div class="mb-10">
+        <p class="text-white font-bold mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-gold-2 text-black text-xs font-bold flex items-center justify-center">3</span> Seus dados</p>
+        <p class="text-gray-500 text-sm mb-5 ml-8">Como podemos te chamar?</p>
+        <input type="text" id="nameInput" placeholder="Nome completo" class="w-full glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:border-gold-2 border border-transparent focus:ring-1 focus:ring-gold-2 transition-all placeholder:text-gray-500">
+      </div>
+
+      <!-- Step 4: Enviar -->
+      <div>
+        <button id="submitBtn" class="btn-shimmer w-full flex items-center justify-center gap-3 bg-gradient-to-r from-gold-2 to-gold text-black font-bold text-lg px-8 py-5 rounded-full hover:shadow-[0_0_35px_rgba(229,184,11,0.5)] transition-shadow">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          Confirmar Agendamento no WhatsApp
+        </button>
+        <p id="formError" class="hidden text-red-400 text-sm text-center mt-4"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOCALIZAÇÃO ============ -->
+<section id="localizacao" class="relative z-10 py-24 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">Onde estamos</span>
+      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">LOCALIZAÇÃO &amp; CONTATO</h2>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8 items-stretch">
+      <div class="reveal glass-strong rounded-3xl p-8 sm:p-10 flex flex-col justify-center gap-8">
+        <div class="flex gap-4">
+          <div class="w-12 h-12 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z" /></svg>
+          </div>
+          <div>
+            <p class="text-white font-bold text-lg mb-1">Endereço</p>
+            <p class="text-gray-400 leading-relaxed">R. Dr. Cyro Lopes Pereira, 910<br>Jardim da Penha — Vitória, ES</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <div class="w-12 h-12 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
+          </div>
+          <div>
+            <p class="text-white font-bold text-lg mb-1">Horário de Funcionamento</p>
+            <p class="text-gray-400 leading-relaxed">Segunda a Sexta: 09:00h às 20:00h<br>Sábado: 08:00h às 17:00h</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <div class="w-12 h-12 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92z" /></svg>
+          </div>
+          <div>
+            <p class="text-white font-bold text-lg mb-1">Redes Sociais</p>
+            <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="text-gold-2 hover:underline">@barbearia.friques</a>
+          </div>
+        </div>
+
+        <a href="#agendar" class="btn-shimmer inline-flex w-fit items-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-8 py-4 rounded-full hover:shadow-[0_0_30px_rgba(229,184,11,0.5)] transition-shadow mt-2">
+          Agendar Meu Horário
+        </a>
+      </div>
+
+      <div class="reveal rounded-3xl overflow-hidden border-gradient min-h-[400px]">
+        <iframe
+          class="map-dark w-full h-full min-h-[400px]"
+          src="https://www.google.com/maps?q=R.+Dr.+Cyro+Lopes+Pereira,+910,+Jardim+da+Penha,+Vit%C3%B3ria+-+ES&output=embed"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="relative z-10 border-t border-white/5 py-12">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-2">
+      <span class="font-display text-2xl tracking-wider text-white">FRIQUES</span>
+      <span class="font-display text-2xl tracking-wider text-gold-gradient">BARBEARIA</span>
+    </div>
+
+    <p class="text-gray-500 text-sm text-center">&copy; <span id="year"></span> Friques Barbearia. Todos os direitos reservados.</p>
+
+    <div class="flex items-center gap-4">
+      <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-300 hover:text-gold-2 hover:border-gold/60 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92zm0 7.36a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm5.68-7.54a1.04 1.04 0 1 1-2.08 0 1.04 1.04 0 0 1 2.08 0z"/></svg>
+      </a>
+      <a href="https://wa.me/5527900000000" target="_blank" rel="noopener" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-300 hover:text-gold-2 hover:border-gold/60 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2zm5.78 14.24c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.13-4.9-4.32-.14-.19-1.17-1.56-1.17-2.97 0-1.42.74-2.11 1-2.4.26-.29.57-.36.76-.36h.55c.18 0 .42-.07.65.5.24.58.82 2.01.89 2.16.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.41.5-.14.15-.28.3-.12.59.16.29.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.22 1.37.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.64.77 1.92.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Ano dinâmico
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Header shadow on scroll
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      header.classList.add('shadow-[0_4px_30px_rgba(0,0,0,0.4)]');
+    } else {
+      header.classList.remove('shadow-[0_4px_30px_rgba(0,0,0,0.4)]');
+    }
+  });
+
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+  });
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---- Módulo de Agendamento ----
+  const serviceCards = document.querySelectorAll('.service-card');
+  let selectedService = null;
+
+  serviceCards.forEach(card => {
+    card.addEventListener('click', () => {
+      serviceCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedService = card.dataset.service;
+    });
+  });
+
+  // Data mínima = hoje
+  const dateInput = document.getElementById('dateInput');
+  const todayStr = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute('min', todayStr);
+
+  // Horários de 09:00 às 19:00 (intervalos de 30 min)
+  const timeInput = document.getElementById('timeInput');
+  for (let h = 9; h <= 19; h++) {
+    ['00', '30'].forEach(m => {
+      if (h === 19 && m === '30') return;
+      const value = `${String(h).padStart(2, '0')}:${m}`;
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = value;
+      opt.className = 'bg-bg2';
+      timeInput.appendChild(opt);
+    });
+  }
+
+  // Envio via WhatsApp
+  const submitBtn = document.getElementById('submitBtn');
+  const nameInput = document.getElementById('nameInput');
+  const formError = document.getElementById('formError');
+  const WHATSAPP_NUMBER = '5527900000000'; // Substituir pelo número real da Friques Barbearia
+
+  submitBtn.addEventListener('click', () => {
+    const date = dateInput.value;
+    const time = timeInput.value;
+    const name = nameInput.value.trim();
+
+    if (!selectedService || !date || !time || !name) {
+      formError.textContent = 'Por favor, preencha todos os campos antes de confirmar.';
+      formError.classList.remove('hidden');
+      return;
+    }
+
+    formError.classList.add('hidden');
+
+    const [year, month, day] = date.split('-');
+    const formattedDate = `${day}/${month}/${year}`;
+
+    const message =
+      `Olá, Friques Barbearia! 💈%0A%0A` +
+      `Gostaria de agendar um horário:%0A` +
+      `*Serviço:* ${selectedService}%0A` +
+      `*Data:* ${formattedDate}%0A` +
+      `*Horário:* ${time}%0A` +
+      `*Nome:* ${name}%0A%0A` +
+      `Aguardo a confirmação, obrigado!`;
+
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
+  });
+</script>
+
+</body>
+</html>
