@@ -2,9 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Friques Barbearia | Estilo e Confiança</title>
-<meta name="description" content="Friques Barbearia em Jardim da Penha, Vitória - ES. Corte, barba e uma experiência premium com Lounge Gamer PS5. Agende agora pelo WhatsApp.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0B">
+<title>Friques Barbearia | Agende seu horário</title>
+<meta name="description" content="Friques Barbearia em Jardim da Penha, Vitória - ES. Corte, barba e Lounge Gamer com PS5. Agende seu horário em poucos toques.">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💈</text></svg>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,30 +18,12 @@
   tailwind.config = {
     theme: {
       extend: {
-        colors: {
-          bg: '#0A0A0B',
-          bg2: '#121215',
-          gold: '#E5B80B',
-          gold2: '#F5CE38',
-        },
-        fontFamily: {
-          sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          display: ['"Bebas Neue"', 'sans-serif'],
-        },
-        animation: {
-          'float': 'float 6s ease-in-out infinite',
-          'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          'fade-up': 'fadeUp 0.8s ease-out forwards',
-        },
+        colors: { bg: '#0A0A0B', bg2: '#121215', gold: '#E5B80B', gold2: '#F5CE38' },
+        fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], display: ['"Bebas Neue"', 'sans-serif'] },
+        animation: { float: 'float 6s ease-in-out infinite', 'fade-up': 'fadeUp 0.6s ease-out forwards' },
         keyframes: {
-          float: {
-            '0%, 100%': { transform: 'translateY(0px)' },
-            '50%': { transform: 'translateY(-14px)' },
-          },
-          fadeUp: {
-            '0%': { opacity: 0, transform: 'translateY(24px)' },
-            '100%': { opacity: 1, transform: 'translateY(0)' },
-          },
+          float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+          fadeUp: { '0%': { opacity: 0, transform: 'translateY(16px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
         },
       },
     },
@@ -46,558 +31,642 @@
 </script>
 
 <style>
-  :root {
-    --gold: #E5B80B;
-    --gold-2: #F5CE38;
-  }
-
+  :root { --gold: #E5B80B; --gold-2: #F5CE38; --safe-b: env(safe-area-inset-bottom, 0px); }
   html { scroll-behavior: smooth; }
-
-  body {
-    background-color: #0A0A0B;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #F5F5F5;
-    overflow-x: hidden;
-  }
-
+  body { background-color: #0A0A0B; font-family: 'Plus Jakarta Sans', sans-serif; color: #F5F5F5; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
   ::selection { background: var(--gold); color: #0A0A0B; }
-
-  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: #0A0A0B; }
   ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--gold), #a97e05); border-radius: 8px; }
+  .font-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: .02em; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  .font-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
+  .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(229,184,11,0.15); }
+  .glass-strong { background: rgba(15,15,17,0.82); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(229,184,11,0.16); }
 
-  /* Glassmorphism */
-  .glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(229, 184, 11, 0.15);
-  }
+  .glow { position: absolute; border-radius: 999px; filter: blur(100px); pointer-events: none; z-index: 0; }
 
-  .glass-strong {
-    background: rgba(18, 18, 21, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(229, 184, 11, 0.18);
-  }
+  .text-gold-gradient { background: linear-gradient(90deg,#F5CE38 0%,#E5B80B 50%,#C9971A 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
-  /* Glow backgrounds */
-  .glow {
-    position: absolute;
-    border-radius: 999px;
-    filter: blur(110px);
-    pointer-events: none;
-    z-index: 0;
-  }
+  .border-gradient { position: relative; border: 1px solid transparent; background: linear-gradient(#121215,#121215) padding-box, linear-gradient(135deg,var(--gold),rgba(229,184,11,0.05),var(--gold)) border-box; }
 
-  /* Gradient text */
-  .text-gold-gradient {
-    background: linear-gradient(90deg, #F5CE38 0%, #E5B80B 50%, #C9971A 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+  .btn-shimmer { position: relative; overflow: hidden; isolation: isolate; }
+  .btn-shimmer::before { content: ''; position: absolute; top: 0; left: -75%; width: 50%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-20deg); transition: left .7s ease; z-index: 1; }
+  .btn-shimmer:hover::before, .btn-shimmer:active::before { left: 125%; }
 
-  /* Gradient border */
-  .border-gradient {
-    position: relative;
-    border: 1px solid transparent;
-    background:
-      linear-gradient(#121215, #121215) padding-box,
-      linear-gradient(135deg, var(--gold), rgba(229,184,11,0.05), var(--gold)) border-box;
-  }
+  .service-card { transition: all .25s ease; cursor: pointer; }
+  .service-card.selected { border-color: var(--gold); background: rgba(229,184,11,0.08); box-shadow: 0 0 20px rgba(229,184,11,0.22), inset 0 0 16px rgba(229,184,11,0.05); }
+  .service-card:active { transform: scale(0.98); }
 
-  /* Shimmer button */
-  .btn-shimmer {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .btn-shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -75%;
-    width: 50%; height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.75s ease;
-    z-index: 1;
-  }
-  .btn-shimmer:hover::before { left: 125%; }
-
-  /* Nav link underline */
-  .nav-link { position: relative; }
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0; bottom: -4px;
-    width: 0; height: 1.5px;
-    background: linear-gradient(90deg, var(--gold-2), var(--gold));
-    transition: width 0.3s ease;
-  }
-  .nav-link:hover::after { width: 100%; }
-
-  /* Service card selection */
-  .service-card { transition: all 0.3s ease; cursor: pointer; }
-  .service-card.selected {
-    border-color: var(--gold);
-    background: rgba(229, 184, 11, 0.08);
-    box-shadow: 0 0 25px rgba(229, 184, 11, 0.25), inset 0 0 20px rgba(229, 184, 11, 0.05);
-    transform: translateY(-4px);
-  }
-
-  /* Reveal on scroll */
-  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
-  /* Map dark filter */
-  .map-dark {
-    filter: grayscale(1) invert(0.92) contrast(0.85) brightness(0.9);
-  }
+  .map-dark { filter: grayscale(1) invert(0.92) contrast(0.85) brightness(0.9); }
 
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.8) sepia(1) saturate(4) hue-rotate(5deg);
-    cursor: pointer;
-  }
+  input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.8) sepia(1) saturate(4) hue-rotate(5deg); cursor: pointer; }
 
-  .badge-dot {
-    box-shadow: 0 0 0 0 rgba(229, 184, 11, 0.7);
-    animation: pulseDot 2s infinite;
-  }
-  @keyframes pulseDot {
-    0% { box-shadow: 0 0 0 0 rgba(229, 184, 11, 0.6); }
-    70% { box-shadow: 0 0 0 10px rgba(229, 184, 11, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(229, 184, 11, 0); }
-  }
+  .status-dot { box-shadow: 0 0 0 0 rgba(74,222,128,0.6); animation: pulseGreen 2s infinite; }
+  @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(74,222,128,.6); } 70% { box-shadow: 0 0 0 8px rgba(74,222,128,0); } 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); } }
+  .status-dot.closed { box-shadow: 0 0 0 0 rgba(248,113,113,.6); animation: pulseRed 2s infinite; }
+  @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(248,113,113,.6); } 70% { box-shadow: 0 0 0 8px rgba(248,113,113,0); } 100% { box-shadow: 0 0 0 0 rgba(248,113,113,0); } }
+
+  /* Wizard */
+  .wizard-panel { display: none; animation: fadeUp .4s ease; }
+  .wizard-panel.active { display: block; }
+  .step-dot { width: 8px; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.15); transition: all .3s ease; }
+  .step-dot.active { width: 24px; background: linear-gradient(90deg,var(--gold-2),var(--gold)); }
+  .step-dot.done { background: var(--gold); }
+
+  /* Bottom nav */
+  #bottomNav { padding-bottom: var(--safe-b); }
+  .nav-item { color: #8a8a8f; transition: color .2s ease; }
+  .nav-item.active { color: var(--gold-2); }
+  .nav-item svg { transition: transform .2s ease; }
+  .nav-item.active svg { transform: translateY(-2px); }
+
+  main { padding-bottom: calc(84px + var(--safe-b)); }
+  @media (min-width: 1024px) { main { padding-bottom: 0; } }
+
+  .toast { transition: opacity .3s ease, transform .3s ease; }
 </style>
 </head>
 
 <body class="relative">
 
-<!-- Background ambient glows -->
 <div class="fixed inset-0 z-0 pointer-events-none">
-  <div class="glow w-[420px] h-[420px] bg-gold/20 top-[-100px] left-[-100px]"></div>
-  <div class="glow w-[500px] h-[500px] bg-gold/10 top-[30%] right-[-150px]"></div>
-  <div class="glow w-[380px] h-[380px] bg-gold/10 bottom-[-100px] left-[20%]"></div>
+  <div class="glow w-[380px] h-[380px] bg-gold/20 top-[-100px] left-[-100px]"></div>
+  <div class="glow w-[420px] h-[420px] bg-gold/10 top-[35%] right-[-160px]"></div>
+  <div class="glow w-[340px] h-[340px] bg-gold/10 bottom-[-100px] left-[15%]"></div>
 </div>
 
-<!-- ============ HEADER ============ -->
-<header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-4 flex items-center justify-between glass-strong lg:glass rounded-b-2xl lg:rounded-none">
-    <a href="#" class="flex items-center gap-2 group">
-      <span class="font-display text-3xl tracking-wider text-white">FRIQUES</span>
-      <span class="font-display text-3xl tracking-wider text-gold-gradient drop-shadow-[0_0_12px_rgba(229,184,11,0.6)]">BARBEARIA</span>
+<!-- ============ TOP BAR ============ -->
+<header id="topbar" class="fixed top-0 inset-x-0 z-50 glass-strong">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-16 lg:h-20 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-1.5">
+      <span class="font-display text-2xl lg:text-3xl tracking-wider text-white">FRIQUES</span>
+      <span class="font-display text-2xl lg:text-3xl tracking-wider text-gold-gradient">BARBEARIA</span>
     </a>
 
     <nav class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-300">
-      <a href="#espaco" class="nav-link hover:text-gold-2 transition-colors">O Espaço</a>
-      <a href="#diferenciais" class="nav-link hover:text-gold-2 transition-colors">Diferenciais</a>
-      <a href="#agendar" class="nav-link hover:text-gold-2 transition-colors">Agendar</a>
-      <a href="#localizacao" class="nav-link hover:text-gold-2 transition-colors">Localização</a>
+      <a href="#servicos" class="hover:text-gold-2 transition-colors">Serviços</a>
+      <a href="#diferenciais" class="hover:text-gold-2 transition-colors">Diferenciais</a>
+      <a href="#agendar" class="hover:text-gold-2 transition-colors">Agendar</a>
+      <a href="#local" class="hover:text-gold-2 transition-colors">Localização</a>
     </nav>
 
-    <a href="#agendar" class="btn-shimmer hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold text-sm px-6 py-2.5 rounded-full hover:shadow-[0_0_25px_rgba(229,184,11,0.5)] transition-shadow">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-      Agendar Agora
-    </a>
-
-    <button id="mobileMenuBtn" class="lg:hidden text-white p-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-    </button>
-  </div>
-
-  <!-- Mobile menu -->
-  <div id="mobileMenu" class="hidden lg:hidden glass-strong mx-4 mt-2 rounded-2xl p-6 flex flex-col gap-5 text-gray-200">
-    <a href="#espaco" class="mobile-link">O Espaço</a>
-    <a href="#diferenciais" class="mobile-link">Diferenciais</a>
-    <a href="#agendar" class="mobile-link">Agendar</a>
-    <a href="#localizacao" class="mobile-link">Localização</a>
-    <a href="#agendar" class="btn-shimmer text-center bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-6 py-3 rounded-full mt-2">Agendar Agora</a>
+    <div class="flex items-center gap-3">
+      <span id="statusPillTop" class="hidden sm:inline-flex items-center gap-1.5 glass px-3 py-1.5 rounded-full text-xs font-semibold">
+        <span id="statusDotTop" class="status-dot w-2 h-2 rounded-full bg-green-400"></span>
+        <span id="statusTextTop">—</span>
+      </span>
+      <a href="#agendar" class="btn-shimmer hidden lg:inline-flex items-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold text-sm px-5 py-2.5 rounded-full">
+        Agendar Agora
+      </a>
+      <a href="https://wa.me/5527900000000" target="_blank" rel="noopener" class="lg:hidden w-10 h-10 rounded-full glass flex items-center justify-center text-gold-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2zm5.78 14.24c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.13-4.9-4.32-.14-.19-1.17-1.56-1.17-2.97 0-1.42.74-2.11 1-2.4.26-.29.57-.36.76-.36h.55c.18 0 .42-.07.65.5.24.58.82 2.01.89 2.16.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.41.5-.14.15-.28.3-.12.59.16.29.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.22 1.37.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.64.77 1.92.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+      </a>
+    </div>
   </div>
 </header>
 
+<main class="relative z-10 pt-16 lg:pt-20">
+
 <!-- ============ HERO ============ -->
-<section class="relative z-10 min-h-screen flex items-center pt-32 pb-16 lg:pt-40">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 items-center w-full">
+<section id="home" class="relative min-h-[92vh] flex items-end lg:items-center overflow-hidden">
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1400&auto=format&fit=crop" alt="Barbeiro atendendo cliente" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-gradient-to-t from-bg via-bg/85 lg:via-bg/70 to-bg/30"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-bg/60 via-transparent to-transparent hidden lg:block"></div>
+  </div>
 
-    <!-- Left: Copy -->
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pb-10 pt-24 lg:py-24 w-full grid lg:grid-cols-2 gap-10 items-center">
     <div class="reveal">
-      <span class="badge-dot inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-xs font-semibold text-gold-2 mb-6">
-        <span class="w-2 h-2 rounded-full bg-gold-2"></span>
-        ESTILO, RESPEITO &amp; EXPERIÊNCIA PREMIUM
-      </span>
+      <div class="flex items-center gap-2 mb-5">
+        <span class="inline-flex items-center gap-1.5 glass px-3 py-1.5 rounded-full text-xs font-semibold">
+          <span id="statusDotHero" class="status-dot w-2 h-2 rounded-full bg-green-400"></span>
+          <span id="statusTextHero">—</span>
+        </span>
+        <span class="inline-flex items-center gap-1 text-gold-2 text-xs font-semibold">4.9 ★ Google</span>
+      </div>
 
-      <h1 class="font-display text-6xl sm:text-7xl lg:text-8xl leading-[0.95] text-white mb-6">
-        SEU ESTILO. <br>
-        <span class="text-gold-gradient drop-shadow-[0_0_25px_rgba(229,184,11,0.35)]">SUA CONFIANÇA.</span>
+      <h1 class="font-display text-5xl sm:text-6xl lg:text-8xl leading-[0.95] text-white mb-4">
+        SEU ESTILO. <br><span class="text-gold-gradient">SUA CONFIANÇA.</span>
       </h1>
 
-      <p class="text-gray-400 text-lg max-w-xl mb-10 leading-relaxed">
-        Muito mais que um corte — o seu momento de pausa no dia. Na Friques Barbearia você recebe técnica, respeito ao seu horário e uma experiência completa, pensada para você.
+      <p class="text-gray-300 lg:text-gray-400 text-base lg:text-lg max-w-xl mb-8 leading-relaxed">
+        Muito mais que um corte — o seu momento de pausa no dia. Agende em segundos, direto pelo celular.
       </p>
 
-      <div class="flex flex-wrap gap-4 mb-14">
-        <a href="#agendar" class="btn-shimmer inline-flex items-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-8 py-4 rounded-full hover:shadow-[0_0_30px_rgba(229,184,11,0.5)] transition-shadow">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-          Marcar Horário
+      <div class="grid grid-cols-2 gap-3 mb-8">
+        <a href="#agendar" class="btn-shimmer flex items-center justify-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-5 py-4 rounded-2xl text-sm sm:text-base">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" /></svg>
+          Agendar
         </a>
-        <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="inline-flex items-center gap-2 glass text-white font-semibold px-8 py-4 rounded-full hover:border-gold/60 hover:text-gold-2 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92zm0 7.36a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm5.68-7.54a1.04 1.04 0 1 1-2.08 0 1.04 1.04 0 0 1 2.08 0z"/></svg>
-          @barbearia.friques
+        <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 glass text-white font-semibold px-5 py-4 rounded-2xl text-sm sm:text-base">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92z"/></svg>
+          Instagram
         </a>
       </div>
 
-      <!-- Stats -->
-      <div class="flex flex-wrap gap-10">
-        <div>
-          <div class="flex items-center gap-1 font-display text-4xl text-white">
-            4.9 <span class="text-gold-2 text-2xl">★</span>
-          </div>
-          <p class="text-gray-500 text-sm">avaliação no Google</p>
+      <!-- Stats strip -->
+      <div class="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
+        <div class="glass rounded-2xl px-5 py-3 shrink-0">
+          <div class="font-display text-2xl text-white">4.9 <span class="text-gold-2 text-lg">★</span></div>
+          <p class="text-gray-500 text-xs">no Google</p>
         </div>
-        <div class="w-px bg-white/10"></div>
-        <div>
-          <div class="font-display text-4xl text-white">2.000+</div>
-          <p class="text-gray-500 text-sm">atendimentos realizados</p>
+        <div class="glass rounded-2xl px-5 py-3 shrink-0">
+          <div class="font-display text-2xl text-white">2.000+</div>
+          <p class="text-gray-500 text-xs">atendimentos</p>
         </div>
-      </div>
-    </div>
-
-    <!-- Right: Visual + Gamer card -->
-    <div class="relative reveal">
-      <div class="relative rounded-[2rem] overflow-hidden border-gradient aspect-[4/5] shadow-[0_0_60px_rgba(229,184,11,0.15)]">
-        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop"
-             alt="Barbeiro atendendo cliente na Friques Barbearia"
-             class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent"></div>
-      </div>
-
-      <!-- Floating Gamer Card -->
-      <div class="animate-float absolute -bottom-8 -left-6 sm:-left-10 glass-strong rounded-2xl p-5 w-72 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-11 h-11 rounded-xl bg-gold/15 flex items-center justify-center text-gold-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7.5H9A5.5 5.5 0 0 0 3.6 13l.66 4.62A2 2 0 0 0 6.24 19.4a2 2 0 0 0 1.8-1.09L9.2 16h5.6l1.16 2.31a2 2 0 0 0 1.8 1.09 2 2 0 0 0 1.98-1.78L20.4 13A5.5 5.5 0 0 0 15 7.5zM9.5 12.75h-1.25V14H7v-1.25H5.75v-1.5H7V10h1.25v1.25H9.5v1.5zM15 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm2.5 2.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
-          </div>
-          <div>
-            <p class="text-white font-bold text-sm">Lounge Gamer PS5</p>
-            <p class="text-gray-400 text-xs">enquanto espera, você joga</p>
-          </div>
-        </div>
-        <div class="flex gap-3 text-gray-300 text-xs">
-          <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14z"/></svg>Climatizado</span>
-          <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-2" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>Wi-Fi</span>
-          <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5z"/></svg>Atenção 1:1</span>
+        <div class="glass rounded-2xl px-5 py-3 shrink-0">
+          <div class="font-display text-2xl text-white">PS5</div>
+          <p class="text-gray-500 text-xs">lounge gamer</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ O ESPAÇO ============ -->
-<section id="espaco" class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10">
-    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">O Ambiente</span>
-      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">UM ESPAÇO FEITO PRA VOCÊ</h2>
-      <p class="text-gray-400 mt-4">Design moderno, conforto e uma vibe descontraída — do jeito que barbearia boa deve ser.</p>
+<!-- ============ SERVIÇOS ============ -->
+<section id="servicos" class="relative py-16 lg:py-24 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+    <div class="mb-10 reveal">
+      <span class="text-gold-2 font-semibold text-xs lg:text-sm tracking-widest uppercase">Tabela de Serviços</span>
+      <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white mt-2">O QUE VOCÊ VAI PEDIR?</h2>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="reveal rounded-2xl overflow-hidden border-gradient aspect-square group">
-        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=800&auto=format&fit=crop" alt="Cadeiras da barbearia" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="service-list-card reveal glass rounded-2xl p-5 flex items-center justify-between gap-4" data-service="Corte Masculino" data-price="R$ 45" data-duration="~30 min">
+        <div>
+          <p class="text-white font-bold">Corte Masculino</p>
+          <p class="text-gray-500 text-xs mt-0.5">~30 min</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="text-gold-2 font-bold">R$ 45</p>
+          <span class="text-[11px] text-gray-400 underline underline-offset-2">agendar</span>
+        </div>
       </div>
-      <div class="reveal rounded-2xl overflow-hidden border-gradient aspect-square group">
-        <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?q=80&w=800&auto=format&fit=crop" alt="Corte de cabelo em andamento" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+
+      <div class="service-list-card reveal glass rounded-2xl p-5 flex items-center justify-between gap-4" data-service="Barba Completa" data-price="R$ 35" data-duration="~25 min">
+        <div>
+          <p class="text-white font-bold">Barba Completa</p>
+          <p class="text-gray-500 text-xs mt-0.5">~25 min</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="text-gold-2 font-bold">R$ 35</p>
+          <span class="text-[11px] text-gray-400 underline underline-offset-2">agendar</span>
+        </div>
       </div>
-      <div class="reveal rounded-2xl overflow-hidden border-gradient aspect-square group">
-        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=800&auto=format&fit=crop" alt="Acabamento de barba" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+
+      <div class="service-list-card reveal glass rounded-2xl p-5 flex items-center justify-between gap-4 border-gradient" data-service="Combo Friques (Corte + Barba)" data-price="R$ 70" data-duration="~50 min">
+        <div>
+          <p class="text-white font-bold">Combo Friques</p>
+          <p class="text-gray-500 text-xs mt-0.5">Corte + Barba · ~50 min</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="text-gold-2 font-bold">R$ 70</p>
+          <span class="text-[11px] text-gray-400 underline underline-offset-2">agendar</span>
+        </div>
+      </div>
+
+      <div class="service-list-card reveal glass rounded-2xl p-5 flex items-center justify-between gap-4" data-service="Sobrancelha" data-price="R$ 15" data-duration="~10 min">
+        <div>
+          <p class="text-white font-bold">Sobrancelha</p>
+          <p class="text-gray-500 text-xs mt-0.5">~10 min</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="text-gold-2 font-bold">R$ 15</p>
+          <span class="text-[11px] text-gray-400 underline underline-offset-2">agendar</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ DIFERENCIAIS ============ -->
-<section id="diferenciais" class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10">
-    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">Por que a Friques</span>
-      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">NOSSOS DIFERENCIAIS</h2>
+<section id="diferenciais" class="relative py-16 lg:py-24 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+    <div class="mb-10 reveal">
+      <span class="text-gold-2 font-semibold text-xs lg:text-sm tracking-widest uppercase">Por que a Friques</span>
+      <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white mt-2">NOSSOS DIFERENCIAIS</h2>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6">
-      <!-- Card 1 -->
-      <div class="reveal glass rounded-2xl p-8 hover:-translate-y-2 hover:border-gold/50 transition-all duration-300">
-        <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42-3.42-3.42" /></svg>
+    <div class="flex lg:grid lg:grid-cols-3 gap-4 overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0 pb-2">
+      <div class="reveal glass rounded-2xl p-6 shrink-0 w-[78%] sm:w-[45%] lg:w-auto">
+        <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42-3.42-3.42" /></svg>
         </div>
-        <h3 class="text-white font-bold text-xl mb-3">Visagismo &amp; Técnica</h3>
-        <p class="text-gray-400 leading-relaxed">Profissionais especializados que analisam o formato do seu rosto para entregar o corte que mais valoriza o seu estilo.</p>
+        <h3 class="text-white font-bold text-lg mb-2">Visagismo &amp; Técnica</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Análise do formato do rosto para o corte que mais valoriza o seu estilo.</p>
       </div>
 
-      <!-- Card 2 -->
-      <div class="reveal glass rounded-2xl p-8 hover:-translate-y-2 hover:border-gold/50 transition-all duration-300">
-        <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" /></svg>
+      <div class="reveal glass rounded-2xl p-6 shrink-0 w-[78%] sm:w-[45%] lg:w-auto">
+        <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" /></svg>
         </div>
-        <h3 class="text-white font-bold text-xl mb-3">Lounge Gamer PS5</h3>
-        <p class="text-gray-400 leading-relaxed">Ambiente climatizado, Wi-Fi liberado e um PlayStation 5 à disposição — sua espera vira parte da experiência.</p>
+        <h3 class="text-white font-bold text-lg mb-2">Lounge Gamer PS5</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Ambiente climatizado, Wi-Fi e PlayStation 5 enquanto você espera.</p>
       </div>
 
-      <!-- Card 3 -->
-      <div class="reveal glass rounded-2xl p-8 hover:-translate-y-2 hover:border-gold/50 transition-all duration-300">
-        <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
+      <div class="reveal glass rounded-2xl p-6 shrink-0 w-[78%] sm:w-[45%] lg:w-auto">
+        <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2 mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
         </div>
-        <h3 class="text-white font-bold text-xl mb-3">Pontualidade &amp; Respeito</h3>
-        <p class="text-gray-400 leading-relaxed">Seu horário agendado é levado a sério. Respeitamos o seu tempo do início ao fim do atendimento.</p>
+        <h3 class="text-white font-bold text-lg mb-2">Pontualidade</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Seu horário agendado é levado a sério, do início ao fim.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ AGENDAMENTO ============ -->
-<section id="agendar" class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-4xl mx-auto px-6 lg:px-10">
-    <div class="text-center max-w-2xl mx-auto mb-14 reveal">
-      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">Reserve seu horário</span>
-      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">AGENDE SEU HORÁRIO</h2>
-      <p class="text-gray-400 mt-4">Preencha os dados abaixo e confirme direto pelo WhatsApp. Rápido e sem complicação.</p>
+<!-- ============ AGENDAMENTO (WIZARD) ============ -->
+<section id="agendar" class="relative py-16 lg:py-24 border-t border-white/5">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-10">
+    <div class="mb-8 reveal">
+      <span class="text-gold-2 font-semibold text-xs lg:text-sm tracking-widest uppercase">Agendamento</span>
+      <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white mt-2">RESERVE SEU HORÁRIO</h2>
+      <p class="text-gray-400 mt-3 text-sm lg:text-base">4 passos rápidos. Confirmação final direto no WhatsApp.</p>
     </div>
 
-    <div class="glass-strong rounded-3xl p-6 sm:p-10 reveal">
+    <div class="glass-strong rounded-3xl p-5 sm:p-8 reveal">
+
+      <!-- Progress -->
+      <div class="flex items-center justify-center gap-2 mb-8">
+        <span class="step-dot active" data-dot="1"></span>
+        <span class="step-dot" data-dot="2"></span>
+        <span class="step-dot" data-dot="3"></span>
+        <span class="step-dot" data-dot="4"></span>
+      </div>
 
       <!-- Step 1: Serviço -->
-      <div class="mb-10">
-        <p class="text-white font-bold mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-gold-2 text-black text-xs font-bold flex items-center justify-center">1</span> Escolha o serviço</p>
-        <p class="text-gray-500 text-sm mb-5 ml-8">Selecione uma opção</p>
-        <div class="grid sm:grid-cols-3 gap-4" id="serviceOptions">
-          <div class="service-card glass rounded-xl p-5 text-center" data-service="Corte Masculino" data-price="R$ 45">
-            <p class="text-white font-semibold">Corte Masculino</p>
+      <div class="wizard-panel active" data-panel="1">
+        <p class="text-white font-bold text-lg mb-1">Escolha o serviço</p>
+        <p class="text-gray-500 text-sm mb-5">Toque em uma opção para selecionar</p>
+        <div class="grid grid-cols-2 gap-3" id="serviceOptions">
+          <div class="service-card glass rounded-xl p-4 text-center" data-service="Corte Masculino" data-price="R$ 45">
+            <p class="text-white font-semibold text-sm">Corte Masculino</p>
             <p class="text-gold-2 text-sm mt-1">R$ 45</p>
           </div>
-          <div class="service-card glass rounded-xl p-5 text-center" data-service="Barba Completa" data-price="R$ 35">
-            <p class="text-white font-semibold">Barba Completa</p>
+          <div class="service-card glass rounded-xl p-4 text-center" data-service="Barba Completa" data-price="R$ 35">
+            <p class="text-white font-semibold text-sm">Barba Completa</p>
             <p class="text-gold-2 text-sm mt-1">R$ 35</p>
           </div>
-          <div class="service-card glass rounded-xl p-5 text-center" data-service="Combo Friques (Corte + Barba)" data-price="R$ 70">
-            <p class="text-white font-semibold">Combo Friques</p>
-            <p class="text-gray-500 text-xs">Corte + Barba</p>
+          <div class="service-card glass rounded-xl p-4 text-center" data-service="Combo Friques (Corte + Barba)" data-price="R$ 70">
+            <p class="text-white font-semibold text-sm">Combo Friques</p>
             <p class="text-gold-2 text-sm mt-1">R$ 70</p>
+          </div>
+          <div class="service-card glass rounded-xl p-4 text-center" data-service="Sobrancelha" data-price="R$ 15">
+            <p class="text-white font-semibold text-sm">Sobrancelha</p>
+            <p class="text-gold-2 text-sm mt-1">R$ 15</p>
           </div>
         </div>
       </div>
 
-      <!-- Step 2: Data e Hora -->
-      <div class="mb-10">
-        <p class="text-white font-bold mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-gold-2 text-black text-xs font-bold flex items-center justify-center">2</span> Data e horário</p>
-        <p class="text-gray-500 text-sm mb-5 ml-8">Quando você prefere vir?</p>
-        <div class="grid sm:grid-cols-2 gap-4">
-          <input type="date" id="dateInput" class="glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:border-gold-2 border border-transparent focus:ring-1 focus:ring-gold-2 transition-all [color-scheme:dark]">
-          <select id="timeInput" class="glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:border-gold-2 border border-transparent focus:ring-1 focus:ring-gold-2 transition-all">
+      <!-- Step 2: Data/Hora -->
+      <div class="wizard-panel" data-panel="2">
+        <p class="text-white font-bold text-lg mb-1">Data e horário</p>
+        <p class="text-gray-500 text-sm mb-5">Quando você prefere vir?</p>
+        <div class="flex flex-col gap-4">
+          <input type="date" id="dateInput" class="glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:ring-1 focus:ring-gold-2 transition-all [color-scheme:dark]">
+          <select id="timeInput" class="glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:ring-1 focus:ring-gold-2 transition-all">
             <option value="" class="bg-bg2">Selecione o horário</option>
           </select>
         </div>
       </div>
 
-      <!-- Step 3: Nome -->
-      <div class="mb-10">
-        <p class="text-white font-bold mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-gold-2 text-black text-xs font-bold flex items-center justify-center">3</span> Seus dados</p>
-        <p class="text-gray-500 text-sm mb-5 ml-8">Como podemos te chamar?</p>
-        <input type="text" id="nameInput" placeholder="Nome completo" class="w-full glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:border-gold-2 border border-transparent focus:ring-1 focus:ring-gold-2 transition-all placeholder:text-gray-500">
+      <!-- Step 3: Dados -->
+      <div class="wizard-panel" data-panel="3">
+        <p class="text-white font-bold text-lg mb-1">Seus dados</p>
+        <p class="text-gray-500 text-sm mb-5">Como podemos te chamar?</p>
+        <div class="flex flex-col gap-4">
+          <input type="text" id="nameInput" placeholder="Nome completo" class="w-full glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:ring-1 focus:ring-gold-2 transition-all placeholder:text-gray-500">
+          <input type="tel" id="phoneInput" placeholder="Telefone (opcional)" class="w-full glass rounded-xl px-5 py-4 text-white bg-transparent outline-none focus:ring-1 focus:ring-gold-2 transition-all placeholder:text-gray-500">
+        </div>
       </div>
 
-      <!-- Step 4: Enviar -->
-      <div>
-        <button id="submitBtn" class="btn-shimmer w-full flex items-center justify-center gap-3 bg-gradient-to-r from-gold-2 to-gold text-black font-bold text-lg px-8 py-5 rounded-full hover:shadow-[0_0_35px_rgba(229,184,11,0.5)] transition-shadow">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-          Confirmar Agendamento no WhatsApp
+      <!-- Step 4: Revisão -->
+      <div class="wizard-panel" data-panel="4">
+        <p class="text-white font-bold text-lg mb-1">Confirme seu agendamento</p>
+        <p class="text-gray-500 text-sm mb-5">Revise antes de enviar pelo WhatsApp</p>
+        <div class="glass rounded-xl p-5 flex flex-col gap-3 text-sm">
+          <div class="flex justify-between"><span class="text-gray-500">Serviço</span><span id="reviewService" class="text-white font-semibold text-right">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Valor</span><span id="reviewPrice" class="text-gold-2 font-semibold">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Data</span><span id="reviewDate" class="text-white font-semibold">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Horário</span><span id="reviewTime" class="text-white font-semibold">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Nome</span><span id="reviewName" class="text-white font-semibold text-right">—</span></div>
+        </div>
+      </div>
+
+      <p id="formError" class="hidden text-red-400 text-sm text-center mt-5"></p>
+
+      <!-- Nav buttons -->
+      <div class="flex gap-3 mt-8">
+        <button id="btnBack" class="hidden flex-1 glass text-white font-semibold px-6 py-4 rounded-full">Voltar</button>
+        <button id="btnNext" class="btn-shimmer flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-6 py-4 rounded-full">
+          Continuar
         </button>
-        <p id="formError" class="hidden text-red-400 text-sm text-center mt-4"></p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ LOCALIZAÇÃO ============ -->
-<section id="localizacao" class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10">
-    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-      <span class="text-gold-2 font-semibold text-sm tracking-widest uppercase">Onde estamos</span>
-      <h2 class="font-display text-5xl sm:text-6xl text-white mt-3">LOCALIZAÇÃO &amp; CONTATO</h2>
+<section id="local" class="relative py-16 lg:py-24 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+    <div class="mb-10 reveal">
+      <span class="text-gold-2 font-semibold text-xs lg:text-sm tracking-widest uppercase">Onde estamos</span>
+      <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white mt-2">LOCALIZAÇÃO &amp; CONTATO</h2>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-8 items-stretch">
-      <div class="reveal glass-strong rounded-3xl p-8 sm:p-10 flex flex-col justify-center gap-8">
+    <div class="grid lg:grid-cols-2 gap-6 items-stretch">
+      <div class="reveal glass-strong rounded-3xl p-6 sm:p-8 flex flex-col gap-6">
         <div class="flex gap-4">
-          <div class="w-12 h-12 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z" /></svg>
+          <div class="w-11 h-11 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z" /></svg>
           </div>
-          <div>
-            <p class="text-white font-bold text-lg mb-1">Endereço</p>
-            <p class="text-gray-400 leading-relaxed">R. Dr. Cyro Lopes Pereira, 910<br>Jardim da Penha — Vitória, ES</p>
+          <div class="flex-1">
+            <p class="text-white font-bold mb-1">Endereço</p>
+            <p class="text-gray-400 text-sm leading-relaxed">R. Dr. Cyro Lopes Pereira, 910<br>Jardim da Penha — Vitória, ES</p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <button id="btnCopyAddress" class="text-xs font-semibold glass px-3 py-2 rounded-full text-gray-300 hover:text-gold-2 transition-colors">Copiar endereço</button>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=R.+Dr.+Cyro+Lopes+Pereira,+910,+Jardim+da+Penha,+Vit%C3%B3ria+-+ES" target="_blank" rel="noopener" class="text-xs font-semibold glass px-3 py-2 rounded-full text-gray-300 hover:text-gold-2 transition-colors">Traçar rota</a>
+            </div>
           </div>
         </div>
 
         <div class="flex gap-4">
-          <div class="w-12 h-12 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
+          <div class="w-11 h-11 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
           </div>
-          <div>
-            <p class="text-white font-bold text-lg mb-1">Horário de Funcionamento</p>
-            <p class="text-gray-400 leading-relaxed">Segunda a Sexta: 09:00h às 20:00h<br>Sábado: 08:00h às 17:00h</p>
+          <div class="flex-1">
+            <p class="text-white font-bold mb-1">Horário de Funcionamento</p>
+            <div class="text-gray-400 text-sm leading-relaxed flex flex-col gap-1">
+              <div class="flex justify-between max-w-xs"><span>Segunda a Sexta</span><span class="text-gray-200">09:00 – 20:00</span></div>
+              <div class="flex justify-between max-w-xs"><span>Sábado</span><span class="text-gray-200">08:00 – 17:00</span></div>
+              <div class="flex justify-between max-w-xs"><span>Domingo</span><span class="text-gray-200">Fechado</span></div>
+            </div>
+            <span id="statusPillLocal" class="inline-flex items-center gap-1.5 glass px-3 py-1.5 rounded-full text-xs font-semibold mt-3">
+              <span id="statusDotLocal" class="status-dot w-2 h-2 rounded-full bg-green-400"></span>
+              <span id="statusTextLocal">—</span>
+            </span>
           </div>
         </div>
 
         <div class="flex gap-4">
-          <div class="w-12 h-12 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92z" /></svg>
+          <div class="w-11 h-11 shrink-0 rounded-xl bg-gold/10 flex items-center justify-center text-gold-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92z"/></svg>
           </div>
           <div>
-            <p class="text-white font-bold text-lg mb-1">Redes Sociais</p>
-            <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="text-gold-2 hover:underline">@barbearia.friques</a>
+            <p class="text-white font-bold mb-1">Redes Sociais</p>
+            <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="text-gold-2 text-sm hover:underline">@barbearia.friques</a>
           </div>
         </div>
 
-        <a href="#agendar" class="btn-shimmer inline-flex w-fit items-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-8 py-4 rounded-full hover:shadow-[0_0_30px_rgba(229,184,11,0.5)] transition-shadow mt-2">
+        <a href="#agendar" class="btn-shimmer inline-flex w-full sm:w-fit items-center justify-center gap-2 bg-gradient-to-r from-gold-2 to-gold text-black font-bold px-8 py-4 rounded-full mt-1">
           Agendar Meu Horário
         </a>
       </div>
 
-      <div class="reveal rounded-3xl overflow-hidden border-gradient min-h-[400px]">
-        <iframe
-          class="map-dark w-full h-full min-h-[400px]"
-          src="https://www.google.com/maps?q=R.+Dr.+Cyro+Lopes+Pereira,+910,+Jardim+da+Penha,+Vit%C3%B3ria+-+ES&output=embed"
-          style="border:0;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+      <div class="reveal rounded-3xl overflow-hidden border-gradient min-h-[320px] lg:min-h-[420px]">
+        <iframe class="map-dark w-full h-full min-h-[320px] lg:min-h-[420px]" src="https://www.google.com/maps?q=R.+Dr.+Cyro+Lopes+Pereira,+910,+Jardim+da+Penha,+Vit%C3%B3ria+-+ES&output=embed" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ FOOTER ============ -->
-<footer class="relative z-10 border-t border-white/5 py-12">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-    <div class="flex items-center gap-2">
-      <span class="font-display text-2xl tracking-wider text-white">FRIQUES</span>
-      <span class="font-display text-2xl tracking-wider text-gold-gradient">BARBEARIA</span>
+<footer class="relative border-t border-white/5 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-5">
+    <div class="flex items-center gap-1.5">
+      <span class="font-display text-xl tracking-wider text-white">FRIQUES</span>
+      <span class="font-display text-xl tracking-wider text-gold-gradient">BARBEARIA</span>
     </div>
-
-    <p class="text-gray-500 text-sm text-center">&copy; <span id="year"></span> Friques Barbearia. Todos os direitos reservados.</p>
-
-    <div class="flex items-center gap-4">
-      <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-300 hover:text-gold-2 hover:border-gold/60 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92zm0 7.36a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm5.68-7.54a1.04 1.04 0 1 1-2.08 0 1.04 1.04 0 0 1 2.08 0z"/></svg>
+    <p class="text-gray-500 text-xs text-center">&copy; <span id="year"></span> Friques Barbearia. Todos os direitos reservados.</p>
+    <div class="flex items-center gap-3">
+      <a href="https://instagram.com/barbearia.friques" target="_blank" rel="noopener" class="w-9 h-9 rounded-full glass flex items-center justify-center text-gray-300 hover:text-gold-2 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.35 3.9 3.87 2.35 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.38a4.46 4.46 0 1 0 0 8.92 4.46 4.46 0 0 0 0-8.92z"/></svg>
       </a>
-      <a href="https://wa.me/5527900000000" target="_blank" rel="noopener" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-300 hover:text-gold-2 hover:border-gold/60 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2zm5.78 14.24c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.13-4.9-4.32-.14-.19-1.17-1.56-1.17-2.97 0-1.42.74-2.11 1-2.4.26-.29.57-.36.76-.36h.55c.18 0 .42-.07.65.5.24.58.82 2.01.89 2.16.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.41.5-.14.15-.28.3-.12.59.16.29.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.22 1.37.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.64.77 1.92.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+      <a href="https://wa.me/5527900000000" target="_blank" rel="noopener" class="w-9 h-9 rounded-full glass flex items-center justify-center text-gray-300 hover:text-gold-2 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2z"/></svg>
       </a>
     </div>
   </div>
 </footer>
 
+</main>
+
+<!-- Floating WhatsApp button -->
+<a href="https://wa.me/5527900000000" target="_blank" rel="noopener" id="fabWhats" class="fixed right-4 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-[0_8px_24px_rgba(0,0,0,0.5)] active:scale-95 transition-transform" style="bottom: calc(96px + var(--safe-b));">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2zm5.78 14.24c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.13-4.9-4.32-.14-.19-1.17-1.56-1.17-2.97 0-1.42.74-2.11 1-2.4.26-.29.57-.36.76-.36h.55c.18 0 .42-.07.65.5.24.58.82 2.01.89 2.16.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.41.5-.14.15-.28.3-.12.59.16.29.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.22 1.37.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.64.77 1.92.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+</a>
+
+<!-- Bottom nav (mobile) -->
+<nav id="bottomNav" class="fixed bottom-0 inset-x-0 z-40 lg:hidden glass-strong border-t border-gold/10">
+  <div class="grid grid-cols-5 items-end px-2 pt-2 pb-2">
+    <a href="#home" class="nav-item flex flex-col items-center gap-1 py-1" data-nav="home">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" /></svg>
+      <span class="text-[10px] font-medium">Início</span>
+    </a>
+    <a href="#servicos" class="nav-item flex flex-col items-center gap-1 py-1" data-nav="servicos">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6.75L21 6.75M6 12L21 12M6 17.25L21 17.25M3 6.75h.008v.008H3V6.75zm0 5.25h.008v.008H3V12zm0 5.25h.008v.008H3v-.008z" /></svg>
+      <span class="text-[10px] font-medium">Serviços</span>
+    </a>
+    <a href="#agendar" class="nav-item flex flex-col items-center gap-1 -mt-6" data-nav="agendar">
+      <span class="w-12 h-12 rounded-full bg-gradient-to-br from-gold-2 to-gold flex items-center justify-center shadow-[0_6px_18px_rgba(229,184,11,0.45)]">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" /></svg>
+      </span>
+      <span class="text-[10px] font-medium mt-0.5">Agendar</span>
+    </a>
+    <a href="#diferenciais" class="nav-item flex flex-col items-center gap-1 py-1" data-nav="diferenciais">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5z" /></svg>
+      <span class="text-[10px] font-medium">Diferenciais</span>
+    </a>
+    <a href="#local" class="nav-item flex flex-col items-center gap-1 py-1" data-nav="local">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z" /></svg>
+      <span class="text-[10px] font-medium">Local</span>
+    </a>
+  </div>
+</nav>
+
+<!-- Toast -->
+<div id="toast" class="toast fixed left-1/2 -translate-x-1/2 z-50 opacity-0 pointer-events-none glass-strong text-white text-sm font-medium px-5 py-3 rounded-full" style="bottom: calc(96px + var(--safe-b));">Endereço copiado!</div>
+
 <script>
-  // Ano dinâmico
   document.getElementById('year').textContent = new Date().getFullYear();
+  const WHATSAPP_NUMBER = '5527900000000'; // Substituir pelo número real da Friques Barbearia
 
-  // Header shadow on scroll
-  const header = document.getElementById('header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      header.classList.add('shadow-[0_4px_30px_rgba(0,0,0,0.4)]');
-    } else {
-      header.classList.remove('shadow-[0_4px_30px_rgba(0,0,0,0.4)]');
-    }
-  });
+  /* ---------- Status Aberto/Fechado ---------- */
+  function computeStatus() {
+    const now = new Date();
+    const day = now.getDay();
+    const h = now.getHours() + now.getMinutes() / 60;
+    let open = false;
+    if (day >= 1 && day <= 5) open = h >= 9 && h < 20;
+    else if (day === 6) open = h >= 8 && h < 17;
+    return open;
+  }
+  function paintStatus(dotId, textId, open) {
+    const dot = document.getElementById(dotId);
+    const text = document.getElementById(textId);
+    if (!dot || !text) return;
+    dot.classList.toggle('closed', !open);
+    dot.classList.toggle('bg-green-400', open);
+    dot.classList.toggle('bg-red-400', !open);
+    text.textContent = open ? 'Aberto agora' : 'Fechado agora';
+    text.classList.toggle('text-green-400', open);
+    text.classList.toggle('text-red-400', !open);
+  }
+  function refreshStatus() {
+    const open = computeStatus();
+    paintStatus('statusDotTop', 'statusTextTop', open);
+    paintStatus('statusDotHero', 'statusTextHero', open);
+    paintStatus('statusDotLocal', 'statusTextLocal', open);
+  }
+  refreshStatus();
+  setInterval(refreshStatus, 60000);
 
-  // Mobile menu toggle
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-  document.querySelectorAll('.mobile-link').forEach(link => {
-    link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-  });
-
-  // Reveal on scroll
-  const revealEls = document.querySelectorAll('.reveal');
+  /* ---------- Reveal on scroll ---------- */
   const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ---------- Bottom nav active state ---------- */
+  const navSections = ['home', 'servicos', 'agendar', 'diferenciais', 'local'];
+  const navItems = document.querySelectorAll('.nav-item');
+  const navObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);
+        const id = entry.target.id;
+        navItems.forEach(n => n.classList.toggle('active', n.dataset.nav === id));
       }
     });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => io.observe(el));
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  navSections.forEach(id => { const el = document.getElementById(id); if (el) navObserver.observe(el); });
 
-  // ---- Módulo de Agendamento ----
+  /* ---------- Booking Wizard ---------- */
+  let selectedService = null, selectedPrice = null;
+  let currentStep = 1;
+  const totalSteps = 4;
+
   const serviceCards = document.querySelectorAll('.service-card');
-  let selectedService = null;
+  const serviceListCards = document.querySelectorAll('.service-list-card');
 
-  serviceCards.forEach(card => {
-    card.addEventListener('click', () => {
-      serviceCards.forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      selectedService = card.dataset.service;
-    });
-  });
+  function selectService(name, price) {
+    selectedService = name; selectedPrice = price;
+    serviceCards.forEach(c => c.classList.toggle('selected', c.dataset.service === name));
+  }
 
-  // Data mínima = hoje
+  serviceCards.forEach(card => card.addEventListener('click', () => selectService(card.dataset.service, card.dataset.price)));
+
+  serviceListCards.forEach(card => card.addEventListener('click', () => {
+    selectService(card.dataset.service, card.dataset.price);
+    document.getElementById('agendar').scrollIntoView({ behavior: 'smooth' });
+    goToStep(1);
+  }));
+
   const dateInput = document.getElementById('dateInput');
   const todayStr = new Date().toISOString().split('T')[0];
   dateInput.setAttribute('min', todayStr);
 
-  // Horários de 09:00 às 19:00 (intervalos de 30 min)
   const timeInput = document.getElementById('timeInput');
   for (let h = 9; h <= 19; h++) {
     ['00', '30'].forEach(m => {
       if (h === 19 && m === '30') return;
       const value = `${String(h).padStart(2, '0')}:${m}`;
       const opt = document.createElement('option');
-      opt.value = value;
-      opt.textContent = value;
-      opt.className = 'bg-bg2';
+      opt.value = value; opt.textContent = value; opt.className = 'bg-bg2';
       timeInput.appendChild(opt);
     });
   }
 
-  // Envio via WhatsApp
-  const submitBtn = document.getElementById('submitBtn');
   const nameInput = document.getElementById('nameInput');
+  const phoneInput = document.getElementById('phoneInput');
   const formError = document.getElementById('formError');
-  const WHATSAPP_NUMBER = '5527900000000'; // Substituir pelo número real da Friques Barbearia
+  const btnNext = document.getElementById('btnNext');
+  const btnBack = document.getElementById('btnBack');
+  const stepDots = document.querySelectorAll('.step-dot');
+  const panels = document.querySelectorAll('.wizard-panel');
 
-  submitBtn.addEventListener('click', () => {
-    const date = dateInput.value;
-    const time = timeInput.value;
-    const name = nameInput.value.trim();
+  function goToStep(step) {
+    currentStep = step;
+    panels.forEach(p => p.classList.toggle('active', Number(p.dataset.panel) === step));
+    stepDots.forEach((d, i) => {
+      d.classList.toggle('active', i + 1 === step);
+      d.classList.toggle('done', i + 1 < step);
+    });
+    btnBack.classList.toggle('hidden', step === 1);
+    btnNext.textContent = step === totalSteps ? '' : 'Continuar';
+    if (step === totalSteps) {
+      btnNext.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.32A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg> Confirmar no WhatsApp`;
+      document.getElementById('reviewService').textContent = selectedService || '—';
+      document.getElementById('reviewPrice').textContent = selectedPrice || '—';
+      const [y, mo, d] = (dateInput.value || '').split('-');
+      document.getElementById('reviewDate').textContent = dateInput.value ? `${d}/${mo}/${y}` : '—';
+      document.getElementById('reviewTime').textContent = timeInput.value || '—';
+      document.getElementById('reviewName').textContent = nameInput.value.trim() || '—';
+    } else {
+      btnNext.textContent = 'Continuar';
+    }
+    formError.classList.add('hidden');
+  }
 
-    if (!selectedService || !date || !time || !name) {
-      formError.textContent = 'Por favor, preencha todos os campos antes de confirmar.';
-      formError.classList.remove('hidden');
+  function validateStep(step) {
+    if (step === 1 && !selectedService) return 'Selecione um serviço para continuar.';
+    if (step === 2 && (!dateInput.value || !timeInput.value)) return 'Escolha data e horário.';
+    if (step === 3 && !nameInput.value.trim()) return 'Informe seu nome completo.';
+    return null;
+  }
+
+  btnNext.addEventListener('click', () => {
+    const err = validateStep(currentStep);
+    if (err) { formError.textContent = err; formError.classList.remove('hidden'); return; }
+
+    if (currentStep < totalSteps) {
+      goToStep(currentStep + 1);
       return;
     }
 
-    formError.classList.add('hidden');
-
-    const [year, month, day] = date.split('-');
-    const formattedDate = `${day}/${month}/${year}`;
-
+    const [y, mo, d] = dateInput.value.split('-');
+    const formattedDate = `${d}/${mo}/${y}`;
+    const phoneLine = phoneInput.value.trim() ? `*Telefone:* ${phoneInput.value.trim()}%0A` : '';
     const message =
       `Olá, Friques Barbearia! 💈%0A%0A` +
       `Gostaria de agendar um horário:%0A` +
       `*Serviço:* ${selectedService}%0A` +
+      `*Valor:* ${selectedPrice}%0A` +
       `*Data:* ${formattedDate}%0A` +
-      `*Horário:* ${time}%0A` +
-      `*Nome:* ${name}%0A%0A` +
-      `Aguardo a confirmação, obrigado!`;
+      `*Horário:* ${timeInput.value}%0A` +
+      `*Nome:* ${nameInput.value.trim()}%0A` +
+      phoneLine +
+      `%0AAguardo a confirmação, obrigado!`;
 
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+  });
+
+  btnBack.addEventListener('click', () => { if (currentStep > 1) goToStep(currentStep - 1); });
+
+  /* ---------- Copiar endereço ---------- */
+  const toast = document.getElementById('toast');
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+    toast.classList.add('opacity-100');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 2200);
+  }
+  document.getElementById('btnCopyAddress').addEventListener('click', async () => {
+    const address = 'R. Dr. Cyro Lopes Pereira, 910 - Jardim da Penha, Vitória - ES';
+    try {
+      await navigator.clipboard.writeText(address);
+      showToast('Endereço copiado!');
+    } catch {
+      showToast('Não foi possível copiar.');
+    }
   });
 </script>
 
