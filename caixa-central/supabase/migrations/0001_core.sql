@@ -342,6 +342,21 @@ begin
   update public.profiles set active = p_active where id = p_user_id;
 end $$;
 
+-- Usada pelo servidor ANTES de operações com a service role (trocar senha, bloquear login):
+-- a decisão de permissão é sempre do banco, nunca do código que tem a chave privilegiada.
+create function public.assert_can_manage_user(p_user_id uuid) returns void
+language plpgsql security definer set search_path = '' as $$
+declare v_org uuid; v_role text;
+begin
+  v_org := private.require_admin();
+  if p_user_id = private.uid() then
+    perform private.fail('Esta ação não vale para o seu próprio usuário', 'FORBIDDEN'); end if;
+  select role into v_role from public.profiles where id = p_user_id and organization_id = v_org;
+  if v_role is null then perform private.fail('Usuário não encontrado', 'NOT_FOUND'); end if;
+  if not private.can_manage_role(private.my_role(), v_role) then
+    perform private.fail('Seu perfil não pode alterar este usuário', 'FORBIDDEN'); end if;
+end $$;
+
 create function public.update_user_name(p_user_id uuid, p_full_name text) returns void
 language plpgsql security definer set search_path = '' as $$
 declare v_org uuid; v_target public.profiles%rowtype;

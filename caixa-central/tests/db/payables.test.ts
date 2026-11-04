@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { addMovement, balance, closeShift, createTestDb, expectError, openShift, uid, world, type World } from "./helpers";
+import { balance, closeShift, createTestDb, expectError, openShift, uid, world, type World } from "./helpers";
 
 let w: World;
 beforeAll(async () => { w = await world(await createTestDb()); });

@@ -208,6 +208,16 @@ begin
     order by r.name;
 end $$;
 
+-- Contas que podem receber sangria/suprimento (só nomes: sem saldos).
+create function public.cash_counter_accounts() returns table (id uuid, name text, type text)
+language plpgsql stable security definer set search_path = '' as $$
+declare v_org uuid;
+begin
+  v_org := private.require_org();
+  return query select a.id, a.name, a.type from public.accounts a
+    where a.organization_id = v_org and a.active and a.type in ('safe', 'bank', 'pix') order by a.type desc, a.name;
+end $$;
+
 -- ---------------------------------------------------------------------
 -- Abertura de turno (passagem com conferência obrigatória)
 -- ---------------------------------------------------------------------
