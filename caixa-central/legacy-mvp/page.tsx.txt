@@ -1,0 +1,418 @@
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
+import {
+  ArrowDownRight, ArrowLeftRight, ArrowRight, ArrowUpRight, Banknote, Bell,
+  CalendarDays, Check, CheckCircle2, CircleAlert, ClipboardCheck, Clock3,
+  FileText, LayoutDashboard, Loader2, LockKeyhole, LogOut, Menu,
+  Plus, RefreshCw, ShieldCheck, Store, Users, Wallet, X,
+} from 'lucide-react'
+import { createClient } from '@/lib/supabase'
+import {
+  brl, categoryLabel, dateBR, paymentLabel, shortTime, todayLocal, todayRange,
+  type Bill, type CashShift, type Movement, type MovementCategory, type PayMethod,
+  type Profile, type Register,
+} from '@/lib/model'
+
+type Section = 'dashboard' | 'cash' | 'bills'
+type MovementKind = 'venda' | 'entrada' | 'despesa' | 'retirada' | 'estorno'
+const paymentOptions: PayMethod[] = ['dinheiro', 'pix', 'debito', 'credito', 'transferencia']
+const today = () => todayLocal()
+const toNumber = (value: string) => Number(value.replace(',', '.'))
+const cents = (value: number) => Math.round(value * 100) / 100
+// Paginação evita saldos errados quando o dia ultrapassa o limite de 1.000 linhas da API.
+async function fetchAllRows<T>(query: any): Promise<{rows: T[]; error: string | null}> {
+  const rows: T[] = []
+  for (let page = 0; page < 50; page++) {
+    const { data, error } = await query.range(page * 1000, page * 1000 + 999)
+    if (error) return { rows: [], error: error.message }
+    rows.push(...((data ?? []) as T[]))
+    if ((data ?? []).length < 1000) return { rows, error: null }
+  }
+  return { rows: [], error: 'Volume acima do limite de segurança (50.000 registros). Implemente agregações no servidor.' }
+}
+
+export default function Home() {
+  const supabase = useMemo(() => createClient(), [])
+  const [userId, setUserId] = useState<string | null | undefined>(undefined)
+  useEffect(() => {
+    let live = true
+    void supabase.auth.getUser().then(({ data }) => { if (live) setUserId(data.user?.id ?? null) })
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (live) setUserId(session?.user.id ?? null)
+    })
+    return () => { live = false; sub.subscription.unsubscribe() }
+  }, [supabase])
+  if (userId === undefined) return <div className="center-screen"><Loader2 className="spin" /> Carregando...</div>
+  if (!userId) return <Login onSignedIn={setUserId} />
+  return <Workspace key={userId} userId={userId} onLogout={() => setUserId(null)} />
+}
+
+function Login({ onSignedIn }: { onSignedIn: (id: string) => void }) {
+  const supabase = useMemo(() => createClient(), [])
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  async function signIn(e: React.FormEvent) {
+    e.preventDefault(); setBusy(true); setError('')
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) setError('Não foi possível entrar. Confira o e-mail e a senha.')
+    else if (data.user) onSignedIn(data.user.id)
+    setBusy(false)
+  }
+  return <div className="login-screen">
+    <div className="login-aside">
+      <div className="brand"><div className="brand-icon"><Store size={23} /></div> CAIXA<span>CENTRAL</span></div>
+      <div className="hero-copy"><span className="eyebrow">GESTÃO DA DISTRIBUIDORA</span>
+        <h1>Todo o financeiro.<br /><em>Em um lugar só.</em></h1>
+        <p>Fechamentos por turno, movimentações e boletos. Você no controle e seu pai informado, mesmo à distância.</p>
+        <div className="hero-points"><span><ShieldCheck size={16} /> Acessos por funcionário</span><span><Wallet size={16} /> Caixa auditável</span><span><CalendarDays size={16} /> Contas organizadas</span></div>
+      </div>
+      <small>CAIXA CENTRAL · VERSÃO INICIAL</small>
+    </div>
+    <div className="login-form-panel"><form className="login-card" onSubmit={signIn}>
+      <div className="mobile-brand brand"><div className="brand-icon"><Store size={20} /></div> CAIXA<span>CENTRAL</span></div>
+      <div className="login-lock"><LockKeyhole size={23}/></div>
+      <h2>Bem-vindo de volta</h2><p>Acesse o painel da sua distribuidora.</p>
+      <label>E-mail<input required type="email" autoComplete="username" placeholder="voce@distribuidora.com" value={email} onChange={e=>setEmail(e.target.value)} /></label>
+      <label>Senha<input required type="password" autoComplete="current-password" placeholder="Sua senha" value={password} onChange={e=>setPassword(e.target.value)} /></label>
+      {error && <div className="notice error"><CircleAlert size={16}/>{error}</div>}
+      <button className="btn primary full" disabled={busy} type="submit">{busy ? 'Entrando...' : 'Entrar no sistema'} <ArrowRight size={17}/></button>
+      <p className="security-footnote">As contas são cadastradas pelo administrador. Não há cadastro público.</p>
+    </form></div>
+  </div>
+}
+
+function Workspace({ userId, onLogout }: { userId: string; onLogout: () => void }) {
+  const supabase = useMemo(() => createClient(), [])
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [registers, setRegisters] = useState<Register[]>([])
+  const [shifts, setShifts] = useState<CashShift[]>([])
+  const [movements, setMovements] = useState<Movement[]>([])
+  const [allActiveMovements, setAllActiveMovements] = useState<Movement[]>([])
+  const [bills, setBills] = useState<Bill[]>([])
+  const [people, setPeople] = useState<Profile[]>([])
+  const [section, setSection] = useState<Section>('dashboard')
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+  const [notice, setNotice] = useState<{ kind: 'success' | 'error'; message: string } | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const manager = profile?.role === 'owner' || profile?.role === 'manager'
+  const active = shifts.find(s => s.status === 'open')
+  const lastClosed = shifts.find(s => s.status === 'closed')
+  const activeMovements = active ? allActiveMovements.filter(m => m.shift_id === active.id) : []
+  const cashExpected = active ? cents(Number(active.opening_cash) + activeMovements.filter(m => m.payment_method === 'dinheiro')
+    .reduce((n, m) => n + (m.direction === 'in' ? Number(m.amount) : -Number(m.amount)), 0)) : null
+
+  async function refresh(quiet = false) {
+    if (!quiet) setRefreshing(true)
+    const { data: current, error: profileError } = await supabase.from('profiles')
+      .select('id,organization_id,full_name,role,active').eq('id', userId).maybeSingle()
+    if (profileError || !current?.active) {
+      setNotice({ kind: 'error', message: 'Usuário sem perfil ativo. Peça ao administrador para cadastrar seu acesso.' })
+      setLoading(false); setRefreshing(false); return
+    }
+    const admin = current.role === 'owner' || current.role === 'manager'
+    const { start, end } = todayRange()
+    const [reg, shiftsResult, profilesResult] = await Promise.all([
+      supabase.from('registers').select('*').order('name'),
+      supabase.from('cash_shifts').select('*').order('opened_at', { ascending: false }).limit(80),
+      admin ? supabase.from('profiles').select('*').order('full_name') : Promise.resolve({ data: [], error: null }),
+    ])
+    const openShift = ((shiftsResult.data ?? []) as CashShift[]).find(s => s.status === 'open')
+    const [moves, openMoves, billResult] = await Promise.all([
+      fetchAllRows<Movement>(supabase.from('cash_movements').select('*').gte('created_at', start).lt('created_at', end).order('created_at', { ascending: false })),
+      openShift ? fetchAllRows<Movement>(supabase.from('cash_movements').select('*').eq('shift_id', openShift.id).order('created_at', { ascending: false })) : Promise.resolve({rows: [], error: null}),
+      admin ? fetchAllRows<Bill>(supabase.from('bills').select('*').order('due_date', { ascending: true })) : Promise.resolve({rows: [], error: null}),
+    ])
+    const firstError = reg.error?.message || shiftsResult.error?.message || profilesResult.error?.message || moves.error || openMoves.error || billResult.error
+    if (firstError) setNotice({ kind: 'error', message: `Erro ao carregar dados: ${firstError}` })
+    else {
+      setProfile(current as Profile)
+      setRegisters((reg.data ?? []) as Register[])
+      setShifts((shiftsResult.data ?? []) as CashShift[])
+      setMovements(moves.rows as Movement[])
+      setAllActiveMovements(openMoves.rows as Movement[])
+      setBills(billResult.rows as Bill[])
+      setPeople((profilesResult.data ?? []) as Profile[])
+    }
+    setLoading(false); setRefreshing(false)
+  }
+  useEffect(() => {
+    void refresh()
+    const id = window.setInterval(() => { void refresh(true) }, 30000)
+    return () => window.clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+  function alert(kind: 'success' | 'error', message: string) { setNotice({kind,message}) }
+  async function afterAction(message: string) { alert('success', message); await refresh() }
+  function selectSection(next: Section) { setSection(next); setSidebarOpen(false); setNotice(null) }
+  async function logout() { await supabase.auth.signOut(); onLogout() }
+
+  if (loading) return <div className="center-screen"><Loader2 className="spin" /> Abrindo painel...</div>
+  if (!profile) return <div className="center-screen center-column"><ShieldCheck size={34}/>
+    <h2>Acesso não configurado</h2><p>{notice?.message ?? 'Este usuário ainda não foi associado à distribuidora.'}</p>
+    <button className="btn" onClick={logout}>Sair</button></div>
+
+  const tabs: { id: Section; title: string; icon: typeof Wallet; adminOnly?: boolean }[] = [
+    { id: 'dashboard', title: 'Visão geral', icon: LayoutDashboard, adminOnly: true },
+    { id: 'cash', title: 'Controle de caixa', icon: Wallet },
+    { id: 'bills', title: 'Boletos e contas', icon: FileText, adminOnly: true },
+  ]
+  const shownSection: Section = !manager && section !== 'cash' ? 'cash' : section
+  return <div className="app-shell">
+    {sidebarOpen && <div className="scrim" onClick={() => setSidebarOpen(false)} />}
+    <aside className={`sidebar ${sidebarOpen ? 'show' : ''}`}>
+      <div className="brand sidebar-brand"><div className="brand-icon"><Store size={20}/></div> CAIXA<span>CENTRAL</span></div>
+      <div className="nav-caption">MENU PRINCIPAL</div>
+      <nav>{tabs.filter(t => !t.adminOnly || manager).map(t => {
+        const Icon = t.icon
+        return <button className={`nav-link ${shownSection === t.id ? 'active' : ''}`} key={t.id} onClick={() => selectSection(t.id)}><Icon size={18}/>{t.title}</button>
+      })}</nav>
+      <div className="sidebar-bottom">
+        <div className="staff-chip"><div className="avatar">{profile.full_name.charAt(0).toUpperCase()}</div><div><b>{profile.full_name}</b><span>{profile.role === 'owner' ? 'Proprietário' : profile.role === 'manager' ? 'Gerente' : 'Operador de caixa'}</span></div></div>
+        <button className="nav-link logout" onClick={logout}><LogOut size={18}/> Sair da conta</button>
+      </div>
+    </aside>
+    <main className="main-area">
+      <header className="topbar"><button aria-label="Abrir menu" className="mobile-menu icon-button" onClick={() => setSidebarOpen(true)}><Menu size={23}/></button>
+        <div className="topbar-path">Distribuidora <span>/</span> <b>{shownSection === 'dashboard' ? 'Visão geral' : shownSection === 'cash' ? 'Controle de caixa' : 'Boletos e contas'}</b></div>
+        <div className="topbar-actions"><span className="live-pill"><span /> Atualiza a cada 30s</span><button title="Atualizar" className="icon-button" onClick={() => void refresh()} disabled={refreshing}><RefreshCw className={refreshing ? 'spin' : ''} size={19}/></button></div>
+      </header>
+      <div className="content-area">
+        <div className="page-heading"><div><span className="eyebrow dark">{new Intl.DateTimeFormat('pt-BR', {weekday:'long',day:'numeric',month:'long',timeZone:'America/Sao_Paulo'}).format(new Date())}</span>
+          <h1>{shownSection === 'dashboard' ? 'Visão geral' : shownSection === 'cash' ? 'Controle de caixa' : 'Boletos e contas'}</h1>
+          <p>{shownSection === 'dashboard' ? `Olá, ${profile.full_name.split(' ')[0]}. Veja como está a distribuidora.` : shownSection === 'cash' ? 'Abertura, movimentação e fechamento por turno.' : 'Acompanhe fornecedores, vencimentos e pagamentos.'}</p>
+        </div><div className="heading-mark"><Store size={21}/></div></div>
+        {notice && <div className={`notice ${notice.kind}`}><div>{notice.kind === 'success' ? <CheckCircle2 size={18}/> : <CircleAlert size={18}/>}<span>{notice.message}</span></div><button aria-label="Fechar aviso" onClick={() => setNotice(null)}><X size={17}/></button></div>}
+        {shownSection === 'dashboard' && manager && <Overview movements={movements} bills={bills} shifts={shifts} active={active} cashExpected={cashExpected} people={people} onCash={() => selectSection('cash')} onBills={() => selectSection('bills')}/>}
+        {shownSection === 'cash' && <CashPanel profile={profile} registers={registers} shifts={shifts} active={active} lastClosed={lastClosed} activeMovements={activeMovements} cashExpected={cashExpected} people={people} onAction={afterAction} onError={message => alert('error',message)} />}
+        {shownSection === 'bills' && manager && <BillsPanel profile={profile} bills={bills} onAction={afterAction} onError={message => alert('error',message)} />}
+      </div>
+    </main>
+  </div>
+}
+
+function Metric({ title, value, icon: Icon, note, tone = 'neutral' }: { title:string, value:string, icon:typeof Wallet, note:string, tone?:string }) {
+  return <div className="metric card"><div className="metric-head"><span>{title}</span><div className={`metric-icon ${tone}`}><Icon size={20}/></div></div><strong>{value}</strong><small>{note}</small></div>
+}
+
+function Overview({ movements, bills, shifts, active, cashExpected, people, onCash, onBills }: {
+  movements: Movement[]; bills:Bill[]; shifts:CashShift[]; active:CashShift|undefined; cashExpected:number|null; people:Profile[]; onCash:()=>void; onBills:()=>void
+}) {
+  const totalIn = movements.filter(m => m.direction === 'in').reduce((n,m)=>n+Number(m.amount),0)
+  const totalOut = movements.filter(m => m.direction === 'out').reduce((n,m)=>n+Number(m.amount),0)
+  const openBills = bills.filter(b => b.status === 'pending')
+  const pending = openBills.reduce((n,b)=>n+Number(b.amount),0)
+  const overdue = openBills.filter(b => b.due_date < today()).length
+  const byMethod = paymentOptions.map(method => ({ name: paymentLabel[method], value: movements.filter(m => m.direction === 'in' && m.payment_method === method).reduce((n,m)=>n+Number(m.amount),0) }))
+  const max = Math.max(...byMethod.map(m => m.value),1)
+  const last = shifts.find(s=>s.status==='closed')
+  const cashDisplay = active ? cashExpected : last?.counted_cash
+  return <>
+    <div className="metric-grid">
+      <Metric title="Entradas registradas hoje" value={brl(totalIn)} icon={ArrowDownRight} note="Dinheiro, Pix, cartão e outros meios" tone="green"/>
+      <Metric title="Saídas lançadas hoje" value={brl(totalOut)} icon={ArrowUpRight} note="Não inclui boletos pagos via banco" tone="orange"/>
+      <Metric title="Dinheiro na gaveta" value={cashDisplay === null || cashDisplay === undefined ? '—' : brl(Number(cashDisplay))} icon={Banknote} note={active ? 'Valor esperado no caixa aberto' : last ? 'Último valor contado' : 'Sem fechamentos'}/>
+      <Metric title="Boletos pendentes" value={brl(pending)} icon={FileText} note={overdue ? `${overdue} conta(s) vencida(s)` : `${openBills.length} conta(s) a pagar`} tone="purple"/>
+    </div>
+    <div className="two-columns">
+      <div className="card panel"><div className="panel-top"><div><h2>Entradas por forma de pagamento</h2><p>Movimentações registradas hoje</p></div><ArrowLeftRight size={19}/></div>
+        <div className="bar-list">{byMethod.map(m => <div className="bar-row" key={m.name}><div className="bar-label"><span>{m.name}</span><b>{brl(m.value)}</b></div><div className="bar-track"><div className="bar-fill" style={{width:`${Math.round(m.value/max*100)}%`}}/></div></div>)}</div>
+      </div>
+      <div className="card panel"><div className="panel-top"><div><h2>Situação da operação</h2><p>Informações mais recentes</p></div><ClipboardCheck size={20}/></div>
+        <div className="status-line"><span className="status-icon"><Wallet size={18}/></span><div><b>Caixa compartilhado</b><span>{active ? 'Turno aberto agora' : 'Nenhum turno aberto'}</span></div><span className={`status-tag ${active ? 'open':'closed'}`}>{active ? 'Aberto' : 'Fechado'}</span></div>
+        <div className="status-line"><span className="status-icon"><Users size={18}/></span><div><b>Funcionário responsável</b><span>{active ? people.find(p=>p.id===active.employee_id)?.full_name ?? 'Funcionário' : 'Aguardando abertura'}</span></div></div>
+        <div className="status-line"><span className="status-icon"><Bell size={18}/></span><div><b>Próximos vencimentos</b><span>{openBills.length} boletos pendentes</span></div><span className="linkish" onClick={onBills}>Ver</span></div>
+        <button className="btn secondary full" onClick={onCash}>Gerenciar caixa <ArrowRight size={16}/></button>
+      </div>
+    </div>
+    <div className="card panel"><div className="panel-top"><div><h2>Últimas movimentações de hoje</h2><p>Registro de entradas e saídas</p></div><button className="btn subtle" onClick={onCash}>Ver caixa <ArrowRight size={15}/></button></div>
+      <MovementTable movements={movements.slice(0,8)} />
+    </div>
+  </>
+}
+
+function MovementTable({ movements }: { movements: Movement[] }) {
+  if (!movements.length) return <div className="empty">Nenhuma movimentação registrada neste período.</div>
+  return <div className="table-scroll"><table><thead><tr><th>Movimentação</th><th>Forma</th><th>Horário</th><th className="align-right">Valor</th></tr></thead><tbody>
+    {movements.map(m => <tr key={m.id}><td><div className="table-title">{categoryLabel[m.category]}</div><span className="table-subtitle">{m.description || 'Sem observação'}</span></td><td>{paymentLabel[m.payment_method]}</td><td>{shortTime(m.created_at)}</td><td className={`align-right amount ${m.direction==='in'?'plus':'minus'}`}>{m.direction==='in'?'+':'−'} {brl(m.amount)}</td></tr>)}
+  </tbody></table></div>
+}
+
+function CashPanel({ profile, registers, shifts, active, lastClosed, activeMovements, cashExpected, people, onAction, onError }: {
+  profile:Profile; registers:Register[]; shifts:CashShift[]; active:CashShift|undefined; lastClosed:CashShift|undefined; activeMovements:Movement[]; cashExpected:number|null;
+  people:Profile[]; onAction:(msg:string)=>Promise<void>;onError:(msg:string)=>void
+}) {
+  const supabase = useMemo(()=>createClient(),[])
+  const manager = profile.role === 'owner' || profile.role === 'manager'
+  const canOperate = !!active && (active.employee_id===profile.id || manager)
+  const [opening, setOpening] = useState('')
+  const [handoffNote, setHandoffNote] = useState('')
+  const [counted, setCounted] = useState('')
+  const [kind, setKind] = useState<MovementKind>('venda')
+  const [method, setMethod] = useState<PayMethod>('dinheiro')
+  const [amount, setAmount] = useState('')
+  const [description, setDescription] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [confirmClose, setConfirmClose] = useState(false)
+  const prev = lastClosed?.counted_cash
+  const activeRegister = registers[0]
+  const cashActions: MovementKind[] = manager ? ['venda','entrada','despesa','retirada','estorno'] : ['venda']
+
+  async function start(e:React.FormEvent) {
+    e.preventDefault(); if (!activeRegister) return onError('Cadastre uma gaveta na configuração inicial.')
+    const value = toNumber(opening)
+    if (!Number.isFinite(value) || value < 0) return onError('Informe um saldo inicial válido.')
+    setBusy(true)
+    const { error } = await supabase.rpc('open_cash_shift', { p_register_id: activeRegister.id, p_opening_cash: value, p_handoff_note: handoffNote.trim() || null })
+    setBusy(false)
+    if (error) return onError(error.message)
+    setOpening(''); setHandoffNote(''); await onAction('Turno aberto. O saldo inicial foi registrado.')
+  }
+  async function addMovement(e:React.FormEvent) {
+    e.preventDefault(); if (!active) return
+    const value=toNumber(amount)
+    if (!Number.isFinite(value) || value <= 0) return onError('Informe um valor maior que zero.')
+    const direction = kind === 'venda' || kind === 'entrada' ? 'in' : 'out'
+    setBusy(true)
+    const { error } = await supabase.from('cash_movements').insert({
+      organization_id: profile.organization_id, shift_id: active.id, created_by:profile.id,
+      category:kind, direction, payment_method:method, amount:value, description:description.trim() || null,
+    })
+    setBusy(false)
+    if (error) return onError(error.message)
+    setAmount('');setDescription(''); await onAction('Movimentação registrada com sucesso.')
+  }
+  async function close() {
+    if (!active || !confirmClose) return
+    const value = toNumber(counted)
+    if (!Number.isFinite(value)||value<0) return onError('Informe o dinheiro contado na gaveta.')
+    setBusy(true)
+    const {error}=await supabase.rpc('close_cash_shift',{p_shift_id:active.id,p_counted_cash:value})
+    setBusy(false)
+    if(error) return onError(error.message)
+    setCounted('');setConfirmClose(false);await onAction('Turno fechado e diferença registrada para conferência.')
+  }
+  return <div className="cash-layout">
+    <div className="cash-primary">
+      <div className="card panel">
+        <div className="panel-top"><div><h2>Caixa principal</h2><p>{activeRegister?.name ?? 'Sem gaveta cadastrada'}</p></div><span className={`status-tag ${active?'open':'closed'}`}>{active?'Turno aberto':'Fechado'}</span></div>
+        {active ? <>
+          <div className="cash-balance"><span>{canOperate ? "Dinheiro esperado na gaveta" : "Gaveta em uso"}</span><strong>{canOperate ? brl(cashExpected) : "Turno em andamento"}</strong><small>{canOperate ? "Apenas movimentações em espécie alteram esse valor." : "Somente o responsável ou gerente pode movimentar e encerrar o turno."}</small></div>
+          <div className="mini-grid"><div><span>Saldo de abertura</span><b>{brl(active.opening_cash)}</b></div><div><span>Turno iniciado em</span><b>{shortTime(active.opened_at)}</b></div></div>
+          <div className="info-line"><Users size={17}/><span>Responsável: <b>{people.find(p=>p.id===active.employee_id)?.full_name ?? (active.employee_id===profile.id?profile.full_name:'Outro operador')}</b></span></div>
+          {!canOperate && <div className="notice warning"><CircleAlert size={17}/><span>Este turno pertence a outro funcionário. Peça que ele realize o fechamento antes de abrir o próximo.</span></div>}
+        </> : <>
+          <div className="empty-state-small"><Wallet size={27}/><h3>Pronto para abrir um turno</h3><p>Conte o dinheiro da gaveta antes de começar.</p></div>
+          <form onSubmit={start} className="form-stack"><label>Valor contado na abertura (R$)<input type="number" min="0" step="0.01" value={opening} required placeholder="Ex.: 250.00" onChange={e=>setOpening(e.target.value)} /></label>
+            {lastClosed && <div className="helper">Última contagem: <b>{brl(prev)}</b>. Se a abertura for diferente, descreva o motivo.</div>}
+            <label>Observação de passagem de caixa (se necessário)<textarea rows={2} placeholder="Ex.: retirada autorizada entre turnos" value={handoffNote} onChange={e=>setHandoffNote(e.target.value)} /></label>
+            <button disabled={busy} className="btn primary full"><Plus size={17}/> {busy?'Abrindo...':'Abrir meu turno'}</button>
+          </form>
+        </>}
+      </div>
+      {canOperate && <div className="card panel"><div className="panel-top"><div><h2>Registrar movimentação</h2><p>Use o total de cada meio de pagamento, ou registre vendas individualmente.</p></div><Plus size={20}/></div>
+        <form className="form-stack" onSubmit={addMovement}><div className="form-row"><label>Tipo<select value={kind} onChange={e=>setKind(e.target.value as MovementKind)}>{cashActions.map(k=><option value={k} key={k}>{categoryLabel[k]}</option>)}</select></label>
+          <label>Forma de pagamento<select value={method} onChange={e=>setMethod(e.target.value as PayMethod)}>{paymentOptions.map(k=><option value={k} key={k}>{paymentLabel[k]}</option>)}</select></label></div>
+          <label>Valor (R$)<input type="number" min="0.01" step="0.01" required placeholder="Ex.: 120.50" value={amount} onChange={e=>setAmount(e.target.value)} /></label>
+          <label>Descrição (opcional)<input maxLength={250} value={description} onChange={e=>setDescription(e.target.value)} placeholder="Ex.: vendas do turno / compra de gelo" /></label>
+          <button disabled={busy} className="btn primary full"><Check size={17}/>{busy?'Salvando...':'Registrar no caixa'}</button>
+        </form>
+      </div>}
+      {canOperate && <div className="card panel"><div className="panel-top"><div><h2>Fechar turno</h2><p>Faça a contagem física antes de confirmar.</p></div><ClipboardCheck size={19}/></div>
+        <div className="form-stack"><label>Dinheiro contado na gaveta (R$)<input type="number" min="0" step="0.01" value={counted} onChange={e=>{setCounted(e.target.value);setConfirmClose(false)}} placeholder="Ex.: 780.00" /></label>
+          {counted !== '' && Number.isFinite(toNumber(counted)) && cashExpected !== null && <div className={`variance ${cents(toNumber(counted)-cashExpected)===0?'matched':'mismatch'}`}><span>Diferença estimada</span><b>{brl(cents(toNumber(counted)-cashExpected))}</b></div>}
+          <label className="check-label"><input type="checkbox" checked={confirmClose} onChange={e=>setConfirmClose(e.target.checked)}/> Confirmei a contagem física; quero encerrar este turno.</label>
+          <button className="btn danger-outline full" disabled={busy||!confirmClose||counted===''} onClick={close} type="button">{busy?'Fechando...':'Confirmar fechamento'}</button>
+        </div>
+      </div>}
+    </div>
+    <div className="cash-secondary">
+      <div className="card panel"><div className="panel-top"><div><h2>Movimentações do turno</h2><p>Entradas e saídas deste turno</p></div><ArrowLeftRight size={19}/></div>
+        <MovementTable movements={activeMovements}/>
+      </div>
+      <div className="card panel"><div className="panel-top"><div><h2>Últimos fechamentos</h2><p>Histórico de conferência</p></div><Clock3 size={19}/></div>
+        <div className="shift-list">{shifts.filter(s=>s.status==='closed').slice(0,6).map(s=><div key={s.id} className="shift-item"><div><b>{shortTime(s.closed_at)}</b><span>{people.find(p=>p.id===s.employee_id)?.full_name ?? (s.employee_id===profile.id?profile.full_name:'Outro operador')}</span></div><div className="shift-values"><b>{brl(s.counted_cash)}</b><small className={Number(s.difference)===0?'plus':'minus'}>Diferença: {brl(s.difference)}</small></div></div>)}
+          {!shifts.some(s=>s.status==='closed') && <div className="empty">Nenhum fechamento encontrado.</div>}</div>
+      </div>
+    </div>
+  </div>
+}
+
+function BillsPanel({ profile, bills, onAction, onError }: {profile:Profile; bills:Bill[];onAction:(msg:string)=>Promise<void>;onError:(msg:string)=>void}) {
+  const supabase = useMemo(()=>createClient(),[])
+  const [supplier, setSupplier] = useState('')
+  const [amount, setAmount] = useState('')
+  const [dueDate, setDueDate] = useState(today())
+  const [notes, setNotes] = useState('')
+  const [file, setFile] = useState<File | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [filter, setFilter] = useState<'pending'|'paid'|'all'>('pending')
+  const [marking, setMarking] = useState<string|null>(null)
+  const pending=bills.filter(b=>b.status==='pending')
+  const overdue=pending.filter(b=>b.due_date<today())
+  const displayed=bills.filter(b=>filter==='all'||b.status===filter)
+
+  async function createBill(e:React.FormEvent) {
+    e.preventDefault()
+    const value=toNumber(amount)
+    if (!supplier.trim()||!Number.isFinite(value)||value<=0) return onError('Preencha o fornecedor e um valor válido.')
+    if (file && (file.size > 10*1024*1024 || !['application/pdf','image/jpeg','image/png'].includes(file.type))) return onError('Anexe um PDF, JPG ou PNG de até 10 MB.')
+    setBusy(true)
+    let attachment_path: string|null=null
+    if (file) {
+      const cleanName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_')
+      attachment_path=`${profile.organization_id}/${crypto.randomUUID()}-${cleanName}`
+      const uploaded=await supabase.storage.from('boletos').upload(attachment_path,file,{upsert:false})
+      if(uploaded.error){setBusy(false);return onError(`Falha no anexo: ${uploaded.error.message}`)}
+    }
+    const {error}=await supabase.from('bills').insert({organization_id:profile.organization_id,created_by:profile.id,supplier:supplier.trim(),amount:value,due_date:dueDate,notes:notes.trim()||null,attachment_path})
+    setBusy(false)
+    if(error){if(attachment_path) void supabase.storage.from('boletos').remove([attachment_path]);return onError(error.message)}
+    setSupplier('');setAmount('');setDueDate(today());setNotes('');setFile(null)
+    const fileInput=document.getElementById('bill-file') as HTMLInputElement|null
+    if(fileInput)fileInput.value=''
+    await onAction('Boleto cadastrado. O pagamento deve ser realizado e confirmado no banco.')
+  }
+  async function markPaid(b:Bill) {
+    if (!window.confirm(`Confirma que o pagamento de ${brl(b.amount)} para ${b.supplier} foi efetivamente realizado no banco?`)) return
+    setMarking(b.id)
+    const {error}=await supabase.from('bills').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',b.id)
+    setMarking(null)
+    if(error)return onError(error.message)
+    await onAction('Pagamento confirmado no controle. Guarde o comprovante bancário.')
+  }
+  async function openFile(b:Bill) {
+    if(!b.attachment_path) return
+    const {data,error}=await supabase.storage.from('boletos').createSignedUrl(b.attachment_path,120)
+    if(error||!data?.signedUrl)return onError(error?.message||'Anexo não encontrado.')
+    window.open(data.signedUrl,'_blank','noopener,noreferrer')
+  }
+  return <>
+    <div className="metric-grid bills-metrics"><Metric title="Total pendente" value={brl(pending.reduce((n,b)=>n+Number(b.amount),0))} icon={FileText} note={`${pending.length} contas pendentes`} tone="purple"/>
+      <Metric title="Vencidos" value={brl(overdue.reduce((n,b)=>n+Number(b.amount),0))} icon={CircleAlert} note={`${overdue.length} contas em atraso`} tone="orange"/>
+      <Metric title="Vencem hoje" value={brl(pending.filter(b=>b.due_date===today()).reduce((n,b)=>n+Number(b.amount),0))} icon={Clock3} note="Conferir no banco"/>
+      <Metric title="Pagos cadastrados" value={brl(bills.filter(b=>b.status==='paid').reduce((n,b)=>n+Number(b.amount),0))} icon={CheckCircle2} note="Histórico carregado" tone="green"/>
+    </div>
+    <div className="bills-layout"><div className="card panel"><div className="panel-top"><div><h2>Boletos cadastrados</h2><p>Organizados por vencimento</p></div><FileText size={19}/></div>
+      <div className="filter-tabs"><button className={filter==='pending'?'chosen':''} onClick={()=>setFilter('pending')}>Pendentes ({pending.length})</button><button className={filter==='paid'?'chosen':''} onClick={()=>setFilter('paid')}>Pagos</button><button className={filter==='all'?'chosen':''} onClick={()=>setFilter('all')}>Todos</button></div>
+      <div className="bill-list">{displayed.map(b=><div className="bill-item" key={b.id}><div className="bill-main"><div className="bill-icon"><FileText size={20}/></div><div><h3>{b.supplier}</h3><span>Vence em {dateBR(b.due_date)}</span>{b.notes&&<small>{b.notes}</small>}</div></div>
+        <div className="bill-details"><b>{brl(b.amount)}</b><span className={`status-tag ${b.status==='paid'?'paid':b.due_date<today()?'late':'pending'}`}>{b.status==='paid'?'Pago':b.due_date<today()?'Vencido':'Pendente'}</span></div>
+        <div className="bill-actions">{b.attachment_path&&<button className="btn subtle" onClick={()=>void openFile(b)}>Ver anexo</button>}{b.status==='pending'&&<button disabled={marking===b.id} className="btn secondary" onClick={()=>void markPaid(b)}><Check size={16}/>{marking===b.id?'Salvando...':'Marcar pago'}</button>}</div>
+      </div>)}{!displayed.length&&<div className="empty">Nenhuma conta nesta categoria.</div>}</div>
+    </div>
+    <div className="card panel"><div className="panel-top"><div><h2>Novo boleto</h2><p>Cadastre assim que receber</p></div><Plus size={20}/></div>
+      <form className="form-stack" onSubmit={createBill}><label>Fornecedor<input required maxLength={140} placeholder="Ex.: Distribuidora ABC" value={supplier} onChange={e=>setSupplier(e.target.value)} /></label>
+        <label>Valor (R$)<input required type="number" min="0.01" step="0.01" placeholder="Ex.: 1500.00" value={amount} onChange={e=>setAmount(e.target.value)} /></label>
+        <label>Data de vencimento<input required type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)} /></label>
+        <label>Observações<textarea rows={2} maxLength={500} placeholder="Ex.: pedido #0012" value={notes} onChange={e=>setNotes(e.target.value)} /></label>
+        <label>Anexar boleto (PDF ou imagem até 10 MB)<input id="bill-file" type="file" accept="application/pdf,image/jpeg,image/png" onChange={e=>setFile(e.target.files?.[0]??null)} /></label>
+        <button className="btn primary full" disabled={busy}><Plus size={17}/>{busy?'Salvando...':'Cadastrar boleto'}</button>
+        <div className="helper">Este sistema apenas organiza as contas. Não efetua pagamentos e não valida automaticamente a compensação bancária.</div>
+      </form>
+    </div></div>
+  </>
+}
