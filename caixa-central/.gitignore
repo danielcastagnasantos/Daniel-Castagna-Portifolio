@@ -8,3 +8,5 @@ next-env.d.ts
 playwright-report
 test-results
 .vercel
+.next-visual
+test-results-visual

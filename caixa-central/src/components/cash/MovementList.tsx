@@ -39,7 +39,7 @@ export function MovementList({ rows, isAdmin, canCancel, names, me }: {
               {cancelled && m.cancel_reason && <p className="text-xs text-danger">Motivo: {m.cancel_reason}</p>}
             </div>
             <div className="flex items-center gap-2">
-              <span className={cn("tabular text-sm font-semibold", m.direction === "in" ? "text-success" : "text-danger", cancelled && "line-through")}>
+              <span className={cn("tabular whitespace-nowrap text-sm font-semibold", m.direction === "in" ? "text-success" : "text-danger", cancelled && "line-through")}>
                 {formatBRL(m.direction === "in" ? m.amount_cents : -m.amount_cents, { signed: true })}
               </span>
               {isAdmin && !cancelled && m.review_status === "pending" && <ReviewMovementButtons id={m.id} />}

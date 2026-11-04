@@ -22,11 +22,11 @@ type Action = (prev: ActionState, formData: FormData) => Promise<ActionState>;
  */
 export function ActionForm({
   action, children, submit, pendingLabel = "Salvando...", variant = "primary", className, resetOnSuccess = true,
-  onSuccess, submitClassName, hideSubmit, confirm, keepOpen,
+  onSuccess, submitClassName, hideSubmit, confirm, keepOpen, fullWidth,
 }: {
   action: Action; children: ReactNode; submit: ReactNode; pendingLabel?: string; variant?: ButtonVariant;
   className?: string; resetOnSuccess?: boolean; onSuccess?: (state: Extract<ActionState, { ok: true }>) => void;
-  submitClassName?: string; hideSubmit?: boolean; confirm?: string; keepOpen?: boolean;
+  submitClassName?: string; hideSubmit?: boolean; confirm?: string; keepOpen?: boolean; fullWidth?: boolean;
 }) {
   // Uma chave por OPERAÇÃO: se a rede cair e a pessoa tentar de novo, a mesma chave é reenviada e o
   // servidor devolve o resultado original em vez de duplicar. Só muda depois de um sucesso confirmado.
@@ -82,7 +82,7 @@ export function ActionForm({
           </p>
         )}
         {!hideSubmit && (
-          <Button type="submit" variant={variant} disabled={pending || !online} className={cn("w-full sm:w-auto", submitClassName)}>
+          <Button type="submit" variant={variant} disabled={pending || !online} className={cn(fullWidth ? "w-full" : "w-full sm:w-auto", submitClassName)}>
             {pending && <Loader2 size={16} className="animate-spin" aria-hidden />}
             {pending ? pendingLabel : submit}
           </Button>

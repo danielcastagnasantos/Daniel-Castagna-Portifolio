@@ -8,12 +8,24 @@ end $$;
 
 create schema auth;
 create table auth.users (
+  instance_id uuid,
   id uuid primary key default gen_random_uuid(),
+  aud text, role text,
   email text unique,
   encrypted_password text,
+  email_confirmed_at timestamptz,
+  raw_app_meta_data jsonb default '{}'::jsonb,
   raw_user_meta_data jsonb default '{}'::jsonb,
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  confirmation_token text, recovery_token text, email_change_token_new text, email_change text
 );
+create table auth.identities (
+  id uuid primary key default gen_random_uuid(), provider_id text, user_id uuid references auth.users (id),
+  identity_data jsonb, provider text, last_sign_in_at timestamptz, created_at timestamptz default now(), updated_at timestamptz default now()
+);
+create schema extensions;
+create extension pgcrypto with schema extensions;
 create function auth.uid() returns uuid language sql stable as $$
   select coalesce(
     nullif(current_setting('request.jwt.claim.sub', true), ''),

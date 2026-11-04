@@ -14,9 +14,11 @@
     "test": "vitest run",
     "test:unit": "vitest run --project unit",
     "test:db": "vitest run --project db",
-    "test:e2e": "playwright test",
-    "db:reset": "node scripts/db-reset.mjs",
-    "seed:dev": "node scripts/seed-dev.mjs"
+    "test:e2e": "node scripts/run-e2e.mjs",
+    "test:visual": "node scripts/run-e2e.mjs visual",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build",
+    "db:reset": "node scripts/db-reset.mjs --stub",
+    "icons": "node scripts/make-icons.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

@@ -6,5 +6,5 @@ export default defineConfig([
   ...nextVitals,
   ...nextTs,
   { files: ["tests/**/*.ts"], rules: { "@typescript-eslint/no-explicit-any": "off" } },
-  globalIgnores([".next/**", "out/**", "node_modules/**", "next-env.d.ts", "legacy-mvp/**", "public/sw.js", "playwright-report/**", "test-results/**"]),
+  globalIgnores([".next/**", ".next-visual/**", "test-results-visual/**", ".bin/**", "backups/**", "out/**", "node_modules/**", "next-env.d.ts", "legacy-mvp/**", "public/sw.js", "playwright-report/**", "test-results/**"]),
 ]);

@@ -1,0 +1,39 @@
+# Configuração do Supabase CLI para DESENVOLVIMENTO LOCAL (`supabase start`).
+# Em produção essas opções são definidas no painel do projeto (veja docs/PRODUCAO.md).
+project_id = "caixa-central"
+
+[api]
+port = 54321
+schemas = ["public", "graphql_public"]
+
+[db]
+port = 54322
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/confirm"]
+# Sem cadastro público: contas só nascem de convite da administração.
+enable_signup = false
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+
+[auth.email]
+enable_confirmations = false
+secure_password_change = true
+minimum_password_length = 10
+
+[auth.email.template.invite]
+subject = "Seu acesso ao Caixa Central"
+content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.recovery]
+subject = "Criar nova senha — Caixa Central"
+content_path = "./supabase/templates/recovery.html"
+
+[storage]
+file_size_limit = "10MiB"

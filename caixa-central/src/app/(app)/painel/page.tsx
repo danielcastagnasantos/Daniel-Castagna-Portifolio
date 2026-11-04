@@ -145,7 +145,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
               {moves.map((m) => (
                 <li key={m.id}><Link href={`/caixa/turnos/${m.shift_id}`} className="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-surface-2/60 sm:px-5">
                   <div className="min-w-0"><p className={cn("text-sm", m.status === "cancelled" && "line-through opacity-60")}>{kindLabel[m.kind]} · {methodLabel[m.payment_method]}</p><p className="truncate text-xs text-muted">{formatDateTimeBR(m.created_at)}{m.description ? ` · ${m.description}` : ""}</p></div>
-                  <span className={cn("tabular text-sm font-semibold", m.direction === "in" ? "text-success" : "text-danger")}>{formatBRL(m.direction === "in" ? m.amount_cents : -m.amount_cents, { signed: true })}</span></Link></li>
+                  <span className={cn("tabular whitespace-nowrap text-sm font-semibold", m.direction === "in" ? "text-success" : "text-danger")}>{formatBRL(m.direction === "in" ? m.amount_cents : -m.amount_cents, { signed: true })}</span></Link></li>
               ))}
             </ul>
           )}
