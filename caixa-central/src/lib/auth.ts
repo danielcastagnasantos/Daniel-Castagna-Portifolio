@@ -22,6 +22,7 @@ export interface Organization {
   review_threshold_cents: number;
   diff_alert_cents: number;
   shift_max_hours: number;
+  change_fund_cents: number;
 }
 
 /** Sessão validada no servidor (getUser consulta o Auth) + perfil ativo via RLS. */
@@ -67,7 +68,7 @@ export const getOrganization = cache(async (): Promise<Organization | null> => {
   if (!s?.profile) return null;
   const { data } = await s.supabase
     .from("organizations")
-    .select("id, name, blind_close, review_threshold_cents, diff_alert_cents, shift_max_hours")
+    .select("id, name, blind_close, review_threshold_cents, diff_alert_cents, shift_max_hours, change_fund_cents")
     .eq("id", s.profile.organization_id)
     .maybeSingle();
   return (data as Organization | null) ?? null;

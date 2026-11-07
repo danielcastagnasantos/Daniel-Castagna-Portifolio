@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { action, callRpc, ok } from "@/lib/action";
 import {
-  cancelSchema, closeShiftSchema, movementSchema, openShiftSchema, reviewMovementSchema, reviewShiftSchema,
+  cancelSchema, closeShiftSchema, closeSimpleSchema, movementSchema, openShiftSchema, reviewMovementSchema, reviewShiftSchema,
 } from "@/lib/schemas";
 import { formatBRL } from "@/lib/money";
 import { kindLabel } from "@/lib/labels";
@@ -59,4 +59,22 @@ export const reviewShiftAction = action({ area: "painel", schema: reviewShiftSch
   if (r.state) return r.state;
   revalidatePath("/caixa", "layout");
   return ok(i.status === "approved" ? "Turno conferido." : "Turno marcado com problema.");
+});
+
+/** Fechamento simples: lança vendas, despesa e retirada e fecha o turno numa única transação. */
+export const closeSimpleAction = action({ schema: closeSimpleSchema }, async (i, ctx) => {
+  const r = await callRpc<{ difference_cents: number; withdrawn_cents: number; change_fund_cents: number }>(ctx, "close_shift_simple", {
+    p_shift_id: i.shift_id, p_cash_sales: i.cash_sales, p_pix: i.pix, p_debit: i.debit, p_credit: i.credit, p_transfer: i.transfer,
+    p_expense_cents: i.expense, p_expense_note: i.expense_note, p_counted_cents: i.counted, p_justification: i.justification,
+    p_request_id: i.request_id,
+  });
+  if (r.state) return r.state;
+  revalidatePath("/caixa", "layout");
+  revalidatePath("/painel");
+  const d = r.data.difference_cents;
+  const keep = formatBRL(r.data.change_fund_cents);
+  const msg = d === 0
+    ? `Turno fechado. Caixa bateu! Retire ${formatBRL(r.data.withdrawn_cents)} e deixe ${keep} de troco na gaveta.`
+    : `Turno fechado com diferença de ${formatBRL(d, { signed: true })}. Retire ${formatBRL(r.data.withdrawn_cents)} e deixe ${keep} de troco.`;
+  return ok(msg, { redirectTo: `/caixa/turnos/${i.shift_id}` });
 });

@@ -64,16 +64,19 @@ export function NewBillButton({ orgId, suppliers, categories }: { orgId: string;
   );
 }
 
-export function PayBillButton({ billId, remainingCents, accounts }: { billId: string; remainingCents: number; accounts: Opt[] }) {
+export function PayBillButton({ billId, remainingCents, accounts, compact, defaultAccountId }: {
+  billId: string; remainingCents: number; accounts: Opt[]; compact?: boolean; defaultAccountId?: string;
+}) {
   return (
-    <ModalButton variant="primary" label="Registrar pagamento" icon={<HandCoins size={16} aria-hidden />} title="Registrar pagamento"
+    <ModalButton variant={compact ? "secondary" : "primary"} size={compact ? "sm" : "md"} label={compact ? "Pagar" : "Registrar pagamento"}
+      icon={<HandCoins size={compact ? 14 : 16} aria-hidden />} title="Registrar pagamento"
       description="Registre somente depois de conferir no app ou extrato do banco que o pagamento foi realizado.">
       <ActionForm action={payBillAction} submit="Confirmar pagamento" pendingLabel="Registrando...">
         <input type="hidden" name="bill_id" value={billId} />
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Valor pago" name="amount" hint="Pode ser parcial."><MoneyInput name="amount" defaultValue={centsToInput(remainingCents)} /></Field>
           <Field label="Data do pagamento" name="paid_on"><Input name="paid_on" type="date" required defaultValue={todayISO()} max={todayISO()} /></Field>
-          <Field label="Saiu de qual conta?" name="account_id"><Select name="account_id" required defaultValue=""><option value="" disabled>Escolha...</option>{accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</Select></Field>
+          <Field label="Saiu de qual conta?" name="account_id"><Select name="account_id" required defaultValue={defaultAccountId ?? ""}><option value="" disabled>Escolha...</option>{accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</Select></Field>
           <Field label="Forma" name="method"><Select name="method" defaultValue="pix">{Object.entries(payMethodLabel).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</Select></Field>
         </div>
         <Field label="Observação" name="note"><Input name="note" maxLength={250} /></Field>

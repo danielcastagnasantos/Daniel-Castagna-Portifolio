@@ -13,7 +13,7 @@ const users = Object.fromEntries([
   [U.cashier, { profile: profile(U.cashier, "Ana Souza", "cashier") }],
 ].map(([k, v]) => [k, { ...v, auth: { id: k, aud: "authenticated", role: "authenticated", email: v.profile.email, user_metadata: {}, app_metadata: {} } }]));
 
-const shiftOpen = { id: id(100), register_id: id(20), employee_id: U.cashier, opened_at: ago(3), opening_cents: 20000, status: "open", closed_at: null, counted_cents: null, expected_cents: null, difference_cents: null, handoff_expected_cents: 20000, handoff_difference_cents: 0, handoff_note: null, close_justification: null, review_status: "pending", review_note: null, closed_by: null, blind: false, profiles: { full_name: "Ana Souza" } };
+const shiftOpen = { id: id(100), register_id: id(20), employee_id: U.cashier, opened_at: ago(3), opening_cents: 15000, status: "open", closed_at: null, counted_cents: null, expected_cents: null, difference_cents: null, handoff_expected_cents: 20000, handoff_difference_cents: 0, handoff_note: null, close_justification: null, review_status: "pending", review_note: null, closed_by: null, blind: false, profiles: { full_name: "Ana Souza" } };
 const shiftClosed = (n, diff) => ({ ...shiftOpen, id: id(101 + n), status: "closed", opened_at: ago(30 + n * 24), closed_at: ago(22 + n * 24), counted_cents: 61000 + diff, expected_cents: 61000, difference_cents: diff, close_justification: diff ? "Troco devolvido a mais" : null, review_status: diff ? "pending" : "approved", closed_by: U.cashier });
 const summary = { shift_id: shiftOpen.id, status: "open", opening_cents: 20000, blind: false, expected_cents: 60000, counted_cents: null, difference_cents: null, sales_by_method: { dinheiro: 50000, pix: 30000, credito: 18990 }, totals: { sales: 98990, other_in: 0, supply: 0, withdrawal: 10000, expense: 0, refund: 0, cash_in: 50000, cash_out: 10000, count: 7 } };
 const mv = (n, kind, dir, method, cents, desc, extra = {}) => ({ id: id(200 + n), kind, direction: dir, payment_method: method, amount_cents: cents, description: desc, status: "posted", review_status: "not_required", created_at: ago(3 - n * 0.4), created_by: U.cashier, cancel_reason: null, shift_id: shiftOpen.id, expense_categories: null, ...extra });
@@ -53,7 +53,7 @@ export const fixtures = {
   },
   tables: {
     profiles: (user) => (user ? [user.profile, ...Object.values(users).map((u) => u.profile).filter((p) => p.id !== user.profile.id)] : []),
-    organizations: [{ id: ORG, name: "Distribuidora Modelo", blind_close: false, review_threshold_cents: 20000, diff_alert_cents: 0, shift_max_hours: 12 }],
+    organizations: [{ id: ORG, name: "Distribuidora Modelo", blind_close: false, review_threshold_cents: 20000, diff_alert_cents: 0, shift_max_hours: 12, change_fund_cents: 15000 }],
     notification_feed: notifs,
     cash_shifts: (user, url) => (url.searchParams.get("status") === "eq.open" ? [shiftOpen] : [shiftOpen, shiftClosed(0, -500), shiftClosed(1, 0), shiftClosed(2, 0)]),
     cash_movements: movements,

@@ -22,3 +22,14 @@ describe("datas em America/Sao_Paulo", () => {
     expect(presetRange("last-month", "2026-03-10")).toEqual({ from: "2026-02-01", to: "2026-02-28" });
   });
 });
+
+describe("semana e ano", () => {
+  it("semana começa na segunda-feira", () => {
+    expect(presetRange("week", "2026-11-04")).toEqual({ from: "2026-11-02", to: "2026-11-04" }); // quarta
+    expect(presetRange("week", "2026-11-08")).toEqual({ from: "2026-11-02", to: "2026-11-08" }); // domingo
+    expect(presetRange("week", "2026-11-02")).toEqual({ from: "2026-11-02", to: "2026-11-02" }); // segunda
+  });
+  it("ano do dia 1º de janeiro até hoje", () => {
+    expect(presetRange("year", "2026-11-04")).toEqual({ from: "2026-01-01", to: "2026-11-04" });
+  });
+});

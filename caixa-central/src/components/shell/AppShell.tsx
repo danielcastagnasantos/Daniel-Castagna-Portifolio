@@ -4,8 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import {
-  Banknote, Bell, CalendarClock, FileText, Landmark, LayoutDashboard, LogOut, MoreHorizontal,
-  Receipt, ScrollText, Settings, Users, X, ArrowLeftRight, type LucideIcon,
+  Banknote, Bell, FileText, LayoutDashboard, LogOut, MoreHorizontal, Settings, Users, X, type LucideIcon,
 } from "lucide-react";
 import { canAccess, type NavKey } from "@/lib/permissions";
 import { roleLabel, type Role } from "@/lib/labels";
@@ -17,17 +16,11 @@ import { signOutAction } from "@/app/actions/auth";
 interface Item { key: NavKey; href: string; label: string; icon: LucideIcon; primary?: boolean }
 
 const ITEMS: Item[] = [
-  { key: "painel", href: "/painel", label: "Painel", icon: LayoutDashboard, primary: true },
+  { key: "painel", href: "/painel", label: "Resumos", icon: LayoutDashboard, primary: true },
   { key: "caixa", href: "/caixa", label: "Caixa", icon: Banknote, primary: true },
   { key: "boletos", href: "/boletos", label: "Boletos", icon: FileText, primary: true },
-  { key: "contas", href: "/contas", label: "Contas e saldos", icon: Landmark },
-  { key: "conciliacao", href: "/conciliacao", label: "Conciliação", icon: ArrowLeftRight },
-  { key: "receber", href: "/receber", label: "A receber", icon: Receipt },
-  { key: "relatorios", href: "/relatorios", label: "Relatórios", icon: CalendarClock, primary: true },
-  { key: "notificacoes", href: "/notificacoes", label: "Notificações", icon: Bell },
-  { key: "equipe", href: "/equipe", label: "Equipe", icon: Users },
+  { key: "equipe", href: "/equipe", label: "Equipe", icon: Users, primary: true },
   { key: "configuracoes", href: "/configuracoes", label: "Configurações", icon: Settings },
-  { key: "auditoria", href: "/auditoria", label: "Auditoria", icon: ScrollText },
 ];
 
 export function AppShell({ children, role, name, orgName, unread }: { children: ReactNode; role: Role; name: string; orgName: string; unread: number }) {

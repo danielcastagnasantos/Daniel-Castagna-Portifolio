@@ -1,7 +1,8 @@
-import { Bell, CreditCard, Landmark, Settings2, Store, Tags } from "lucide-react";
+import Link from "next/link";
+import { Banknote, Bell, CreditCard, Landmark, Settings2, Store, Tags, Wrench } from "lucide-react";
 import { getOrganization, requireAuth } from "@/lib/auth";
 import { Alert, Badge, Card, CardBody, CardHeader, PageHeader } from "@/components/ui/primitives";
-import { SettingsForms, CategoryRow, RegisterRow, RouteRow, NewCategory, NewRegister, EmailToggle } from "@/components/settings/SettingsForms";
+import { ChangeFundForm, SettingsForms, CategoryRow, RegisterRow, RouteRow, NewCategory, NewRegister, EmailToggle } from "@/components/settings/SettingsForms";
 import { accountTypeLabel, methodLabel } from "@/lib/labels";
 import { centsToInput } from "@/lib/money";
 
@@ -23,6 +24,18 @@ export default async function SettingsPage() {
     <>
       <PageHeader title="Configurações" description="Regras do caixa, caixas (gavetas), destino de cada forma de pagamento e categorias." />
       <div className="grid gap-5 lg:grid-cols-2">
+        <Card className="self-start">
+          <CardHeader icon={Banknote} title="Troco do caixa" />
+          <CardBody><ChangeFundForm amount={centsToInput(org.change_fund_cents)} /></CardBody>
+        </Card>
+        <Card className="self-start">
+          <CardHeader icon={Wrench} title="Recursos avançados" description="Telas que ficam fora do menu para manter o dia a dia simples." />
+          <CardBody className="grid grid-cols-2 gap-2 text-sm">
+            {[["/contas", "Contas e saldos"], ["/conciliacao", "Conciliação do banco"], ["/receber", "Contas a receber"], ["/relatorios", "Todos os relatórios"], ["/notificacoes", "Notificações"], ["/auditoria", "Auditoria"]].map(([href, label]) => (
+              <Link key={href} href={href} className="rounded-xl border border-border px-3 py-2 hover:bg-surface-2">{label}</Link>
+            ))}
+          </CardBody>
+        </Card>
         <Card className="self-start">
           <CardHeader icon={Settings2} title="Empresa e regras do caixa" />
           <CardBody><SettingsForms org={{ name: org.name, blind: org.blind_close, review: centsToInput(org.review_threshold_cents), diff: centsToInput(org.diff_alert_cents), hours: org.shift_max_hours }} /></CardBody>

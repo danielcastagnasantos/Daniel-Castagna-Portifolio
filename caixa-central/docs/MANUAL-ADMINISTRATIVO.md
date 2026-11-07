@@ -13,15 +13,19 @@
 
 Ninguém altera o próprio perfil. O banco de dados — e não só a tela — impede isso.
 
+## O menu (simples de propósito)
+**Resumos · Caixa · Boletos · Equipe · Configurações.** Contas e saldos, conciliação, contas a receber, todos os relatórios, notificações e auditoria continuam existindo em **Configurações > Recursos avançados**.
+
 ## Rotina diária (gerente)
-1. **Painel:** veja caixas abertos, vencimentos de hoje e alertas.
-2. **Caixa > Turnos:** abra cada turno fechado e use **Conferir este turno** (ou aponte o problema). Confira também **movimentações aguardando conferência** (aprovar/recusar).
-3. **Boletos:** registre os novos e pague o que vence — **só marque pago depois de conferir no banco**.
-4. **Conciliação (semanal):** importe o extrato (CSV/OFX), concilie as linhas e crie lançamentos para tarifas/rendimentos.
-5. **Contas e saldos:** registre a **liquidação do cartão** quando o dinheiro cair no banco (não é receita nova) e transferências entre contas.
+1. **Resumos:** veja o vendido (hoje, semana, mês, ano), boletos vencidos/a vencer e diferenças de caixa.
+2. **Caixa > Todos os turnos:** abra cada turno fechado e use **Conferir este turno**.
+3. **Boletos:** organizados por data (vencidos primeiro). Toque em **Pagar** só depois de conferir no banco.
 
 ## Rotina do proprietário (celular)
-Abra o app instalado → **Painel**: entradas/saídas do dia, saldos separados (em espécie, banco, cartão a receber), contas a pagar e atrasadas, diferenças de caixa, caixas abertos agora. Em **Boletos > Agenda** veja os próximos 7/15/30 dias. **Notificações** reúne os alertas.
+Abra o app instalado → **Resumos**: vendido por período e por forma de pagamento, boletos pagos, a pagar e vencidos, diferenças de caixa e dinheiro guardado. **Boletos** mostra o que vence em cada dia.
+
+## O troco de R$ 150
+Todo dia ficam R$ 150,00 na gaveta entre os turnos. No fechamento o sistema calcula o quanto retirar (o que passar do troco vai para o cofre). O valor do troco muda em **Configurações > Troco do caixa**.
 
 ## Conceitos importantes
 - **Faturamento ≠ dinheiro.** Venda no cartão é faturamento, mas só vira dinheiro no banco na liquidação. Por isso “Cartão a receber” é uma conta à parte.

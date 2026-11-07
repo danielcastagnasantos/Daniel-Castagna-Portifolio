@@ -7,17 +7,17 @@ import { Modal } from "@/components/ui/Modal";
 import { Button, Alert } from "@/components/ui/primitives";
 import { cn } from "@/components/ui/cn";
 import { closeShiftAction, movementAction, openShiftAction } from "@/app/actions/cash";
-import { formatBRL, parseMoneyToCents } from "@/lib/money";
+import { centsToInput, formatBRL, parseMoneyToCents } from "@/lib/money";
 import { PAYMENT_METHODS, methodLabel } from "@/lib/labels";
 
-export function OpenShiftForm({ registers }: { registers: Array<{ id: string; name: string }> }) {
+export function OpenShiftForm({ registers, changeFundCents }: { registers: Array<{ id: string; name: string }>; changeFundCents: number }) {
   return (
     <ActionForm action={openShiftAction} submit={<><Wallet size={16} aria-hidden /> Abrir meu turno</>} pendingLabel="Abrindo..." submitClassName="w-full sm:w-auto">
       {registers.length > 1 ? (
         <Field label="Caixa" name="register_id"><Select name="register_id" required>{registers.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</Select></Field>
       ) : <input type="hidden" name="register_id" value={registers[0]?.id ?? ""} />}
-      <Field label="Dinheiro contado na gaveta agora" name="opening" hint="Conte as notas e moedas antes de digitar. O sistema compara com o que o turno anterior deixou.">
-        <MoneyInput name="opening" autoFocus />
+      <Field label="Troco na gaveta agora" name="opening" hint={`Conte as notas e moedas. O normal é ${formatBRL(changeFundCents)}. O sistema compara com o que o turno anterior deixou.`}>
+        <MoneyInput name="opening" autoFocus defaultValue={centsToInput(changeFundCents)} />
       </Field>
       <Field label="Observação da passagem de turno" name="note" hint="Obrigatória apenas se a sua contagem não bater com a do turno anterior.">
         <Textarea name="note" rows={2} maxLength={500} placeholder="Ex.: faltou uma nota de R$ 10 ao contar" />

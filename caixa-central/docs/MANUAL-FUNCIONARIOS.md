@@ -9,29 +9,24 @@
 
 ## Abrir o turno
 1. Vá em **Caixa**.
-2. **Conte o dinheiro da gaveta** (notas e moedas) e digite o total em “Dinheiro contado”.
+2. **Conte o troco da gaveta.** Normalmente são **R$ 150,00**. O campo já vem com esse valor; se a contagem for outra, digite o que você contou de verdade.
 3. Toque em **Abrir meu turno**.
-   - Se o valor não bater com o que o colega deixou, o sistema pede uma **observação**. Escreva o que aconteceu. Não tente “acertar” o número: informe o que você contou de verdade.
+   - Se o valor não bater com o que o colega deixou, o sistema pede uma **observação**. Escreva o que aconteceu. Não tente "acertar" o número.
    - Se outra pessoa estiver com o caixa aberto, você só consegue abrir depois que ela fechar.
 
-## Registrar vendas
-1. Digite o **valor**, escolha a **forma de pagamento** (Dinheiro, Pix, Débito, Crédito, Transferência) e toque em **Registrar venda**.
-2. **Só dinheiro entra na gaveta.** Pix e cartão são registrados, mas não mudam o dinheiro que deve ter na gaveta.
-3. Registre cada venda **uma vez**. Se o botão ficar “Registrando…”, espere. Se a internet cair, aparece um aviso e o lançamento **não é salvo** — tente de novo quando voltar. Repetir é seguro: o sistema não duplica.
+## Durante o turno
+Não precisa lançar nada venda por venda. Atenda normalmente e guarde o dinheiro na gaveta.
 
-## Outros lançamentos
-- **Sangria:** quando tirar dinheiro da gaveta (ex.: levar ao cofre). Escolha para onde foi e descreva.
-- **Suprimento:** quando colocar dinheiro (ex.: troco).
-- **Despesa:** pagamento em dinheiro da gaveta (gelo, lanche…). Escolha a categoria e descreva.
-- Valores altos ficam **aguardando conferência da gerência** — é normal.
-- **Errou um lançamento?** Você não consegue apagar. Avise o gerente: ele cancela e o cancelamento fica registrado.
-
-## Fechar o turno
-1. Toque em **Fechar turno**.
-2. **Conte o dinheiro da gaveta** e digite o total.
+## Fechar o turno (uma tela só)
+1. Em **Caixa**, preencha:
+   1. **Quanto foi vendido** em cada forma de pagamento (Dinheiro, Pix, Débito, Crédito). Deixe em branco o que não teve.
+   2. **Despesa paga com dinheiro da gaveta**, se houve (valor e o que foi, ex.: gelo).
+   3. **Total contado**: conte tudo o que está na gaveta (troco + dinheiro das vendas).
+2. O sistema mostra **quanto retirar da gaveta** e **quanto deixar de troco** (R$ 150,00), e se o caixa bateu.
 3. Se houver diferença (sobra ou falta), escreva a **justificativa** com honestidade.
-4. Marque a confirmação e toque em **Confirmar fechamento**. Depois de fechado, o turno **não pode ser alterado**.
-5. Em alguns períodos o sistema usa **fechamento cego**: ele não mostra o valor esperado antes de você contar. Isso é normal.
+4. Toque em **Fechar turno**. **Retire da gaveta o valor indicado e deixe o troco.** Depois de fechado, o turno não pode ser alterado.
+
+Se a internet cair, aparece um aviso e **nada é salvo**: tente de novo quando voltar. Repetir é seguro, o sistema não duplica.
 
 ## O que você vê
 Apenas o seu caixa e os seus turnos. Boletos, saldos de banco e relatórios financeiros são só da gerência e do proprietário.

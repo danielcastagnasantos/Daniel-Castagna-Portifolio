@@ -4,7 +4,7 @@ import { Pencil, Plus } from "lucide-react";
 import { ActionForm, Checkbox, Field, Input, MoneyInput, Select } from "@/components/forms/ActionForm";
 import { ModalButton } from "@/components/ui/Modal";
 import { Badge } from "@/components/ui/primitives";
-import { createRegisterAction, setEmailNotificationsAction, setRegisterActiveAction, setRouteAction, updateSettingsAction, upsertCategoryAction } from "@/app/actions/settings";
+import { createRegisterAction, setChangeFundAction, setEmailNotificationsAction, setRegisterActiveAction, setRouteAction, updateSettingsAction, upsertCategoryAction } from "@/app/actions/settings";
 
 export function SettingsForms({ org }: { org: { name: string; blind: boolean; review: string; diff: string; hours: number } }) {
   return (
@@ -79,6 +79,16 @@ export function EmailToggle({ enabled }: { enabled: boolean }) {
     <ActionForm action={setEmailNotificationsAction} submit={enabled ? "Desativar e-mails" : "Ativar e-mails"} variant="secondary" resetOnSuccess={false}>
       <input type="hidden" name="enabled" value={String(!enabled)} />
       <p className="text-sm">Alertas por e-mail: <b>{enabled ? "ativados" : "desativados"}</b></p>
+    </ActionForm>
+  );
+}
+
+export function ChangeFundForm({ amount }: { amount: string }) {
+  return (
+    <ActionForm action={setChangeFundAction} submit="Salvar troco" resetOnSuccess={false}>
+      <Field label="Troco que fica na gaveta entre os turnos" name="amount" hint="Normalmente R$ 150,00. O fechamento calcula o quanto retirar para sobrar só esse valor.">
+        <MoneyInput name="amount" defaultValue={amount} />
+      </Field>
     </ActionForm>
   );
 }

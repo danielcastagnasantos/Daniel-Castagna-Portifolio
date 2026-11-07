@@ -19,7 +19,7 @@ const errors = (page: Page) => {
   return list;
 };
 
-const ADMIN_PAGES = ["/painel", "/caixa", "/caixa/turnos", `/caixa/turnos/${fixtures.ids.id(101)}`, "/boletos", `/boletos/${fixtures.ids.id(301)}`, "/boletos/agenda", "/boletos/fornecedores",
+const ADMIN_PAGES = ["/painel", "/painel?periodo=ano", "/painel?periodo=semana", "/boletos?ver=pagos", "/caixa", "/caixa/turnos", `/caixa/turnos/${fixtures.ids.id(101)}`, "/boletos", `/boletos/${fixtures.ids.id(301)}`, "/boletos/agenda", "/boletos/fornecedores",
   "/contas", `/contas/${fixtures.ids.id(22)}`, "/conciliacao", "/receber", "/relatorios", "/relatorios/daily_close", "/relatorios/sales_by_method", "/relatorios/bills",
   "/notificacoes", "/equipe", "/configuracoes", "/auditoria"];
 
@@ -31,7 +31,7 @@ test.describe("proprietário: todas as telas renderizam sem erro (desktop)", () 
       const errs = errors(page);
       const res = await page.goto(path);
       expect(res?.status(), path).toBe(200);
-      await expect(page, "não pode ter sido redirecionado ao login").toHaveURL(new RegExp(`${path.replace(/\//g, "\\/")}$`));
+      await expect(page, "não pode ter sido redirecionado ao login").toHaveURL(new RegExp(`${path.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}$`));
       await expect(page.locator("main h1").first()).toBeVisible();
       await expect(page.getByRole("heading", { name: "Entrar" })).toHaveCount(0);
       await page.waitForLoadState("networkidle");
@@ -61,7 +61,7 @@ test.describe("celular (390×844): proprietário e operador", () => {
     await page.goto("/caixa");
     await expect(page.getByRole("heading", { name: "Meu turno" })).toBeVisible();
     await expect(page.getByRole("button", { name: /Fechar turno/ })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Boletos|Painel|Contas/ })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Boletos|Resumos|Equipe/ })).toHaveCount(0);
     await page.waitForLoadState("networkidle");
     await page.screenshot({ path: info.outputPath("operador-caixa.png"), fullPage: true });
     expect(errs, errs.join("\n")).toEqual([]);
@@ -92,33 +92,29 @@ test.describe("permissões na interface", () => {
 
 test.describe("interações da interface", () => {
   test.use({ viewport: { width: 1366, height: 860 } });
-  test("fechamento: prévia da diferença em tempo real e modal de confirmação", async ({ page, context }, info) => {
+  test("fechamento simples: mostra quanto retirar, deixa R$ 150 de troco e calcula a diferença", async ({ page, context }, info) => {
     await login(context, U.cashier);
     await page.goto("/caixa");
-    await page.getByRole("button", { name: /Fechar turno/ }).click();
-    const dialog = page.getByRole("dialog");
-    await expect(dialog).toBeVisible();
-    await dialog.getByLabel("Dinheiro contado na gaveta").fill("580,00");
-    await expect(dialog.getByText("Falta")).toBeVisible();
-    await expect(dialog.getByText(/-R\$\s*20,00/)).toBeVisible();   // esperado 600,00 (fixture) − 580,00
-    await page.screenshot({ path: info.outputPath("fechamento.png") });
-    await page.keyboard.press("Escape");
-    await expect(dialog).toBeHidden();
+    await page.getByLabel("Dinheiro", { exact: true }).fill("500,00");
+    await page.getByLabel("Total contado (notas e moedas)").fill("650,00");
+    await expect(page.getByText("Retirar da gaveta")).toBeVisible();
+    await expect(page.getByText(/R\$\s*500,00/).first()).toBeVisible();
+    await expect(page.getByText("Deixar de troco")).toBeVisible();
+    await expect(page.getByText("Caixa bateu")).toBeVisible();      // abertura 150 + 500 de vendas = 650 esperado
+    await page.screenshot({ path: info.outputPath("fechamento.png"), fullPage: true });
   });
-  test("tabela: busca, filtro e ordenação", async ({ page, context }) => {
+  test("boletos: agrupados por mês e data, vencido em destaque, abas A pagar/Pagos", async ({ page, context }) => {
     await login(context, U.owner);
     await page.goto("/boletos");
-    const rows = page.locator("table tbody tr");
-    const total = await rows.count();
-    expect(total).toBeGreaterThan(3);
-    await page.getByPlaceholder("Pesquisar...").fill("energia");
-    await expect(rows).toHaveCount(1);
-    await page.getByPlaceholder("Pesquisar...").fill("");
-    await page.getByLabel("Situação").selectOption("overdue");
-    await expect(rows.first()).toContainText("Ambev");
-    await page.getByLabel("Situação").selectOption("");
-    await page.getByRole("button", { name: "Valor", exact: true }).click();
-    await expect(page.locator("th[aria-sort]")).toHaveCount(1);
+    await expect(page.getByRole("tab", { name: "A pagar" })).toHaveAttribute("aria-selected", "true");
+    const items = page.locator("main ul li");
+    expect(await items.count()).toBeGreaterThanOrEqual(3);
+    await expect(page.getByText("Ambev Distribuição").first()).toBeVisible();
+    await expect(page.getByText("Vencido").first()).toBeVisible();
+    await expect(page.getByRole("button", { name: "Pagar" }).first()).toBeVisible();
+    await page.getByRole("tab", { name: "Pagos" }).click();
+    await expect(page).toHaveURL(/ver=pagos/);
+    await expect(page.getByText("Transportadora Rota")).toBeVisible();
   });
   test("novo boleto: modal com parcelamento mostra campos extras", async ({ page, context }) => {
     await login(context, U.owner);
@@ -129,16 +125,5 @@ test.describe("interações da interface", () => {
     await d.getByLabel("Tipo").selectOption("installments");
     await expect(d.getByLabel("Nº de parcelas")).toBeVisible();
     await expect(d.getByLabel("Valor total")).toBeVisible();
-  });
-  test("venda: escolher Pix esconde conta de gaveta; sangria pergunta destino", async ({ page, context }) => {
-    await login(context, U.cashier);
-    await page.goto("/caixa");
-    await page.locator('label:has(input[value="pix"])').click();
-    await expect(page.locator('input[value="pix"]')).toBeChecked();
-    await expect(page.getByText(/não entram na gaveta/)).toBeVisible();
-    await page.getByRole("tab", { name: "Sangria" }).click();
-    await expect(page.getByLabel("Para onde foi o dinheiro?")).toBeVisible();
-    await page.getByRole("tab", { name: "Despesa" }).click();
-    await expect(page.getByLabel("Categoria da despesa")).toBeVisible();
   });
 });
