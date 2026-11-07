@@ -44,8 +44,7 @@ export default async function BillsPage({ searchParams }: { searchParams: Promis
     <>
       <PageHeader title="Boletos" description="Organizados por data de vencimento. Marque como pago só depois de conferir no banco."
         actions={<><LinkButton href="/boletos/agenda" variant="secondary"><CalendarDays size={16} aria-hidden /> Próximos dias</LinkButton>
-          <LinkButton href="/boletos/fornecedores" variant="secondary">Fornecedores</LinkButton>
-          <NewBillButton orgId={ctx.profile.organization_id} suppliers={lookups.suppliers.filter((s) => s.active)} categories={lookups.categories} /></>} />
+          <NewBillButton orgId={ctx.profile.organization_id} supplierNames={lookups.suppliers.map((s) => s.name)} categories={lookups.categories} /></>} />
 
       <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="A pagar (total)" icon={FileText} tone="primary" value={formatBRL(sumCents(open.map((b) => b.remaining_cents)))} hint={`${open.length} boleto(s)`} />

@@ -6,7 +6,7 @@
 | Ver painel, saldos, relatórios | ✅ | ✅ | ❌ |
 | Abrir/fechar o próprio turno e lançar vendas | ✅ | ✅ | ✅ |
 | Lançar correções, cancelar movimentações, conferir turnos | ✅ | ✅ | ❌ |
-| Boletos, fornecedores, contas, conciliação, a receber | ✅ | ✅ | ❌ |
+| Boletos, contas, conciliação, a receber | ✅ | ✅ | ❌ |
 | Criar acessos de **operador** / desativar operadores | ✅ | ✅ | ❌ |
 | Criar acessos de gerente/proprietário, **mudar perfis** | ✅ | ❌ | ❌ |
 | Ver auditoria | ✅ | ✅ | ❌ |

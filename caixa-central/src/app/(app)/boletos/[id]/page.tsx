@@ -54,7 +54,7 @@ export default async function BillDetail({ params }: { params: Promise<{ id: str
         description={<>{bill.description}{bill.installments_total > 1 ? ` · parcela ${bill.installment_no}/${bill.installments_total}` : ""}{bill.category ? ` · ${bill.category}` : ""}</>}
         actions={editable ? <>
           <PayBillButton billId={id} remainingCents={bill.remaining_cents} accounts={lookups.accounts} />
-          <EditBillButton bill={bill} suppliers={lookups.suppliers} categories={lookups.categories} />
+          <EditBillButton bill={bill} supplierNames={lookups.suppliers.map((s) => s.name)} categories={lookups.categories} />
           {bill.paid_cents === 0 && <CancelBillButton id={id} />}
         </> : undefined}
       />

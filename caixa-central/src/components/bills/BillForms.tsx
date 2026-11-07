@@ -2,12 +2,11 @@
 
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Pencil, Plus, Ban, HandCoins, Undo2, Building2 } from "lucide-react";
+import { Pencil, Plus, Ban, HandCoins, Undo2 } from "lucide-react";
 import { ActionForm, Checkbox, Field, Input, MoneyInput, Select, Textarea } from "@/components/forms/ActionForm";
 import { ModalButton } from "@/components/ui/Modal";
 import { Alert } from "@/components/ui/primitives";
-import { cn } from "@/components/ui/cn";
-import { cancelBillAction, cancelPaymentAction, createBillsAction, payBillAction, updateBillAction, upsertSupplierAction } from "@/app/actions/bills";
+import { cancelBillAction, cancelPaymentAction, createBillsAction, payBillAction, updateBillAction } from "@/app/actions/bills";
 import { uploadBillFile, validateFile } from "./FileUpload";
 import { centsToInput } from "@/lib/money";
 import { payMethodLabel } from "@/lib/labels";
@@ -15,15 +14,12 @@ import { todayISO } from "@/lib/dates";
 
 type Opt = { id: string; name: string };
 
-export function NewBillButton({ orgId, suppliers, categories }: { orgId: string; suppliers: Opt[]; categories: Opt[] }) {
+export function NewBillButton({ orgId, supplierNames, categories }: { orgId: string; supplierNames: string[]; categories: Opt[] }) {
   const [mode, setMode] = useState("single");
   const fileRef = useRef<HTMLInputElement>(null);
   return (
     <ModalButton variant="primary" label="Novo boleto" icon={<Plus size={16} aria-hidden />} title="Cadastrar boleto" description="Único, parcelado ou recorrente.">
-      {suppliers.length === 0 ? (
-        <Alert tone="warning" title="Cadastre um fornecedor primeiro">Vá em Boletos &gt; Fornecedores e cadastre quem emitiu o boleto.</Alert>
-      ) : (
-        <ActionForm action={createBillsAction} submit="Cadastrar" onSuccess={async (s) => {
+      <ActionForm action={createBillsAction} submit="Cadastrar" onSuccess={async (s) => {
           const file = fileRef.current?.files?.[0];
           const ids = (s.data?.ids as string[] | undefined) ?? [];
           if (file && ids[0]) {
@@ -31,7 +27,10 @@ export function NewBillButton({ orgId, suppliers, categories }: { orgId: string;
             catch (e) { toast.error(`O boleto foi cadastrado, mas o anexo falhou: ${e instanceof Error ? e.message : "erro"}. Anexe pela tela do boleto.`); }
           }
         }}>
-          <Field label="Fornecedor" name="supplier_id"><Select name="supplier_id" required defaultValue=""><option value="" disabled>Escolha...</option>{suppliers.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</Select></Field>
+          <Field label="Quem cobra (fornecedor)" name="supplier_name" hint="Digite o nome. Se já usou antes, aparece para escolher.">
+            <Input name="supplier_name" required minLength={2} maxLength={140} list="supplier-names" autoComplete="off" placeholder="Ex.: Ambev" />
+          </Field>
+          <datalist id="supplier-names">{supplierNames.map((n) => <option key={n} value={n} />)}</datalist>
           <Field label="Descrição" name="description"><Input name="description" required minLength={2} maxLength={200} placeholder="Ex.: Pedido 4521 — cerveja" /></Field>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Categoria" name="category_id"><Select name="category_id" defaultValue=""><option value="">Sem categoria</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</Select></Field>
@@ -58,8 +57,7 @@ export function NewBillButton({ orgId, suppliers, categories }: { orgId: string;
                 onChange={(e) => { const f = e.target.files?.[0]; const err = f ? validateFile(f) : null; if (err) { toast.error(err); e.target.value = ""; } }} />
             </div>
           )}
-        </ActionForm>
-      )}
+      </ActionForm>
     </ModalButton>
   );
 }
@@ -87,15 +85,16 @@ export function PayBillButton({ billId, remainingCents, accounts, compact, defau
   );
 }
 
-export function EditBillButton({ bill, suppliers, categories }: {
-  bill: { id: string; supplier_id: string; description: string; category_id: string | null; amount_cents: number; due_date: string; barcode: string | null; notes: string | null };
-  suppliers: Opt[]; categories: Opt[];
+export function EditBillButton({ bill, supplierNames, categories }: {
+  bill: { id: string; supplier: string; description: string; category_id: string | null; amount_cents: number; due_date: string; barcode: string | null; notes: string | null };
+  supplierNames: string[]; categories: Opt[];
 }) {
   return (
     <ModalButton variant="secondary" label="Editar" icon={<Pencil size={16} aria-hidden />} title="Editar boleto" description="A alteração fica registrada no histórico.">
       <ActionForm action={updateBillAction} submit="Salvar alterações" resetOnSuccess={false}>
         <input type="hidden" name="id" value={bill.id} />
-        <Field label="Fornecedor" name="supplier_id"><Select name="supplier_id" defaultValue={bill.supplier_id}>{suppliers.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</Select></Field>
+        <Field label="Quem cobra" name="supplier_name"><Input name="supplier_name" required minLength={2} maxLength={140} defaultValue={bill.supplier} list="supplier-names-edit" autoComplete="off" /></Field>
+        <datalist id="supplier-names-edit">{supplierNames.map((n) => <option key={n} value={n} />)}</datalist>
         <Field label="Descrição" name="description"><Input name="description" required defaultValue={bill.description} maxLength={200} /></Field>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Categoria" name="category_id"><Select name="category_id" defaultValue={bill.category_id ?? ""}><option value="">Sem categoria</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</Select></Field>
@@ -128,30 +127,6 @@ export function CancelPaymentButton({ id }: { id: string }) {
       <ActionForm action={cancelPaymentAction} submit="Cancelar pagamento" variant="danger">
         <input type="hidden" name="id" value={id} />
         <Field label="Motivo (obrigatório)" name="reason"><Input name="reason" required minLength={5} maxLength={300} /></Field>
-      </ActionForm>
-    </ModalButton>
-  );
-}
-
-export function SupplierButton({ supplier, className }: {
-  supplier?: { id: string; name: string; document: string | null; phone: string | null; email: string | null; notes: string | null; active: boolean }; className?: string;
-}) {
-  return (
-    <ModalButton variant={supplier ? "ghost" : "primary"} size={supplier ? "sm" : "md"} className={cn(className)}
-      label={supplier ? "Editar" : "Novo fornecedor"} icon={supplier ? <Pencil size={14} aria-hidden /> : <Building2 size={16} aria-hidden />}
-      title={supplier ? "Editar fornecedor" : "Novo fornecedor"}>
-      <ActionForm action={upsertSupplierAction} submit="Salvar" resetOnSuccess={!supplier}>
-        {supplier && <input type="hidden" name="id" value={supplier.id} />}
-        <Field label="Nome" name="name"><Input name="name" required minLength={2} maxLength={140} defaultValue={supplier?.name} /></Field>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="CNPJ/CPF" name="document"><Input name="document" maxLength={24} defaultValue={supplier?.document ?? ""} /></Field>
-          <Field label="Telefone" name="phone"><Input name="phone" type="tel" maxLength={30} defaultValue={supplier?.phone ?? ""} /></Field>
-        </div>
-        <Field label="E-mail" name="email"><Input name="email" type="email" maxLength={160} defaultValue={supplier?.email ?? ""} /></Field>
-        <Field label="Observações" name="notes"><Textarea name="notes" rows={2} maxLength={500} defaultValue={supplier?.notes ?? ""} /></Field>
-        {supplier && (
-          <Field label="Situação" name="active"><Select name="active" defaultValue={String(supplier.active)}><option value="true">Ativo</option><option value="false">Inativo (não aparece em novos boletos)</option></Select></Field>
-        )}
       </ActionForm>
     </ModalButton>
   );

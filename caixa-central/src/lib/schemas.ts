@@ -109,7 +109,7 @@ export const supplierSchema = z.object({
 
 export const billSchema = z.object({
   request_id: requestId,
-  supplier_id: uuid("Fornecedor"),
+  supplier_name: text(2, 140, "Quem cobra"),
   description: text(2, 200, "Descrição"),
   category_id: optionalUuid,
   amount: money("Valor"),
@@ -121,7 +121,7 @@ export const billSchema = z.object({
   notes: optionalText(500),
 });
 export const billUpdateSchema = z.object({
-  id: uuid(), supplier_id: uuid("Fornecedor"), description: text(2, 200, "Descrição"), category_id: optionalUuid,
+  id: uuid(), supplier_name: text(2, 140, "Quem cobra"), description: text(2, 200, "Descrição"), category_id: optionalUuid,
   amount: money("Valor"), due_date: isoDate("Data de vencimento"), barcode: optionalText(80), notes: optionalText(500),
 });
 export const payBillSchema = z.object({
