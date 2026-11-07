@@ -1,8 +1,4 @@
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
-
-const root = dirname(fileURLToPath(import.meta.url));
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -15,10 +11,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  distDir: process.env.NEXT_DIST_DIR ?? ".next",
-  // Este projeto vive em uma subpasta com o próprio package-lock.json.
-  outputFileTracingRoot: root,
-  turbopack: { root },
+  // Só usado pelo QA visual local (build separado); na Vercel fica o padrão .next.
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   experimental: {
     // Upload de extratos (CSV/OFX até 3 MB) passa pela Server Action. Anexos de boleto vão direto ao Storage.
     serverActions: { bodySizeLimit: "4mb" },
