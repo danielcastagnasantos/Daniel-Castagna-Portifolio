@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { action, callRpc, ok } from "@/lib/action";
-import { accountActiveSchema, categorySchema, registerNameSchema, routeSchema, settingsSchema } from "@/lib/schemas";
+import { accountActiveSchema, categorySchema, changeFundSchema, registerNameSchema, routeSchema, settingsSchema } from "@/lib/schemas";
 
 const refresh = () => { revalidatePath("/configuracoes"); revalidatePath("/caixa", "layout"); };
 
@@ -57,4 +57,12 @@ export const markNotificationsReadAction = action({ area: "notificacoes", schema
   revalidatePath("/notificacoes");
   revalidatePath("/", "layout");
   return ok(i.id ? "Marcada como lida." : "Todas marcadas como lidas.");
+});
+
+export const setChangeFundAction = action({ area: "configuracoes", schema: changeFundSchema }, async (i, ctx) => {
+  const r = await callRpc(ctx, "set_change_fund", { p_cents: i.amount });
+  if (r.state) return r.state;
+  refresh();
+  revalidatePath("/painel");
+  return ok("Valor do troco atualizado.");
 });

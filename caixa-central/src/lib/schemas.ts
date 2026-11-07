@@ -71,6 +71,22 @@ export const closeShiftSchema = z.object({
   justification: optionalText(500),
 });
 
+/** Fechamento simples: totais do turno por forma de pagamento + dinheiro contado. */
+export const closeSimpleSchema = z.object({
+  request_id: requestId,
+  shift_id: uuid("Turno"),
+  cash_sales: money("Vendas em dinheiro", { allowZero: true }).optional().default(0),
+  pix: money("Vendas no Pix", { allowZero: true }).optional().default(0),
+  debit: money("Vendas no débito", { allowZero: true }).optional().default(0),
+  credit: money("Vendas no crédito", { allowZero: true }).optional().default(0),
+  transfer: money("Vendas por transferência", { allowZero: true }).optional().default(0),
+  expense: money("Despesa em dinheiro", { allowZero: true }).optional().default(0),
+  expense_note: optionalText(250),
+  counted: money("Dinheiro contado na gaveta", { allowZero: true }),
+  justification: optionalText(500),
+});
+export const changeFundSchema = z.object({ amount: money("Troco", { allowZero: true }) });
+
 export const cancelSchema = z.object({
   id: uuid(),
   reason: text(5, 300, "Motivo"),

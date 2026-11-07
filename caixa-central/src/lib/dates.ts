@@ -48,10 +48,16 @@ export function addMonthsISO(iso: string, months: number): string {
 export const isISODate = (s: unknown): s is string =>
   typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(Date.parse(s));
 
-export type PeriodPreset = "today" | "7d" | "30d" | "month" | "last-month";
+export type PeriodPreset = "today" | "week" | "7d" | "30d" | "month" | "last-month" | "year";
 export function presetRange(preset: PeriodPreset, today = todayISO()): { from: string; to: string } {
   switch (preset) {
     case "today": return { from: today, to: today };
+    case "week": {
+      // semana corrente: segunda-feira até hoje
+      const dow = new Date(`${today}T00:00:00Z`).getUTCDay(); // 0 = domingo
+      return { from: addDaysISO(today, -((dow + 6) % 7)), to: today };
+    }
+    case "year": return { from: `${today.slice(0, 4)}-01-01`, to: today };
     case "7d": return { from: addDaysISO(today, -6), to: today };
     case "30d": return { from: addDaysISO(today, -29), to: today };
     case "month": return { from: startOfMonthISO(today), to: today };
