@@ -19,7 +19,7 @@ const errors = (page: Page) => {
   return list;
 };
 
-const ADMIN_PAGES = ["/painel", "/painel?periodo=ano", "/painel?periodo=semana", "/boletos?ver=pagos", "/caixa", "/caixa/turnos", `/caixa/turnos/${fixtures.ids.id(101)}`, "/boletos", `/boletos/${fixtures.ids.id(301)}`, "/boletos/agenda", "/boletos/fornecedores",
+const ADMIN_PAGES = ["/painel", "/painel?periodo=ano", "/painel?periodo=semana", "/boletos?ver=pagos", "/caixa", "/caixa/turnos", `/caixa/turnos/${fixtures.ids.id(101)}`, "/boletos", `/boletos/${fixtures.ids.id(301)}`, "/boletos/agenda",
   "/contas", `/contas/${fixtures.ids.id(22)}`, "/conciliacao", "/receber", "/relatorios", "/relatorios/daily_close", "/relatorios/sales_by_method", "/relatorios/bills",
   "/notificacoes", "/equipe", "/configuracoes", "/auditoria"];
 

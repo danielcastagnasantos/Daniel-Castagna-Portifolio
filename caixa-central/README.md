@@ -23,7 +23,7 @@ Sistema de gestão financeira para uma distribuidora de bebidas: **caixa por tur
 - **Turnos de caixa:** abertura com contagem, **um único turno aberto por gaveta** (garantido no banco), vendas em dinheiro/Pix/débito/crédito/transferência, sangria, suprimento, despesa, estorno, fechamento com **dinheiro esperado × contado**, diferença e justificativa, **fechamento cego** configurável, **passagem de turno com conferência obrigatória**, conferência pelo gerente, comprovante em PDF. Turno fechado é congelado.
 - **Livro‑razão imutável** com contas separadas (gaveta, cofre, banco, Pix, cartão a receber). Correções são **estornos rastreáveis**; nada é apagado. Transferência e liquidação de cartão **não** são receita.
 - **Painel** que não mistura faturamento, dinheiro, saldo bancário e cartão a receber; gráficos diário/semanal/mensal; vencimentos; diferenças; atrasos.
-- **Boletos:** fornecedores, único/parcelado/recorrente (centavos exatos), anexos privados (PDF/imagem), pagamento parcial **só com confirmação humana**, comprovante, histórico de alterações, agenda de 7/15/30 dias.
+- **Boletos:** organizados por data, único/parcelado/recorrente (centavos exatos), anexos privados (PDF/imagem), pagamento parcial **só com confirmação humana**, comprovante, histórico de alterações, agenda de 7/15/30 dias.
 - **Conciliação:** importa extrato **CSV/OFX**, detecta duplicidades, concilia manualmente, cria lançamento para tarifas/rendimentos.
 - **Relatórios** (10) com filtros e exportação **PDF, Excel e CSV**, sempre calculados do banco.
 - **Notificações** (vencimentos, atrasos, diferenças, caixa aberto há muito tempo, aprovações) + e‑mail opcional.
