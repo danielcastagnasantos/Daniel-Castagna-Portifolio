@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Subprojeto independente (tem o próprio package.json, lint e testes).
+    "caixa-central/**",
   ]),
   {
     // O three.js é uma biblioteca fundamentalmente mutável: animar significa
