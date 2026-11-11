@@ -27,18 +27,18 @@ export function Login() {
       <form onSubmit={entrar} className="w-full max-w-sm space-y-4">
         <div className="mb-2 flex items-center gap-3">
           <span className="grid size-11 place-items-center rounded-2xl bg-primary text-on-primary"><Wallet size={22} aria-hidden /></span>
-          <div><h1 className="text-xl font-semibold tracking-tight">Caixa Simples</h1><p className="text-sm text-muted">Entre para lançar entradas e saídas.</p></div>
+          <div><h1 className="text-2xl font-bold tracking-tight">Caixa</h1><p className="text-base text-muted">Entre para ver e lançar o dinheiro.</p></div>
         </div>
-        <label className="block text-sm font-medium">E-mail
+        <label className="block text-base font-semibold">E-mail
           <input type="email" required autoComplete="username" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 h-12 w-full rounded-xl border border-border bg-surface px-3 text-base" />
+            className="mt-1 h-14 w-full rounded-2xl border-2 border-border bg-surface px-4 text-lg" />
         </label>
-        <label className="block text-sm font-medium">Senha
+        <label className="block text-base font-semibold">Senha
           <input type="password" required autoComplete="current-password" value={senha} onChange={(e) => setSenha(e.target.value)}
-            className="mt-1 h-12 w-full rounded-xl border border-border bg-surface px-3 text-base" />
+            className="mt-1 h-14 w-full rounded-2xl border-2 border-border bg-surface px-4 text-lg" />
         </label>
         {erro && <p role="alert" className="rounded-xl bg-out-soft px-3 py-2 text-sm text-out">{erro}</p>}
-        <button disabled={busy} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary text-base font-medium text-on-primary disabled:opacity-60">
+        <button disabled={busy} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-xl font-bold text-on-primary disabled:opacity-60">
           {busy && <Loader2 size={18} className="animate-spin" aria-hidden />} Entrar
         </button>
       </form>
