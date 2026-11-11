@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "caixa-central"]
+  "exclude": ["node_modules", "caixa-central", "caixa-simples"]
 }

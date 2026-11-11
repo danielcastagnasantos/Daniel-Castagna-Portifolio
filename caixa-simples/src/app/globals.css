@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #eff1f5; --border: #e2e5eb;
+  --text: #0f172a; --muted: #5b6579;
+  --primary: #4f46e5; --on-primary: #ffffff;
+  --in: #047857; --in-soft: #e3f6ee; --out: #c81e1e; --out-soft: #fde8e8; --warn-soft: #fdf1dc; --warn: #b45309;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0d12; --surface: #12151c; --surface-2: #1a1e29; --border: #272c3a;
+    --text: #e8ebf2; --muted: #9099ae; --primary: #8b8ff8; --on-primary: #0b0d12;
+    --in: #34d399; --in-soft: #0f2a21; --out: #f87171; --out-soft: #331618; --warn-soft: #2c2310; --warn: #fbbf24;
+    color-scheme: dark;
+  }
+}
+@theme inline {
+  --color-bg: var(--bg); --color-surface: var(--surface); --color-surface-2: var(--surface-2); --color-border: var(--border);
+  --color-text: var(--text); --color-muted: var(--muted); --color-primary: var(--primary); --color-on-primary: var(--on-primary);
+  --color-in: var(--in); --color-in-soft: var(--in-soft); --color-out: var(--out); --color-out-soft: var(--out-soft);
+  --color-warn: var(--warn); --color-warn-soft: var(--warn-soft);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overscroll-behavior-y: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 8px; }
+.tabular { font-variant-numeric: tabular-nums; }
+dialog.modal {
+  margin: auto; padding: 0; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); color: var(--text);
+  width: min(520px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); box-shadow: 0 24px 64px rgb(0 0 0 / .3);
+}
+dialog.modal::backdrop { background: rgb(8 10 16 / .55); }
+dialog.modal[open] { animation: pop .15s ease-out; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+.safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
