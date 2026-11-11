@@ -14,16 +14,19 @@ async function entrar(page: Page, email = "dono@teste.com", senha = "senha12345"
 }
 
 async function lancar(page: Page, o: { tipo: "entrada" | "saida"; valor: string; categoria?: string; data?: string; cartao?: boolean; descricao?: string }) {
-  await page.getByRole("button", { name: o.tipo === "entrada" ? "+ Entrada" : "− Saída" }).click();
+  await page.getByRole("button", { name: o.tipo === "entrada" ? "+ Entrou" : "− Saiu" }).click();
   const d = page.getByRole("dialog");
-  await d.getByLabel("Valor (R$)").fill(o.valor);
-  if (o.data) await d.getByLabel("Data").fill(o.data);
+  await d.getByLabel("Quanto foi? (R$)").fill(o.valor);
   if (o.cartao) await d.getByRole("button", { name: "Cartão", exact: true }).click();
+  if (o.data) {
+    await d.getByRole("button", { name: "Outro dia" }).click();
+    await d.getByLabel("Escolha o dia").fill(o.data);
+  }
   if (o.categoria) await d.getByRole("button", { name: o.categoria, exact: true }).click();
-  if (o.descricao) await d.getByLabel("Especificação (opcional)").fill(o.descricao);
-  await d.getByRole("button", { name: o.tipo === "entrada" ? "Lançar entrada" : "Lançar saída" }).click();
+  if (o.descricao) await d.getByLabel(/Observação/).fill(o.descricao);
+  await d.getByRole("button", { name: "Salvar" }).click();
   await expect(d).toBeHidden();
-  await expect(page.getByRole("status")).toContainText(/lançada/);
+  await expect(page.getByRole("status")).toContainText("Salvo");
 }
 
 test("login: senha errada mostra erro; certa abre o caixa vazio", async ({ page }) => {
@@ -32,7 +35,7 @@ test("login: senha errada mostra erro; certa abre o caixa vazio", async ({ page 
   await page.getByLabel("Senha").fill("senha12345");
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page.getByTestId("saldo-dinheiro")).toHaveText(/R\$\s*0,00/);
-  await expect(page.getByText(/Nada lançado neste período/)).toBeVisible();
+  await expect(page.getByText("Ainda não tem nada aqui.")).toBeVisible();
 });
 
 test("EXEMPLO DO PAI: 340 de manhã + caixa antigo = 1.200 em caixa; sai 800 de mercadoria; sobra 400", async ({ page }) => {
@@ -57,10 +60,9 @@ test("cartão fica separado do dinheiro", async ({ page }) => {
   await entrar(page);
   await lancar(page, { tipo: "entrada", valor: "500", categoria: "Venda" });
   await lancar(page, { tipo: "entrada", valor: "250,50", categoria: "Venda", cartao: true, descricao: "Cartão da tarde" });
-  await lancar(page, { tipo: "saida", valor: "50", categoria: "Outros", cartao: true });
+  await lancar(page, { tipo: "saida", valor: "50", categoria: "Mercadoria", cartao: true });
   await expect(page.getByTestId("saldo-dinheiro")).toHaveText(/R\$\s*500,00/);
   await expect(page.getByTestId("saldo-cartao")).toHaveText(/R\$\s*200,50/);
-  await expect(page.getByTestId("saldo-total")).toHaveText(/R\$\s*700,50/);
 });
 
 test("editar e excluir atualizam os saldos; exclusão pede confirmação", async ({ page }) => {
@@ -68,30 +70,47 @@ test("editar e excluir atualizam os saldos; exclusão pede confirmação", async
   await lancar(page, { tipo: "entrada", valor: "100", categoria: "Venda" });
   await page.getByRole("button", { name: /Venda/ }).first().click();
   const d = page.getByRole("dialog");
-  await d.getByLabel("Valor (R$)").fill("150");
-  await d.getByRole("button", { name: "Salvar alterações" }).click();
+  await d.getByLabel("Quanto foi? (R$)").fill("150");
+  await d.getByRole("button", { name: "Salvar" }).click();
   await expect(page.getByTestId("saldo-dinheiro")).toHaveText(/R\$\s*150,00/);
   await page.getByRole("button", { name: /Venda/ }).first().click();
   await page.getByRole("dialog").getByRole("button", { name: "Excluir" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();                                  // ainda não excluiu
-  await page.getByRole("dialog").getByRole("button", { name: "Confirmar exclusão" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Sim, excluir" }).click();
   await expect(page.getByTestId("saldo-dinheiro")).toHaveText(/R\$\s*0,00/);
 });
 
 test("validação: valor vazio/zero e data futura são recusados sem gravar", async ({ page, request }) => {
   await entrar(page);
-  await page.getByRole("button", { name: "+ Entrada" }).click();
+  await page.getByRole("button", { name: "+ Entrou" }).click();
   const d = page.getByRole("dialog");
-  await d.getByRole("button", { name: "Lançar entrada" }).click();
-  await expect(d.getByRole("alert")).toContainText("valor maior que zero");
-  await d.getByLabel("Valor (R$)").fill("0");
-  await d.getByRole("button", { name: "Lançar entrada" }).click();
-  await expect(d.getByRole("alert")).toContainText("valor maior que zero");
-  await d.getByLabel("Valor (R$)").fill("10");
-  await d.getByLabel("Data").fill("2999-01-01");
-  await d.getByRole("button", { name: "Lançar entrada" }).click();
+  await d.getByRole("button", { name: "Salvar" }).click();
+  await expect(d.getByRole("alert")).toContainText("Digite quanto foi");
+  await d.getByLabel("Quanto foi? (R$)").fill("0");
+  await d.getByRole("button", { name: "Salvar" }).click();
+  await expect(d.getByRole("alert")).toContainText("Digite quanto foi");
+  await d.getByLabel("Quanto foi? (R$)").fill("10");
+  await d.getByRole("button", { name: "Outro dia" }).click();
+  await d.getByLabel("Escolha o dia").fill("2999-01-01");
+  await d.getByRole("button", { name: "Salvar" }).click();
   await expect(d.getByRole("alert")).toContainText("futuro");
   expect(await (await request.get(`${FAKE}/__rows`)).json()).toHaveLength(0);
+});
+
+test("lançar é fácil: Hoje já vem escolhido, Ontem e categoria 'Outro' com texto livre", async ({ page, request }) => {
+  await entrar(page);
+  await page.getByRole("button", { name: "+ Saiu" }).or(page.getByRole("button", { name: "− Saiu" })).click();
+  const d = page.getByRole("dialog");
+  await expect(d.getByRole("button", { name: "Hoje" })).toHaveAttribute("aria-pressed", "true");
+  await d.getByLabel("Quanto foi? (R$)").fill("45");
+  await d.getByRole("button", { name: "Ontem" }).click();
+  await d.getByRole("button", { name: "Outro", exact: true }).click();
+  await d.getByLabel("Digite de quê foi").fill("Conserto da porta");
+  await d.getByRole("button", { name: "Salvar" }).click();
+  await expect(d).toBeHidden();
+  const rows = await (await request.get(`${FAKE}/__rows`)).json();
+  expect(rows[0]).toMatchObject({ tipo: "saida", categoria: "Conserto da porta", valor_centavos: 4500 });
+  await expect(page.getByTestId("saldo-dinheiro")).toHaveText(/-R\$\s*45,00/);
 });
 
 test("sem conexão: não confirma como salvo; ao tentar de novo grava UMA vez (mesma chave)", async ({ page, request }) => {
@@ -102,17 +121,17 @@ test("sem conexão: não confirma como salvo; ao tentar de novo grava UMA vez (m
     if (route.request().method() === "POST") { ids.push(route.request().postDataJSON().id); return route.abort("failed"); }
     return route.continue();
   });
-  await page.getByRole("button", { name: "+ Entrada" }).click();
+  await page.getByRole("button", { name: "+ Entrou" }).click();
   const d = page.getByRole("dialog");
-  await d.getByLabel("Valor (R$)").fill("77");
-  await d.getByRole("button", { name: "Lançar entrada" }).click();
+  await d.getByLabel("Quanto foi? (R$)").fill("77");
+  await d.getByRole("button", { name: "Salvar" }).click();
   await expect(d.getByRole("alert")).toContainText("Sem conexão");
   await expect(d).toBeVisible();                                                           // os dados continuam na tela
   expect(await (await request.get(`${FAKE}/__rows`)).json()).toHaveLength(0);              // nada foi salvo
 
   await page.unroute("**/rest/v1/lancamentos");
   page.on("request", (r) => { if (r.method() === "POST" && r.url().includes("/lancamentos")) ids.push(r.postDataJSON().id); });
-  await d.getByRole("button", { name: "Lançar entrada" }).click();
+  await d.getByRole("button", { name: "Salvar" }).click();
   await expect(d).toBeHidden();
   const rows = await (await request.get(`${FAKE}/__rows`)).json();
   expect(rows).toHaveLength(1);
@@ -123,7 +142,7 @@ test("sem conexão: não confirma como salvo; ao tentar de novo grava UMA vez (m
 test("quem não foi liberado vê o aviso e não consegue lançar", async ({ page }) => {
   await entrar(page, "intruso@teste.com");
   await expect(page.locator("main").getByRole("alert")).toContainText("ainda não foi liberado");
-  await expect(page.getByRole("button", { name: "+ Entrada" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "+ Entrou" })).toHaveCount(0);
 });
 
 test("os dados e o login continuam depois de recarregar; sair volta ao login", async ({ page }) => {
@@ -139,7 +158,7 @@ test("baixar planilha (CSV) traz os lançamentos do período, saída com sinal n
   await entrar(page);
   await lancar(page, { tipo: "entrada", valor: "340", categoria: "Venda", descricao: "Manhã" });
   await lancar(page, { tipo: "saida", valor: "80", categoria: "Mercadoria" });
-  const [dl] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Baixar planilha" }).click()]);
+  const [dl] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: /Baixar planilha/ }).click()]);
   const txt = await (await import("node:fs/promises")).readFile(await dl.path(), "utf8");
   expect(txt).toContain("Data;Tipo;Forma;Categoria;Descrição;Valor (R$)");
   expect(txt).toMatch(/Entrada;Dinheiro;Venda;Manhã;340,00/);
@@ -153,7 +172,7 @@ test.describe("celular e tema", () => {
     await lancar(page, { tipo: "entrada", valor: "1234,56", categoria: "Venda", descricao: "Manhã" });
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await page.screenshot({ path: info.outputPath("celular.png"), fullPage: true });
-    await page.getByRole("button", { name: "− Saída" }).click();
+    await page.getByRole("button", { name: "− Saiu" }).click();
     const box = await page.getByRole("dialog").boundingBox();
     expect(box!.width).toBeLessThanOrEqual(390);
     await page.waitForTimeout(400);

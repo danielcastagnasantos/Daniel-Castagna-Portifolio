@@ -15,13 +15,13 @@ export interface Lancamento {
 export const FORMA_LABEL: Record<Forma, string> = { dinheiro: "Dinheiro", cartao: "Cartão" };
 export const TIPO_LABEL: Record<Tipo, string> = { entrada: "Entrada", saida: "Saída" };
 
-/** Sugestões (a pessoa também pode digitar outra). */
+/** Opções de "de quê?" (só toque). "Outro" deixa a pessoa digitar. */
 export const CATEGORIAS: Record<Tipo, string[]> = {
-  entrada: ["Venda", "Caixa anterior", "Recebimento", "Outros"],
-  saida: ["Mercadoria", "Funcionário", "Aluguel", "Energia / Água", "Combustível", "Manutenção", "Outros"],
+  entrada: ["Venda", "Caixa anterior", "Outro"],
+  saida: ["Mercadoria", "Funcionário", "Contas (luz, água, aluguel)", "Combustível", "Outro"],
 };
-/** Atalhos de especificação para preencher a descrição com um toque. */
+/** Atalhos para a observação. */
 export const ATALHOS: Record<Tipo, string[]> = {
-  entrada: ["Manhã", "Tarde", "Noite", "Dia todo", "Dias anteriores"],
-  saida: ["Fornecedor", "Frete", "Pagamento", "Retirada"],
+  entrada: ["Manhã", "Tarde", "Noite", "Dia todo"],
+  saida: ["Fornecedor", "Frete", "Pagamento"],
 };

@@ -5,9 +5,9 @@ App para lançar **entradas** e **saídas** do caixa, em **dinheiro** ou **cart�
 Exemplo: hoje vendeu 340 de manhã; caixas dos últimos dias somam 860 → **1.200 em caixa**; saída de 800 em mercadoria → **sobram 400**. (Este exemplo é um dos testes automáticos.)
 
 ## Como usar
-- **+ Entrada / − Saída**: informe o valor, a data (pode ser antiga), dinheiro ou cartão, a categoria (Venda, Caixa anterior, Mercadoria…) e a especificação (Manhã, Tarde, Fornecedor… ou texto livre).
+- **+ Entrou / − Saiu**: responda quanto foi, se foi em dinheiro ou cartão, quando (Hoje, Ontem ou outro dia, para caixas antigos), de quê (Venda, Caixa anterior, Mercadoria… ou "Outro" para digitar) e, se quiser, uma observação (Manhã, Tarde…).
 - Toque em um lançamento para **editar** ou **excluir** (a exclusão pede confirmação e o registro continua guardado no banco).
-- Cada dia mostra o **dinheiro no caixa no fim do dia**. **Baixar planilha** gera um CSV do período (abre no Excel).
+- Cada dia mostra o **dinheiro no caixa no fim do dia**. **Baixar planilha (Excel)** gera um CSV do período (abre no Excel).
 - Sem internet nada é salvo e o app avisa; tentar de novo não duplica.
 
 ## Publicar (resumo)
