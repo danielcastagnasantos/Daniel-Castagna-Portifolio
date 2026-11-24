@@ -13,7 +13,8 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": { "@shared/*": ["./src/shared/*"] }
   },
   "include": ["src", "web/src", "web/*.ts", "tests", "*.ts"],
   "exclude": ["node_modules", "data", "web/dist"]

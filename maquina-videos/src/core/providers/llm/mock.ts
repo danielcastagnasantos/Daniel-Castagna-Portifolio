@@ -11,18 +11,21 @@ import type { LlmProvider } from "./types";
 const MOTIONS: Motion[] = ["zoom-in", "pan-left", "zoom-out", "pan-right", "pan-up", "pan-down"];
 const TRANSITIONS: Transition[] = ["fade", "slide", "zoom", "wipe", "fade"];
 
-const POINT_SENTENCES = [
-  "Existe um detalhe sobre {t} que quase ninguém percebe, e ele muda tudo.",
-  "Quando você olha de perto, {t} funciona de um jeito bem diferente do que parece.",
-  "O mais curioso é que, na prática, {t} depende muito mais do contexto do que da intenção.",
-  "Imagine uma situação simples do dia a dia: é aí que {t} aparece com mais clareza.",
-  "E repare como isso se repete: sempre que {t} entra em cena, o resultado muda.",
-  "Por isso a maioria das pessoas erra: elas tratam {t} como algo fixo, e não como um processo.",
-];
-const CLOSERS = [
-  "No fim, a pergunta não é o que {t} é, e sim o que você faz com isso.",
-  "Talvez a versão mais útil de {t} seja justamente a que você ainda não tentou.",
-];
+type Role = "hook" | "context" | "point" | "twist" | "closer";
+const POOL: Record<Role, string[]> = {
+  hook: ["Você já parou para pensar em {t}?", "A resposta pode mudar tudo."],
+  context: ["Quase todo mundo vê {t} do jeito óbvio.", "É aí que a gente se engana.", "Mas existe outro ângulo."],
+  point: [
+    "Existe um detalhe sobre {t} que quase ninguém percebe.",
+    "Na prática, {t} depende mais do contexto do que da intenção.",
+    "Imagine uma situação simples do dia a dia: é aí que isso aparece.",
+    "E repare como o padrão se repete sempre que {t} entra em cena.",
+    "Por isso tanta gente erra: trata {t} como algo fixo, e não como processo.",
+  ],
+  twist: ["Agora a virada: e se o problema nunca foi {t}?", "E sim a pergunta que você faz sobre isso."],
+  closer: ["No fim, a pergunta não é o que {t} é.", "É o que você faz com isso."],
+};
+const LABEL: Record<Role, string> = { hook: "E SE…?", context: "O ÓBVIO", point: "PONTO", twist: "A VIRADA", closer: "E VOCÊ?" };
 
 export class MockLlm implements LlmProvider {
   readonly id = "teste";
@@ -53,42 +56,38 @@ export class MockLlm implements LlmProvider {
     // Frases de teste com o tema inteiro ficam longas demais: usa só as primeiras palavras.
     const t = tokenize(full).length > 6 ? tokenize(full).slice(0, 6).join(" ") : full;
     const wps = req.brand.script.wordsPerSecond;
-    const budget = Math.round(req.targetDurationSec * wps);
-    const sceneCount = Math.min(14, Math.max(4, Math.round(req.targetDurationSec / 7)));
-    const pointCount = sceneCount - 4;
+    const budget = req.targetDurationSec * wps;
+    const n = Math.min(14, Math.max(3, Math.round(req.targetDurationSec / 6)));
+    const middle: Role[] = n === 3 ? ["point"] : n === 4 ? ["context", "twist"] : ["context", ...Array.from({ length: n - 4 }, () => "point" as const), "twist"];
+    const roles: Role[] = ["hook", ...middle, "closer"];
+    const perScene = budget / roles.length;
 
-    // Cada cena é uma lista de frases; cortamos frases do fim até caber no orçamento de palavras.
-    const sentences: string[][] = [];
-    sentences.push([`Você já parou para pensar em ${t}?`, "A resposta pode mudar tudo."]);
-    sentences.push([`Quase todo mundo vê ${t} do jeito óbvio.`, "É aí que a gente se engana."]);
-    for (let i = 0; i < pointCount; i++) {
-      sentences.push([
-        `Ponto ${i + 1}. ${POINT_SENTENCES[i % POINT_SENTENCES.length]!.replaceAll("{t}", t)}`,
-        POINT_SENTENCES[(i + 2) % POINT_SENTENCES.length]!.replaceAll("{t}", t),
-      ]);
-    }
-    sentences.push([`Agora a virada: e se o problema nunca foi ${t}?`, "E sim a pergunta que você faz sobre isso."]);
-    sentences.push([CLOSERS[0]!.replaceAll("{t}", t), req.brand.script.defaultCta].filter(Boolean));
+    let pointNo = 0;
+    const scenes = roles.map((role, i) => {
+      const pool = POOL[role];
+      const target = role === "hook" ? Math.min(perScene, 13) : perScene;
+      const base = role === "point" ? i : 0; // varia as frases de cada ponto
+      let text = pool[base % pool.length]!;
+      for (let k = 1; k < pool.length * 2; k++) {
+        const next = pool[(base + k) % pool.length]!;
+        if (countWords(text) + countWords(next) > target * 1.05) break;
+        text += " " + next;
+      }
+      if (role === "closer" && req.brand.script.defaultCta && countWords(text) + countWords(req.brand.script.defaultCta) <= target * 1.3) text += " " + req.brand.script.defaultCta;
+      text = text.replaceAll("{t}", t);
+      const label = role === "point" ? `${LABEL.point} ${++pointNo}` : LABEL[role];
+      return { role, text, label };
+    });
 
-    const total = () => sentences.reduce((n, sc) => n + sc.reduce((m, s) => m + countWords(s), 0), 0);
-    for (let guard = 0; total() > budget && guard < 200; guard++) {
-      // remove a última frase da cena mais longa que ainda tem mais de uma frase
-      const candidates = sentences.map((sc, i) => ({ i, w: sc.reduce((m, s) => m + countWords(s), 0), n: sc.length })).filter((c) => c.n > 1);
-      if (candidates.length === 0) break;
-      candidates.sort((a, b) => b.w - a.w);
-      sentences[candidates[0]!.i]!.pop();
-    }
-    const narrations = sentences.map((sc) => sc.join(" "));
-    const onScreen = ["E SE…?", "O ÓBVIO", ...Array.from({ length: pointCount }, (_, i) => `PONTO ${i + 1}`), "A VIRADA", "E VOCÊ?"];
     return ScriptSchema.parse({
       title: `[TESTE] ${full.slice(0, 80)}`,
-      hook: narrations[0],
-      scenes: narrations.map((narration, i) => ({
+      hook: scenes[0]!.text,
+      scenes: scenes.map((sc, i) => ({
         id: sceneId(i),
-        narration,
-        onScreenText: onScreen[i],
+        narration: sc.text,
+        onScreenText: sc.label,
         visual: {
-          description: `Cena ${i + 1} (teste): fundo gráfico animado com a palavra-chave "${onScreen[i] ?? ""}".`,
+          description: `Cena ${i + 1} (teste): fundo gráfico animado com a palavra-chave "${sc.label}".`,
           prompt: `Abstract cinematic vertical background about "${t}", minimal, no text`,
           kind: "auto",
           motion: MotionSchema.parse(MOTIONS[i % MOTIONS.length]),
@@ -96,7 +95,7 @@ export class MockLlm implements LlmProvider {
         },
         transition: i === 0 ? "cut" : TRANSITIONS[i % TRANSITIONS.length],
         sfx: [],
-        targetSec: Math.max(1, Math.round((countWords(narration) / wps) * 10) / 10),
+        targetSec: Math.max(1, Math.round((countWords(sc.text) / wps) * 10) / 10),
       })),
       cta: req.brand.script.defaultCta || undefined,
       postCaption: `[TESTE] ${full}`,
