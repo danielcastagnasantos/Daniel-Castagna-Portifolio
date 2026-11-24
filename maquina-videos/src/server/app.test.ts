@@ -37,7 +37,7 @@ describe.skipIf(!ffmpegOk)("API HTTP (em processo, sem rede)", () => {
     app = await createApp(config, { renderer: new FakeRenderer(), providersFor: (p) => createProviders(config, { testMode: p.testMode, visualMode: p.visualMode }, ffmpeg) });
     server = createServerApp(app);
   });
-  afterAll(() => fs.rmSync(tmp, { recursive: true, force: true }));
+  afterAll(() => { try { fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch { /* Windows pode segurar arquivos por instantes */ } });
 
   it("health e marcas", async () => {
     const h = (await (await get("/api/health")).json()) as Record<string, any>;

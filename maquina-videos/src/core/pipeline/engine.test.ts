@@ -42,7 +42,7 @@ describe.skipIf(!ffmpegOk)("Engine (modo de teste, renderizador substituto)", ()
       providersFor: (p): Providers => ({ ...createProviders(config, { testMode: p.testMode, visualMode: p.visualMode }, ffmpeg), tts }),
     });
   });
-  afterAll(() => fs.rmSync(tmp, { recursive: true, force: true }));
+  afterAll(() => { try { fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch { /* Windows pode segurar arquivos por instantes */ } });
 
   async function produce(theme = "A lenda do tempo que passa", dur = 10): Promise<Project> {
     const p = await app.engine.createProject({ brandId: "versao-x", theme, targetDurationSec: dur, testMode: true });

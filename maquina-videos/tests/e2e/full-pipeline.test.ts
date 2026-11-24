@@ -32,7 +32,7 @@ describe("pipeline real (Remotion) em modo de teste", () => {
     tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mv-e2e-"));
     app = await createApp(loadConfig({ DATA_DIR: tmp, BROWSER_EXECUTABLE: process.env.BROWSER_EXECUTABLE ?? "" } as NodeJS.ProcessEnv));
   });
-  afterAll(() => fs.rmSync(tmp, { recursive: true, force: true }));
+  afterAll(() => { try { fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch { /* Windows pode segurar arquivos por instantes */ } });
 
   it("produz um MP4 H.264 1080x1920 @ 60fps com áudio, legendas e verificação aprovada", async () => {
     const p = await app.engine.createProject({ brandId: "versao-x", theme: "Por que o tempo parece acelerar com a idade", targetDurationSec: 15, testMode: true });

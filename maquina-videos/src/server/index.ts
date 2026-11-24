@@ -13,6 +13,11 @@ async function main() {
   attachLogSinks(config.dataDir, app.bus);
   const log = createLogger();
 
+  // Bibliotecas (ex.: Remotion ao falhar o download do navegador) podem emitir um segundo erro "solto" além
+  // do erro que já tratamos. Num servidor local com estado gravado em disco, registramos e seguimos em frente.
+  process.on("unhandledRejection", (reason) => log.error(`Rejeição não tratada (ignorada): ${toErrorInfo(reason).message}`));
+  process.on("uncaughtException", (err) => log.error(`Exceção não tratada (ignorada): ${toErrorInfo(err).message}`));
+
   const server = serve({ fetch: createServerApp(app).fetch, port: config.server.port, hostname: config.server.host });
   server.on("error", (e: NodeJS.ErrnoException) => {
     if (e.code === "EADDRINUSE") log.error(`A porta ${config.server.port} já está em uso. Feche a outra instância ou defina PORT no .env.`);

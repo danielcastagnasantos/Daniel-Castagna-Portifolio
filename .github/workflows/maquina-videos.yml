@@ -1,0 +1,64 @@
+name: maquina-videos
+
+# Verifica o subprojeto maquina-videos em Linux E Windows (o desenvolvimento foi feito em Linux;
+# o Windows 11 é o alvo de uso, então este workflow é o termômetro de compatibilidade).
+on:
+  push:
+    paths: ["maquina-videos/**", ".github/workflows/maquina-videos.yml"]
+  pull_request:
+    paths: ["maquina-videos/**", ".github/workflows/maquina-videos.yml"]
+  workflow_dispatch:
+    inputs:
+      e2e:
+        description: "Rodar também o teste de ponta a ponta com render real (Windows, demora)"
+        type: boolean
+        default: false
+
+defaults:
+  run:
+    working-directory: maquina-videos
+
+jobs:
+  unit:
+    name: tipos + testes (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: maquina-videos/package-lock.json
+      - name: Instalar FFmpeg (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Instalar FFmpeg (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: choco install ffmpeg -y --no-progress
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build:web
+
+  e2e-windows:
+    name: ponta a ponta com render real (windows)
+    if: github.event_name == 'workflow_dispatch' && inputs.e2e
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: maquina-videos/package-lock.json
+      - name: Instalar FFmpeg
+        shell: pwsh
+        run: choco install ffmpeg -y --no-progress
+      - run: npm ci
+      - run: npm run test:e2e

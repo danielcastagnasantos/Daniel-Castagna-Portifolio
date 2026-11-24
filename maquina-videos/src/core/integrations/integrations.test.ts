@@ -66,7 +66,7 @@ describe.skipIf(!ffmpegOk)("Telegram + webhook (servidores falsos — NÃO são 
     const ffmpeg = new Ffmpeg("ffmpeg", "ffprobe");
     app = await createApp(config, { renderer: new FakeRenderer(), providersFor: (p) => createProviders(config, { testMode: p.testMode, visualMode: p.visualMode }, ffmpeg) });
   });
-  afterAll(() => fs.rmSync(tmp, { recursive: true, force: true }));
+  afterAll(() => { try { fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch { /* Windows pode segurar arquivos por instantes */ } });
 
   async function newScripted(): Promise<Project> {
     const p = await app.engine.createProject({ brandId: "versao-x", theme: "Tema Telegram", targetDurationSec: 20, testMode: true });

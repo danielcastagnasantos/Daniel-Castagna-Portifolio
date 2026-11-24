@@ -104,7 +104,7 @@ Detalhes e fontes de cada API: [`docs/PROVEDORES.md`](docs/PROVEDORES.md).
 | `npm run produzir -- "tema" --duracao 30 --aprovar` | Produção pela linha de comando |
 | `npm run studio` | Remotion Studio: pré-visualiza/edita a composição visual |
 | `npm run still -- <idProjeto> 30 300 900` | Renderiza quadros (PNG) de um projeto para inspecionar o visual |
-| `npm test` | 70+ testes unitários/integração (rápidos, sem rede) |
+| `npm test` | 80+ testes unitários/integração (rápidos, sem rede) |
 | `npm run test:e2e` | Teste de ponta a ponta com render real (alguns minutos) |
 | `npm run typecheck` | Verificação de tipos |
 

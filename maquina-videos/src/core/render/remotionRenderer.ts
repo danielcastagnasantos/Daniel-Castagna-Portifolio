@@ -9,7 +9,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { serve } from "@hono/node-server";
 import { bundle } from "@remotion/bundler";
-import { makeCancelSignal, renderMedia, selectComposition } from "@remotion/renderer";
+import { ensureBrowser, makeCancelSignal, renderMedia, selectComposition } from "@remotion/renderer";
 import type { AppConfig } from "../config";
 import type { AssetPaths } from "../assets";
 import { AppError, CancelledError } from "../errors";
@@ -91,6 +91,20 @@ export class RemotionRenderer implements Renderer {
     const started = Date.now();
     if (req.signal.aborted) throw new CancelledError();
     const serveUrl = await this.getBundle((f) => req.onProgress(f * 0.05, "Empacotando composição"));
+
+    // Sem navegador próprio configurado, garante o Chrome Headless Shell do Remotion (baixa na 1ª vez, ~100 MB).
+    if (!this.config.browserExecutable) {
+      req.onProgress(0.05, "Verificando o navegador do Remotion");
+      try {
+        await ensureBrowser({ logLevel: "warn" });
+      } catch (e) {
+        throw new AppError(
+          "RENDER_BROWSER",
+          `Não foi possível preparar o navegador do Remotion (precisa de internet na primeira vez): ${(e as Error).message.slice(0, 300)}. Alternativa: defina BROWSER_EXECUTABLE no .env com o caminho de um Chrome/Edge instalado.`,
+          { cause: e },
+        );
+      }
+    }
 
     // Servidor temporário com os arquivos (áudio, imagens, vídeos) que o Chromium vai buscar.
     const server = serve({ fetch: createAssetApp(this.assets).fetch, port: 0, hostname: "127.0.0.1" });
