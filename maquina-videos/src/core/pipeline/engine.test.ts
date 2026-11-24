@@ -79,7 +79,7 @@ describe.skipIf(!ffmpegOk)("Engine (modo de teste, renderizador substituto)", ()
     const approved = await app.engine.approveVideo(done.id);
     expect(approved.status).toBe("approved");
     const { file } = await app.engine.exportVideo(done.id);
-    expect(file).toMatch(/exports.*-TESTE\.mp4$/);
+    expect(file).toMatch(/exports.*teste.*\.mp4$/i);
     expect(fs.statSync(file).size).toBeGreaterThan(1000);
   });
 

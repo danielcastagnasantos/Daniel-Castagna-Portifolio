@@ -5,3 +5,8 @@ web/dist/
 .env.*
 !.env.example
 *.tsbuildinfo
+assets/library/images/*
+assets/library/videos/*
+assets/library/music/*
+assets/library/sfx/*
+!assets/library/*/.gitkeep

@@ -186,6 +186,7 @@ export class Engine {
         d.status = "awaiting_script_approval";
       });
       log.info("Revisão aplicada. Confira e aprove novamente.");
+      this.deps.bus.emit("milestone", { type: "script_ready", projectId: id });
     }, { failStep: "script", restore: previousStatus });
     return p;
   }
@@ -263,6 +264,7 @@ export class Engine {
       status: "pending" as const,
     }));
     const previousStatus = project.status;
+    const wasApproved = project.scriptApprovedHash === scriptHash(project.script);
     const p = await this.deps.store.update(id, (d) => {
       d.changeRequests.push(...reqs);
       d.status = "generating_script";
@@ -285,12 +287,21 @@ export class Engine {
           throw e;
         }
       }
-      // O usuário pediu estas mudanças sobre um roteiro já aprovado: reaprova e regera só o que mudou.
       await this.deps.store.update(id, (d) => {
         d.script = script;
       });
-      await this.prepareProduction(id, script);
-      await this.runProduction(id, signal, log);
+      if (wasApproved) {
+        // Mudança pedida sobre um roteiro já aprovado: reaprova e regera só o que mudou.
+        await this.prepareProduction(id, script);
+        await this.runProduction(id, signal, log);
+      } else {
+        await this.deps.store.update(id, (d) => {
+          d.scriptApprovedHash = undefined;
+          d.status = "awaiting_script_approval";
+        });
+        log.info("Alterações aplicadas ao roteiro. Confira e aprove para produzir.");
+        this.deps.bus.emit("milestone", { type: "script_ready", projectId: id });
+      }
     }, { failStep: "script", restore: previousStatus });
     return p;
   }
@@ -318,7 +329,8 @@ export class Engine {
     const dir = path.join(this.deps.config.dataDir, "exports");
     await ensureDir(dir);
     const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 13);
-    const name = `${slug(project.script?.title ?? project.theme)}-${stamp}${project.testMode ? "-TESTE" : ""}.mp4`;
+    const base = slug(project.script?.title ?? project.theme);
+    const name = `${base}-${stamp}${project.testMode && !base.includes("teste") ? "-TESTE" : ""}.mp4`;
     const dest = path.join(dir, name);
     await fs.copyFile(src, dest);
     const size = (await fs.stat(dest)).size;

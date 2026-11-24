@@ -63,3 +63,30 @@ export function runProcess(cmd: string, args: string[], opts: RunOptions = {}): 
     });
   });
 }
+
+/** Como runProcess, mas devolve o stdout como Buffer (para decodificar áudio/vídeo cru). */
+export function runBinary(cmd: string, args: string[], opts: { signal?: AbortSignal; timeoutMs?: number } = {}): Promise<{ code: number; stdout: Buffer; stderr: string }> {
+  return new Promise((resolve, reject) => {
+    if (opts.signal?.aborted) return reject(new CancelledError());
+    const child = spawn(cmd, args, { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+    const chunks: Buffer[] = [];
+    let stderr = "";
+    const timer = opts.timeoutMs ? setTimeout(() => child.kill("SIGKILL"), opts.timeoutMs) : undefined;
+    const onAbort = () => child.kill("SIGKILL");
+    opts.signal?.addEventListener("abort", onAbort, { once: true });
+    child.stdout.on("data", (d: Buffer) => chunks.push(d));
+    child.stderr.on("data", (d: Buffer) => {
+      stderr = (stderr + d.toString("utf8")).slice(-4000);
+    });
+    child.on("error", (e: NodeJS.ErrnoException) => {
+      if (timer) clearTimeout(timer);
+      reject(e.code === "ENOENT" ? new MissingConfigError(`Programa "${cmd}"`, "Instale o FFmpeg e reabra o terminal.") : e);
+    });
+    child.on("close", (code) => {
+      if (timer) clearTimeout(timer);
+      opts.signal?.removeEventListener("abort", onAbort);
+      if (opts.signal?.aborted) return reject(new CancelledError());
+      resolve({ code: code ?? -1, stdout: Buffer.concat(chunks), stderr });
+    });
+  });
+}

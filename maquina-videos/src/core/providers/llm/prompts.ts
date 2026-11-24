@@ -108,3 +108,14 @@ export function referencesUserPrompt(theme: string, refs: Reference[]): string {
     "Analise os padrões de narrativa e retenção.",
   ].join("\n");
 }
+
+export function ideasUserPrompt(args: { count: number; topic?: string; avoid: string[] }): string {
+  return [
+    `Sugira ${args.count} ideias de vídeos curtos para a marca.`,
+    args.topic ? `Assunto/nicho de interesse: ${args.topic}` : "Escolha assuntos variados dentro do estilo da marca.",
+    args.avoid.length ? `NÃO repita nem se aproxime destes temas já produzidos:\n${args.avoid.map((a) => `- ${a}`).join("\n")}` : "",
+    "Cada ideia deve ser específica (não genérica), factual e filmável em 30–60 segundos. Não invente fatos nem dados.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}

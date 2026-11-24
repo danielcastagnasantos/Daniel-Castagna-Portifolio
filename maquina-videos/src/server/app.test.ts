@@ -110,7 +110,7 @@ describe.skipIf(!ffmpegOk)("API HTTP (em processo, sem rede)", () => {
     // aprovar e baixar
     expect((await post(`/api/projects/${id}/approve-video`)).status).toBe(200);
     const dl = await get(`/api/projects/${id}/download`);
-    expect(dl.headers.get("content-disposition")).toMatch(/attachment; filename=".*_TESTE\.mp4"/);
+    expect(dl.headers.get("content-disposition")).toMatch(/attachment; filename=".*TESTE.*\.mp4"/i);
     expect((await dl.arrayBuffer()).byteLength).toBeGreaterThan(1000);
     const exp = (await (await post(`/api/projects/${id}/export`)).json()) as { file: string };
     expect(fs.existsSync(exp.file)).toBe(true);
@@ -129,6 +129,17 @@ describe.skipIf(!ffmpegOk)("API HTTP (em processo, sem rede)", () => {
       expect(text).not.toContain("ANTHROPIC_API_KEY=");
       expect(text).not.toContain('"level"');
     }
+  });
+
+  it("ideias de tema: modo de teste devolve exemplos rotulados; marca inválida é rejeitada", async () => {
+    const r = await post("/api/ideas", { brandId: "versao-x", count: 3, topic: "economia doméstica", testMode: true });
+    const j = (await r.json()) as { testMode: boolean; generator: string; ideas: { theme: string }[] };
+    expect(j.testMode).toBe(true);
+    expect(j.generator).toBe("teste");
+    expect(j.ideas).toHaveLength(3);
+    expect(j.ideas[0]!.theme).toContain("[TESTE]");
+    expect((await post("/api/ideas", { brandId: "x", count: 3, testMode: true })).status).toBe(400);
+    expect((await post("/api/ideas", { brandId: "versao-x", count: 3, testMode: false })).status).toBe(412);
   });
 
   it("SSE entrega o estado atual do projeto ao conectar", async () => {

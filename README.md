@@ -66,3 +66,7 @@ docs/superpowers/   Spec de design e plano de implementação
 **Acessibilidade não é opcional no código.** `prefers-reduced-motion` desliga parallax, cursor customizado, efeito de digitação e congela a cena. O canvas é `aria-hidden`. Se for mexer em animação, mantenha esse caminho funcionando.
 
 **Decoração nunca bloqueia conteúdo.** O preloader não espera o WebGL. Se a GPU falhar, estiver bloqueada ou o navegador não suportar, o site carrega normalmente com fundo preto.
+
+## Outros projetos neste repositório
+
+- **`maquina-videos/`** — Máquina de produção automática de vídeos curtos (Versão X / Hipótese X): roteiro com Claude, narração ElevenLabs, render Remotion 1080×1920 @ 60 fps, interface web local, Telegram e n8n. Projeto independente, com o próprio `package.json`; veja [`maquina-videos/README.md`](maquina-videos/README.md).

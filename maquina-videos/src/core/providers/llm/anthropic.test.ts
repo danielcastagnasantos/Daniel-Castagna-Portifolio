@@ -133,4 +133,17 @@ describe("AnthropicLlm (SDK oficial + servidor falso — NÃO é a API real)", (
     const llm = new AnthropicLlm({ apiKey: "sk-ant-test-123456", model: "claude-opus-5-5", fallbacks: false, fetch: fakeFetch, baseURL: "https://fake.anthropic.test" });
     await expect(llm.reviseScript({ brand, script: original, instruction: "x", sceneIds: ["sc-01"], targetDurationSec: 30, language: "pt-BR" })).rejects.toThrow(/número de cenas/);
   });
+
+  it("sugere ideias com saída estruturada e respeita a quantidade pedida", async () => {
+    let user = "";
+    const fakeFetch = (async (_u: string | URL | Request, init?: RequestInit) => {
+      user = (JSON.parse(String(init?.body)).messages as { content: string }[]).at(-1)!.content;
+      return json(message(JSON.stringify({ ideas: [1, 2, 3, 4].map((n) => ({ theme: `Tema ${n}`, hook: `Gancho ${n}`, why: "porque sim" })) })));
+    }) as unknown as typeof fetch;
+    const llm = new AnthropicLlm({ apiKey: "sk-ant-test-123456", model: "claude-opus-5-5", fallbacks: false, fetch: fakeFetch, baseURL: "https://fake.anthropic.test" });
+    const ideas = await llm.suggestIdeas({ brand, count: 2, topic: "sono", avoid: ["Tema velho"], language: "pt-BR" });
+    expect(ideas.map((i) => i.theme)).toEqual(["Tema 1", "Tema 2"]);
+    expect(user).toContain("sono");
+    expect(user).toContain("Tema velho");
+  });
 });

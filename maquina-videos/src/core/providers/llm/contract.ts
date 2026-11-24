@@ -109,3 +109,13 @@ export function enforceUntouchedScenes(original: Script, revised: Script, target
   });
   return { ...revised, scenes, title: original.title, hook: targetIds.includes(original.scenes[0]!.id) ? revised.hook : original.hook };
 }
+
+export const LlmIdeasSchema = z.object({
+  ideas: z.array(
+    z.object({
+      theme: z.string().describe("Tema do vídeo em uma frase clara, em português do Brasil."),
+      hook: z.string().describe("Sugestão de gancho (primeira frase falada)."),
+      why: z.string().describe("Por que esse tema funciona para a marca e para a retenção (1 frase)."),
+    }),
+  ),
+});

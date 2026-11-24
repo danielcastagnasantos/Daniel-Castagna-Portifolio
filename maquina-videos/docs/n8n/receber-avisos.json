@@ -1,0 +1,54 @@
+{
+  "name": "Máquina de Vídeos — receber avisos (webhook)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "maquina-videos",
+        "options": {}
+      },
+      "id": "b1",
+      "name": "Aviso da Máquina de Vídeos",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "maquina-videos-eventos"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lê o evento enviado pela Máquina de Vídeos.\n// Se você definiu WEBHOOK_SECRET, valide o header x-signature (HMAC-SHA256 do corpo BRUTO):\n// ative a opção \"Raw Body\" no nó Webhook e compare com require('crypto').createHmac('sha256', segredo).update(corpoBruto).digest('hex').\nconst b = $input.first().json.body;\nreturn [{ json: { event: b.event, projectId: b.projectId, title: b.title, status: b.status, links: b.links } }];"
+      },
+      "id": "b2",
+      "name": "Ler evento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Aviso da Máquina de Vídeos": {
+      "main": [
+        [
+          {
+            "node": "Ler evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateNote": "NAO TESTADO em uma instancia n8n real. Ligue a saida a Slack/Drive/e-mail etc. Veja docs/N8N.md."
+  }
+}

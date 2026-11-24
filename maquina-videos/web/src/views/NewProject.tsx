@@ -21,10 +21,24 @@ export function NewProject({ brands, health, onCreated }: { brands: BrandInfo[];
   const [refs, setRefs] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ideas, setIdeas] = useState<{ theme: string; hook: string; why: string }[]>([]);
+  const [loadingIdeas, setLoadingIdeas] = useState(false);
 
   const test = testMode ?? health?.defaultTestMode ?? true;
   const keysOk = Boolean(health?.providers.anthropic && health?.providers.elevenlabs);
   const runwayOk = Boolean(health?.providers.runway);
+
+  async function suggest() {
+    setLoadingIdeas(true);
+    try {
+      const r = await api<{ ideas: { theme: string; hook: string; why: string }[] }>("/ideas", { method: "POST", body: { brandId, count: 5, topic: theme.trim() || undefined, testMode: test } });
+      setIdeas(r.ideas);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoadingIdeas(false);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -67,6 +81,20 @@ export function NewProject({ brands, health, onCreated }: { brands: BrandInfo[];
           Tema do vídeo
           <textarea value={theme} onChange={(e) => setTheme(e.target.value)} rows={3} placeholder="Ex.: Por que o tempo parece passar mais rápido quando ficamos mais velhos?" required minLength={3} />
         </label>
+        <div className="row">
+          <button type="button" className="btn sm" onClick={suggest} disabled={loadingIdeas || (!test && !keysOk)}>{loadingIdeas ? "Pensando…" : "💡 Sugerir ideias"}</button>
+          <small className="muted">{test ? "Modo de teste: ideias de exemplo." : "Usa o Claude (gera um pequeno custo)."} Se você já escreveu algo acima, vira o assunto.</small>
+        </div>
+        {ideas.length > 0 && (
+          <div style={{ display: "grid", gap: 8 }}>
+            {ideas.map((i) => (
+              <button type="button" key={i.theme} className="chip" style={{ width: "100%" }} onClick={() => { setTheme(i.theme); setIdeas([]); }}>
+                <b>{i.theme}</b>
+                <small className="muted">{i.why}</small>
+              </button>
+            ))}
+          </div>
+        )}
         <label>
           Duração aproximada: <span style={{ color: "var(--accent)" }}>{duration}s</span>
           <input type="range" min={15} max={90} step={5} value={duration} onChange={(e) => setDuration(Number(e.target.value))} list="durs" />

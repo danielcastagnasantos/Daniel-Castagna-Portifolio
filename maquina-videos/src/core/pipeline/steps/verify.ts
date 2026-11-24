@@ -2,6 +2,7 @@ import { AppError } from "../../errors";
 import { exists } from "../../util/fs";
 import { countWords } from "../../../shared/timing";
 import { VIDEO, type Check, type Verification } from "../../../shared/schemas";
+import { analyzeSync, energyEnvelope, speechMask } from "../../../shared/syncCheck";
 import type { StepContext } from "../context";
 import { readPlan } from "./render";
 
@@ -77,6 +78,18 @@ export async function verifyStep(ctx: StepContext): Promise<void> {
       if (vol.maxDb === null || vol.maxDb <= -60) checks.push(fail("silence", "Áudio audível", "O áudio está mudo."));
       else if ((vol.meanDb ?? -99) < -42) checks.push(warn("silence", "Áudio audível", `Volume muito baixo (média ${vol.meanDb?.toFixed(1)} dB).`));
       else checks.push(ok("silence", "Áudio audível", `${a.codec}, ${a.sampleRate ?? "?"} Hz, média ${vol.meanDb?.toFixed(1)} dB, pico ${vol.maxDb?.toFixed(1)} dB`));
+      // Sincronia medida (não presumida): áudio final × palavras das legendas.
+      try {
+        const pcm = await deps.ffmpeg.decodeMono16k(disk, ctx.signal);
+        const env = energyEnvelope(pcm, 16000);
+        const mask = speechMask(plan.captions.flatMap((p) => p.words), plan.fps, env.length);
+        const r = analyzeSync(env, mask);
+        if (r.corrBest < 0.2) checks.push(warn("av-sync", "Sincronia áudio × legenda (medida)", `Correlação baixa (${r.corrBest.toFixed(2)}): não deu para medir — música alta demais ou voz muito baixa?`));
+        else if (Math.abs(r.bestLagMs) <= 60) checks.push(ok("av-sync", "Sincronia áudio × legenda (medida)", `Pico de correlação em ${r.bestLagMs.toFixed(0)} ms (r=${r.corrBest.toFixed(2)})`));
+        else checks.push(warn("av-sync", "Sincronia áudio × legenda (medida)", `Possível deslocamento de ${r.bestLagMs.toFixed(0)} ms entre voz e legenda (r=${r.corrBest.toFixed(2)}).`));
+      } catch (e) {
+        checks.push(warn("av-sync", "Sincronia áudio × legenda (medida)", `Não foi possível medir: ${(e as Error).message}`));
+      }
       if (vol.maxDb !== null && vol.maxDb > -0.1) checks.push(warn("clipping", "Sem distorção", `Pico em ${vol.maxDb.toFixed(1)} dB: possível clipping.`));
     }
   }

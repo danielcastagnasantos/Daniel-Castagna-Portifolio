@@ -10,14 +10,15 @@ import { AppError, ExternalApiError } from "../../errors";
 import { createLogger } from "../../logger";
 import type { Brand, Reference, ReferenceAnalysis, Script } from "../../../shared/schemas";
 import {
+  LlmIdeasSchema,
   LlmReferenceAnalysisSchema,
   LlmScriptSchema,
   enforceUntouchedScenes,
   toReferenceAnalysis,
   toScript,
 } from "./contract";
-import { referencesSystemPrompt, referencesUserPrompt, reviseUserPrompt, scriptSystemPrompt, scriptUserPrompt } from "./prompts";
-import type { LlmContext, LlmProvider } from "./types";
+import { ideasUserPrompt, referencesSystemPrompt, referencesUserPrompt, reviseUserPrompt, scriptSystemPrompt, scriptUserPrompt } from "./prompts";
+import type { Idea, LlmContext, LlmProvider } from "./types";
 
 const log = createLogger();
 
@@ -100,6 +101,11 @@ export class AnthropicLlm implements LlmProvider {
       }
       throw e;
     }
+  }
+
+  async suggestIdeas(req: { brand: Brand; count: number; topic?: string; avoid: string[]; language: string }, ctx?: LlmContext): Promise<Idea[]> {
+    const out = await this.structured(LlmIdeasSchema, scriptSystemPrompt(req.brand), ideasUserPrompt(req), ctx, 8_000);
+    return out.ideas.slice(0, req.count).map((i) => ({ theme: i.theme.trim(), hook: i.hook.trim(), why: i.why.trim() }));
   }
 
   async analyzeReferences(req: { brand: Brand; theme: string; references: Reference[] }, ctx?: LlmContext): Promise<ReferenceAnalysis> {

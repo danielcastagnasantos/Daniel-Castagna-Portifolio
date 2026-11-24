@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { AppError } from "../errors";
 import { ensureDir } from "../util/fs";
-import { runProcess } from "./process";
+import { runBinary, runProcess } from "./process";
 
 export interface StreamInfo {
   type: "video" | "audio" | "other";
@@ -107,6 +107,14 @@ export class Ffmpeg {
     const max = /max_volume:\s*(-?[\d.]+|-inf)\s*dB/.exec(r.stderr)?.[1];
     const num = (s?: string) => (s === undefined ? null : s === "-inf" ? -120 : Number(s));
     return { meanDb: num(mean), maxDb: num(max) };
+  }
+
+  /** Decodifica o áudio para PCM mono 16 kHz (Int16) — usado para medir a sincronia. */
+  async decodeMono16k(file: string, signal?: AbortSignal): Promise<Int16Array> {
+    const r = await runBinary(this.ffmpegPath, ["-v", "error", "-i", file, "-vn", "-ac", "1", "-ar", "16000", "-f", "s16le", "-"], { signal, timeoutMs: 5 * 60_000 });
+    if (r.code !== 0) throw new AppError("FFMPEG_FAILED", `ffmpeg falhou ao decodificar áudio: ${r.stderr.slice(-300)}`);
+    const buf = r.stdout;
+    return new Int16Array(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length - (buf.length % 2)));
   }
 
   private async run(args: string[], signal?: AbortSignal, timeoutMs = 20 * 60_000): Promise<void> {

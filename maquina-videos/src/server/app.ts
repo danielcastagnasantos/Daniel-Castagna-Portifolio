@@ -11,6 +11,7 @@
 import { timingSafeEqual } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { Readable } from "node:stream";
 import { Hono, type Context } from "hono";
 import { streamSSE } from "hono/streaming";
 import { z } from "zod";
@@ -31,6 +32,7 @@ const CreateSchema = z.object({
   visualMode: VisualModeSchema.optional(),
   references: z.array(ReferenceSchema.omit({ id: true })).max(10).optional(),
 });
+const IdeasSchema = z.object({ brandId: z.string(), count: z.number().int().min(1).max(10).default(5), topic: z.string().max(200).optional(), testMode: z.boolean().optional() });
 const ReviseSchema = z.object({ instruction: z.string().min(3), sceneIds: z.array(z.string()).optional() });
 const ChangesSchema = z.object({ changes: z.array(z.object({ sceneId: z.string(), instruction: z.string().min(3) })).min(1).max(40) });
 
@@ -109,6 +111,18 @@ export function createServerApp(app: App): Hono {
 
   api.get("/brands", (c) => c.json(app.brands.list().map((b) => ({ id: b.id, name: b.name, tagline: b.tagline, implemented: b.implemented, palette: b.palette, mode: b.mode }))));
 
+  /** Ideias de tema (Claude no modo ao vivo; exemplos fixos no modo de teste). Gera custo só no modo ao vivo. */
+  api.post("/ideas", async (c) => {
+    const b = await body(c, IdeasSchema);
+    const brand = app.brands.get(b.brandId);
+    if (!brand) throw new ValidationError(`Marca desconhecida: ${b.brandId}`);
+    const testMode = b.testMode ?? config.defaultTestMode;
+    const providers = app.deps.providersFor({ testMode, visualMode: "graphics" } as Project);
+    const done = (await store.list()).map((p) => p.theme).slice(0, 30);
+    const ideas = await providers.llm.suggestIdeas({ brand, count: b.count, topic: b.topic, avoid: done, language: "pt-BR" });
+    return c.json({ testMode, generator: providers.llm.id, ideas });
+  });
+
   api.get("/projects", async (c) => c.json(await store.list()));
   api.post("/projects", async (c) => {
     const input = await body(c, CreateSchema);
@@ -181,9 +195,9 @@ export function createServerApp(app: App): Hono {
     const r = p.artifacts.render;
     const disk = r ? app.assets.toDisk(r.file) : null;
     if (!r || !disk || !fs.existsSync(disk)) throw new NotFoundError("Vídeo");
-    const name = `${(p.script?.title ?? p.theme).replace(/[^\w-]+/g, "_").slice(0, 60)}${p.testMode ? "_TESTE" : ""}.mp4`;
-    const data = fs.createReadStream(disk);
-    return new Response(data as unknown as ReadableStream, {
+    const base = (p.script?.title ?? p.theme).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w-]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 60) || "video";
+    const name = `${base}${p.testMode && !/teste/i.test(base) ? "_TESTE" : ""}.mp4`;
+    return new Response(Readable.toWeb(fs.createReadStream(disk)) as ReadableStream, {
       headers: { "Content-Type": "video/mp4", "Content-Length": String(fs.statSync(disk).size), "Content-Disposition": `attachment; filename="${name}"` },
     });
   });

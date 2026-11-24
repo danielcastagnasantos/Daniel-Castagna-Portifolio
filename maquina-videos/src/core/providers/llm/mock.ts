@@ -6,7 +6,7 @@
 import { MotionSchema, ScriptSchema, type Brand, type Motion, type Reference, type ReferenceAnalysis, type Script, type Transition } from "../../../shared/schemas";
 import { sceneId } from "../../../shared/script";
 import { countWords, tokenize } from "../../../shared/timing";
-import type { LlmProvider } from "./types";
+import type { Idea, LlmProvider } from "./types";
 
 const MOTIONS: Motion[] = ["zoom-in", "pan-left", "zoom-out", "pan-right", "pan-up", "pan-down"];
 const TRANSITIONS: Transition[] = ["fade", "slide", "zoom", "wipe", "fade"];
@@ -29,6 +29,17 @@ const LABEL: Record<Role, string> = { hook: "E SE…?", context: "O ÓBVIO", poi
 
 export class MockLlm implements LlmProvider {
   readonly id = "teste";
+
+  async suggestIdeas(req: { brand: Brand; count: number; topic?: string; avoid: string[] }): Promise<Idea[]> {
+    // Modo de teste: ideias de exemplo (não são sugestões da IA).
+    const base = req.topic?.trim() || "um assunto do dia a dia";
+    const angles = ["O que quase ninguém percebe sobre", "O erro mais comum ao pensar em", "A versão mais simples de explicar", "Por que ainda confundimos", "O que mudaria se víssemos de outro jeito:", "Uma pergunta honesta sobre"];
+    return angles
+      .map((a) => `${a} ${base}`)
+      .filter((t) => !req.avoid.includes(t))
+      .slice(0, req.count)
+      .map((theme) => ({ theme: `[TESTE] ${theme}`, hook: `Você já pensou nisso? ${theme}.`, why: "Ideia de exemplo gerada no modo de teste (sem IA)." }));
+  }
 
   async analyzeReferences(req: { brand: Brand; theme: string; references: Reference[] }): Promise<ReferenceAnalysis> {
     // Heurística real sobre o texto fornecido (não é IA): mede o que dá para medir.

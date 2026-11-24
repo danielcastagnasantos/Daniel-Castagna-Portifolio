@@ -1,0 +1,177 @@
+{
+  "name": "Máquina de Vídeos — ideia → projeto → roteiro (aprovação humana)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1,
+                3,
+                5
+              ],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "a1",
+      "name": "Agendar (seg/qua/sex 9h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8787/api/ideas",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer COLE_AQUI_O_API_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ brandId: 'versao-x', count: 3, testMode: true }) }}",
+        "options": {}
+      },
+      "id": "a2",
+      "name": "Pedir ideias",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega a primeira ideia sugerida. Troque por sua lógica (planilha, fila, etc.).\nconst idea = $input.first().json.ideas[0];\nreturn [{ json: { theme: idea.theme } }];"
+      },
+      "id": "a3",
+      "name": "Escolher ideia",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8787/api/projects",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer COLE_AQUI_O_API_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ brandId: 'versao-x', theme: $json.theme, targetDurationSec: 45, testMode: true }) }}",
+        "options": {}
+      },
+      "id": "a4",
+      "name": "Criar projeto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        780,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://host.docker.internal:8787/api/projects/{{ $json.id }}/generate-script",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer COLE_AQUI_O_API_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ '{}' }}",
+        "options": {}
+      },
+      "id": "a5",
+      "name": "Gerar roteiro",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Agendar (seg/qua/sex 9h)": {
+      "main": [
+        [
+          {
+            "node": "Pedir ideias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir ideias": {
+      "main": [
+        [
+          {
+            "node": "Escolher ideia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escolher ideia": {
+      "main": [
+        [
+          {
+            "node": "Criar projeto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar projeto": {
+      "main": [
+        [
+          {
+            "node": "Gerar roteiro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateNote": "NAO TESTADO em uma instancia n8n real. Confira cada no apos importar. Veja docs/N8N.md."
+  }
+}
