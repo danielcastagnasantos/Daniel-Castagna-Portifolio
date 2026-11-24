@@ -1,0 +1,73 @@
+{
+  "id": "versao-x",
+  "name": "Versão X",
+  "tagline": "Ideias que mudam a forma de pensar",
+  "mode": "versao-x",
+  "implemented": true,
+  "palette": {
+    "background": "#0A0F1F",
+    "backgroundAlt": "#131B36",
+    "primary": "#3D7BFF",
+    "accent": "#FFC83D",
+    "text": "#FFFFFF",
+    "textMuted": "#A9B4D0"
+  },
+  "fonts": {
+    "family": "Montserrat",
+    "files": {
+      "700": "fonts/montserrat-latin-700-normal.woff2",
+      "800": "fonts/montserrat-latin-800-normal.woff2",
+      "900": "fonts/montserrat-latin-900-normal.woff2"
+    }
+  },
+  "captions": {
+    "fontSize": 84,
+    "weight": 900,
+    "maxWordsPerPage": 4,
+    "maxCharsPerPage": 24,
+    "uppercase": true,
+    "positionPercent": 63,
+    "activeColor": "#FFC83D",
+    "inactiveColor": "#FFFFFF",
+    "strokeColor": "#0A0F1F",
+    "strokeWidth": 12
+  },
+  "watermark": "VERSÃO X",
+  "outro": {
+    "enabled": true,
+    "text": "Siga para a próxima versão",
+    "seconds": 2
+  },
+  "voice": {
+    "voiceId": "",
+    "modelId": "",
+    "stability": 0.45,
+    "similarityBoost": 0.8,
+    "style": 0.25,
+    "speed": 1,
+    "useSpeakerBoost": true
+  },
+  "music": {
+    "file": "",
+    "volume": 0.14,
+    "duckedVolume": 0.05,
+    "fadeInSec": 1,
+    "fadeOutSec": 1.5
+  },
+  "sfx": {
+    "volume": 0.5,
+    "onTransition": "whoosh",
+    "library": {}
+  },
+  "script": {
+    "styleGuide": "Vídeos curtos, educativos e reflexivos. Tom: direto, inteligente e curioso — como um amigo muito bem informado explicando algo fascinante, sem clichês de guru, sem sensacionalismo vazio e sem promessas exageradas.\n\nEstrutura recomendada: (1) GANCHO nos primeiros 3 segundos: uma pergunta, uma contradição ou uma afirmação que quebra a intuição; (2) contexto rápido; (3) dois a quatro pontos, cada um com UM exemplo concreto e visual; (4) uma virada reflexiva que muda o ângulo do espectador; (5) fechamento memorável (pergunta ou ideia final) e uma chamada para ação curta.\n\nRegras: frases curtas, linguagem falada (como se fala, não como se escreve); uma ideia por cena; abrir ciclos de curiosidade e fechá-los mais adiante; variar o ritmo. Seja factual: NÃO invente estatísticas, estudos, citações, nomes ou datas. Se não tiver certeza de um número, use linguagem qualitativa. Evite temas médicos, jurídicos ou financeiros com conclusões categóricas; se tocar neles, use ressalvas honestas.",
+    "forbidden": [
+      "estatísticas ou estudos inventados",
+      "citações atribuídas a pessoas reais sem fonte conhecida",
+      "promessas de resultado garantido",
+      "clichês como 'você não vai acreditar'"
+    ],
+    "defaultCta": "Se isso mudou seu jeito de ver, compartilhe com quem precisa ouvir.",
+    "wordsPerSecond": 2.6
+  }
+}

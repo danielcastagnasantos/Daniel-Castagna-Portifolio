@@ -1,0 +1,48 @@
+{
+  "name": "maquina-videos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Máquina de produção automática de vídeos curtos (Versão X / Hipótese X): roteiro, narração, legendas e render 1080x1920 @ 60fps.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c cyan,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "tsx watch --clear-screen=false src/server/index.ts",
+    "dev:web": "vite --config web/vite.config.ts",
+    "build:web": "vite build --config web/vite.config.ts",
+    "start": "tsx src/server/index.ts",
+    "studio": "remotion studio src/remotion/index.ts",
+    "doctor": "tsx src/cli/doctor.ts",
+    "still": "tsx src/cli/still.ts",
+    "produzir": "tsx src/cli/produce.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.13.0",
+    "@hono/node-server": "^2.1.11",
+    "@remotion/bundler": "4.0.546",
+    "@remotion/cli": "4.0.546",
+    "@remotion/renderer": "4.0.546",
+    "hono": "^4.13.21",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "4.0.546",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "concurrently": "^10.0.7",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}

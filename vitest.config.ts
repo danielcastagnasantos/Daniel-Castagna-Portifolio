@@ -10,6 +10,6 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts", "messages/**/*.test.ts"],
-    exclude: ["node_modules/**", "caixa-central/**", "caixa-simples/**"],
+    exclude: ["node_modules/**", "caixa-central/**", "caixa-simples/**", "maquina-videos/**"],
   },
 });

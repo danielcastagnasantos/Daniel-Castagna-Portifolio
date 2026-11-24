@@ -1,0 +1,69 @@
+{
+  "id": "hipotese-x",
+  "name": "Hipótese X",
+  "tagline": "E se a escolha fosse sua?",
+  "mode": "hipotese-x",
+  "implemented": false,
+  "palette": {
+    "background": "#0D0612",
+    "backgroundAlt": "#1B0E26",
+    "primary": "#B04DFF",
+    "accent": "#FF3D81",
+    "text": "#FFFFFF",
+    "textMuted": "#C9B3D9"
+  },
+  "fonts": {
+    "family": "Anton",
+    "files": {
+      "400": "fonts/anton-latin-400-normal.woff2"
+    }
+  },
+  "captions": {
+    "fontSize": 96,
+    "weight": 400,
+    "maxWordsPerPage": 3,
+    "maxCharsPerPage": 20,
+    "uppercase": true,
+    "positionPercent": 63,
+    "activeColor": "#FF3D81",
+    "inactiveColor": "#FFFFFF",
+    "strokeColor": "#0D0612",
+    "strokeWidth": 12
+  },
+  "watermark": "HIPÓTESE X",
+  "outro": {
+    "enabled": true,
+    "text": "Vote nos comentários",
+    "seconds": 2
+  },
+  "voice": {
+    "voiceId": "",
+    "modelId": "",
+    "stability": 0.35,
+    "similarityBoost": 0.8,
+    "style": 0.45,
+    "speed": 1,
+    "useSpeakerBoost": true
+  },
+  "music": {
+    "file": "",
+    "volume": 0.16,
+    "duckedVolume": 0.05,
+    "fadeInSec": 1,
+    "fadeOutSec": 1.5
+  },
+  "sfx": {
+    "volume": 0.55,
+    "onTransition": "whoosh",
+    "library": {}
+  },
+  "script": {
+    "styleGuide": "Histórias interativas em episódios curtos, com suspense. Cada episódio continua o anterior (siga a BÍBLIA DA SÉRIE fornecida) com personagens consistentes (nome, aparência, voz, objetivos). O episódio termina num ponto de tensão e apresenta DUAS opções para o público votar. Nunca decida o resultado da votação: ele só entra na história depois de registrado e confirmado por uma pessoa.",
+    "forbidden": [
+      "escolher automaticamente o resultado de uma votação",
+      "contradizer a bíblia da série"
+    ],
+    "defaultCta": "Qual caminho você escolhe? Vote nos comentários.",
+    "wordsPerSecond": 2.6
+  }
+}
